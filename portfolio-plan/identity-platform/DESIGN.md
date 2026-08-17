@@ -108,6 +108,7 @@
 ## デモ
 
 - sample-rp でログイン → UserInfo 表示 → ログアウト（IdP セッションも終わる。再ログインで Consent を飛ばしてログイン画面になる）
+- sample-rp-b（Compose または e2e）でも同じ IdP セッションでログインし、片方から logout するともう片方の RP セッションも終わる
 - 故意に redirect_uri を改ざんして拒否されること
 - 同じ code の二回交換が失敗すること
 
