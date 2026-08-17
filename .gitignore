@@ -1,9 +1,5 @@
 # Git ignore (workspace / meta repo)
 
-# Per-project design docs: keep on disk, do not version
-**/DESIGN.md
-**/design.md
-
 # Chat transcripts (may contain sensitive discussion)
 **/chat-context/
 
@@ -20,12 +16,8 @@ id_rsa.pub
 credentials.json
 serviceAccount.json
 
-# Nested product repositories (each pf-* has its own git)
-**/pf-*/
-
 # Tooling
 .idea/
-.vscode/
 *.swp
 coverage.out
 coverage.html

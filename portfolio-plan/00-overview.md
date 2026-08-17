@@ -8,7 +8,7 @@
 - **元アイデア数: 30（欠落なし）**
 - **同時に本線として走らせる開発トラック: 最大 3**（基盤が揃ったあと）
 - 認証・ファイル・画像・観測・予約は「製品をまたぐ共有能力」として切り出し、同じ機能を 30 回実装しない
-- フロント / バックエンド / インフラのライフサイクルが独立するものは **ポリレポ**、ドメインと型が密結合なものは **モノレポ**
+- フロント / バックエンド / インフラのライフサイクルが独立するものでも、**一人開発では製品ごとに 1 Git リポジトリ**（中は `apps/` 分割）にする。入れ子 Git は使わない。
 
 就職活動上の見せ方は「15 個のバラバラな習作」ではなく、**1 つのポートフォリオ・エコシステム**である。ただし各プロジェクトは単独デモ可能で、他プロジェクトが落ちていても IdP モックやシードデータで動くことを必須とする。
 
@@ -16,7 +16,7 @@
 
 | ID | プロジェクト | 含める元アイデア | リポジトリ方針 | 役割 |
 | --- | --- | --- | --- | --- |
-| P01 | identity-platform | 14 | ポリレポ | 全アプリ共通の OIDC IdP |
+| P01 | identity-platform | 14 | 製品モノレポ `../pf-identity` | 全アプリ共通の OIDC IdP |
 | P02 | cloud-platform | 16, 17, 18 | ポリレポ | AWS 3-tier、K8s、可観測性 |
 | P03 | media-platform | 13, 28 | ポリレポ | ファイルストレージ + 画像派生パイプライン |
 | P04 | workspace | 01, 02, 12, 26 | ポリレポ | カンバン + Wiki + チャット + 共同編集 |
@@ -236,25 +236,13 @@ flowchart TB
 
 ## リポジトリ命名
 
-GitHub 組織またはユーザー配下で次のプレフィックスを使う。
+メタ（この `project`）と、製品ごとに 1 リポジトリ。製品リポジトリはメタの **兄弟ディレクトリ** に置く。
 
-- `pf-identity-*`
-- `pf-cloud-*`
-- `pf-media-*`
-- `pf-workspace-*`
-- `pf-calendar`
-- `pf-commerce-*`
-- `pf-recommend`
-- `pf-content-*`
-- `pf-attendance`
-- `pf-talent-*`
-- `pf-developer-*`
-- `pf-reliability`
-- `pf-data`
-- `pf-finance`
-- `pf-habit-*`
+- メタ: このリポジトリ（ideas / DESIGN / 指示）
+- `pf-identity`（P01）
+- 以降: `pf-cloud`, `pf-media`, `pf-workspace`, `pf-calendar`, `pf-commerce`, `pf-recommend`, `pf-content`, `pf-attendance`, `pf-talent`, `pf-developer`, `pf-reliability`, `pf-data`, `pf-finance`, `pf-habit`
 
-ポリレポでも **1 プロジェクト = 1 設計資料** を維持する。issue とロードマップはプロジェクト単位、コードはリポジトリ単位。
+1 プロジェクト = 1 設計資料 = 1 製品リポジトリ。デプロイ単位は `apps/` で分ける。
 
 ## 就職活動での出し方
 
@@ -268,13 +256,13 @@ GitHub 組織またはユーザー配下で次のプレフィックスを使う�
 
 ## 実装チャットへの渡し方
 
-詳細な工程は `portfolio-plan/instructions.md` と `.cursor/rules/` を正とする。「P01 を実装して」のように言われた場合は、対象プロジェクトの `instructions.md` に列挙されたファイルと `chat-context/` 一式を先に読む。
+詳細な工程は `portfolio-plan/instructions.md` を正とする。「P01 を実装して」のときは `identity-platform/AGENTS.md` と `chat-context/` 一式を先に読む。
 
 | やりたいこと | 渡すファイル |
 | --- | --- |
 | 次に何を作るか決める | `portfolio-plan/00-overview.md` と `portfolio-plan/instructions.md` |
-| 特定プロジェクトを実装する | 共通指示 + そのプロジェクトの `instructions.md` + DESIGN.md + 元アイデア + `chat-context/` 一式 |
+| 特定プロジェクトを実装する | 共通指示 + そのプロジェクトの `AGENTS.md` + DESIGN.md + 元アイデア + `chat-context/` 一式 |
 | 他プロジェクトとの API を実装する | 利用側と提供側、両方の指示と DESIGN.md |
 | インフラに載せる | アプリの DESIGN + `cloud-platform/DESIGN.md` |
 
-`DESIGN.md` と `chat-context/` は git に入れない。
+`DESIGN.md` は git 管理する。`chat-context/` は管理しない。製品コードは兄弟の製品リポジトリ。

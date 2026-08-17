@@ -5,7 +5,7 @@ Cursor ルール（`.cursor/rules/`）はこのファイルの要約である。
 「P01 を実装して」のようにプロジェクトを指定されたら、必ず次を読む。
 
 1. 本ファイル
-2. 対象プロジェクトの `instructions.md`
+2. 対象プロジェクトの `AGENTS.md`（なければ `instructions.md`）
 3. そこに列挙された `00-overview.md` / `DESIGN.md` / 元アイデア markdown
 4. 対象プロジェクトの `chat-context/` 配下を **ファイル名の昇順** で全て
 
@@ -15,7 +15,7 @@ Cursor ルール（`.cursor/rules/`）はこのファイルの要約である。
 
 | ID | フォルダ | 指示ファイル |
 | --- | --- | --- |
-| P01 | `identity-platform/` | `identity-platform/instructions.md` |
+| P01 | `identity-platform/` | `identity-platform/AGENTS.md` |
 | P02 | `cloud-platform/` | `cloud-platform/instructions.md` |
 | P03 | `media-platform/` | `media-platform/instructions.md` |
 | P04 | `workspace/` | `workspace/instructions.md` |
@@ -37,12 +37,12 @@ Cursor ルール（`.cursor/rules/`）はこのファイルの要約である。
 
 次は **どのリポジトリにもコミットしない。**
 
-- `DESIGN.md` / `design.md`（設計方針は作業ツリーに残してよいがバージョン管理しない）
+- `DESIGN.md` は git 管理する（設計の履歴が必要なため）
 - `<project>/chat-context/`（チャット記録。秘密が混ざる可能性がある）
 - `.env`、`.env.local`、秘密鍵、PEM、証明書秘密鍵、クラウドキー
 - 個人情報・本番相当のダンプ
 
-親リポジトリ（本 `project`）はアイデア・共通指示・Cursor ルールを管理する。各 `pf-*` は **独立した git リポジトリ**（ポリレポ）。親は `pf-*` の中身を追跡しない。
+この `project` リポジトリはアイデア・設計・共通指示・Cursor ルールを管理する。製品コードは **兄弟ディレクトリの製品リポジトリ**（例: `../pf-identity`）に置く。入れ子の `.git` は作らない。
 
 ## チャット記録
 
@@ -64,7 +64,7 @@ Cursor ルール（`.cursor/rules/`）はこのファイルの要約である。
 2. メソッド、小さな純関数、リポジトリ関数など、意図の単位で `git add` してコミットする
 3. 画面やエンドポイント一式がつながったときも、まとまりとしてコミットする
 4. リファクタだけ、テスト追加だけ、ドキュメントだけ、も別コミットにする
-5. メッセージは本文で「なぜ」を書く。機密や DESIGN.md を stage しない
+5. メッセージは本文で「なぜ」を書く。`.env` や `chat-context/` を stage しない
 6. `git add -A` で chat-context や `.env` を巻き込まない。パスを明示する
 7. `--no-verify`、`--amend`（条件外）、force push、config 変更はしない
 8. フックが失敗したら、直して **新しいコミット** にする
