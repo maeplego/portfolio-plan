@@ -1,0 +1,8 @@
+# Local gitignore (project folder)
+
+chat-context/
+.env
+.env.*
+!.env.example
+*.pem
+*.key

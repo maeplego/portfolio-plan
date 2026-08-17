@@ -1,0 +1,6 @@
+﻿chat-context/
+.env
+.env.*
+!.env.example
+*.pem
+*.key

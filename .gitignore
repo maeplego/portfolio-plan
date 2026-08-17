@@ -1,0 +1,35 @@
+# Git ignore (workspace / meta repo)
+
+# Per-project design docs: keep on disk, do not version
+**/DESIGN.md
+**/design.md
+
+# Chat transcripts (may contain sensitive discussion)
+**/chat-context/
+
+# Secrets and keys
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+id_rsa
+id_rsa.pub
+credentials.json
+serviceAccount.json
+
+# Nested product repositories (each pf-* has its own git)
+**/pf-*/
+
+# Tooling
+.idea/
+.vscode/
+*.swp
+coverage.out
+coverage.html
+node_modules/
+__pycache__/
+.DS_Store
+Thumbs.db

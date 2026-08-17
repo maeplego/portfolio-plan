@@ -1,0 +1,18 @@
+---
+description: 会話開始時に読むファイルとプロジェクト特定の手順
+alwaysApply: true
+---
+
+# セッション開始
+
+実装・調査の前に、この順で読む。チャット履歴だけに頼らない。
+
+1. `portfolio-plan/instructions.md`（全プロジェクト共通の工程）
+2. ユーザー発言からプロジェクト ID（P01–P15）を特定する
+3. そのプロジェクトの `instructions.md`（例: `identity-platform/instructions.md`）
+4. そこに列挙された overview / DESIGN.md / 元アイデア md
+5. そのプロジェクトの `chat-context/` をファイル名昇順で全部読む
+
+「P01 を実装して」と言われた場合の読み込み対象は `identity-platform/instructions.md` に固定されている。
+
+DESIGN.md と `chat-context/` は git に入れない。コードは各 `pf-*` リポジトリで管理する。
