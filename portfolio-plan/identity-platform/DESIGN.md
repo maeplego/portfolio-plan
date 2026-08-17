@@ -23,13 +23,13 @@
 | パス | 役割 | デプロイ |
 | --- | --- | --- |
 | `apps/server` | Authorization Server。`/authorize`, `/token`, `/userinfo`, JWKS、ログイン HTML | 単一バイナリ + Postgres |
-| `apps/admin` | クライアント登録、ユーザー無効化、監査ログ（未作成） | Next.js |
-| `apps/sample-rp` | 接続確認用の最小 RP（未作成） | Next.js |
+| `apps/admin` | クライアント登録、ユーザー無効化、監査ログ | Next.js |
+| `apps/sample-rp` | 接続確認用の最小 RP | Next.js |
 | `deploy/` | Compose。後に Terraform モジュール呼び出し | ローカル / 将来の IaC |
 
 プロセスは分ける（管理 UI の依存更新で IdP バイナリを巻き込まない）。リポジトリだけを分けない。
 
-ローカルでは `deploy/` の Compose が Postgres を上げ、`apps/server` を単体実行する。admin / sample-rp が揃ったら compose に足す。
+ローカルでは `deploy/` の Compose が Postgres・IdP・admin・sample-rp を上げる。ホストで個別起動してもよい。
 
 ## 技術スタック
 
