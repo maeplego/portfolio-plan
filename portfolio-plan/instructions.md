@@ -16,7 +16,7 @@ Cursor ルール（`.cursor/rules/`）はこのファイルの要約である。
 | ID | フォルダ | 指示ファイル |
 | --- | --- | --- |
 | P01 | `identity-platform/` | `identity-platform/AGENTS.md` |
-| P02 | `cloud-platform/` | `cloud-platform/instructions.md` |
+| P02 | `cloud-platform/` | `cloud-platform/AGENTS.md` |
 | P03 | `media-platform/` | `media-platform/instructions.md` |
 | P04 | `workspace/` | `workspace/instructions.md` |
 | P05 | `calendar/` | `calendar/instructions.md` |
