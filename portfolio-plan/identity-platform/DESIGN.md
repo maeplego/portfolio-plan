@@ -57,7 +57,7 @@
 ## ドメイン
 
 - ユーザー（email 一意、password_hash、disabled）
-- クライアント（confidential / public、redirect_uris 完全一致リスト）
+- クライアント（confidential / public、redirect_uris / post_logout_redirect_uris 完全一致、frontchannel_logout_uri）
 - 認可コード（hashed、60s、used_at）
 - リフレッシュトークン（hashed、family_id、ローテーション）
 - 同意（subject + client + scopes）
@@ -87,13 +87,15 @@
 - CORS は token endpoint に安易に `*` を付けない。通常の Web RP はサーバー側交換
 - モバイル（P15）は authorization code をアプリが受け取る。カスタム URL スキームより **claimed HTTPS** または Expo の推奨フロー。実装時は「public + PKCE」を崩さない
 - メール検証は MVP では省略可。その場合アカウント復旧を弱くする旨を README に書く
-- 本番利用しない、既知の非実装（PAR, CIBA, ログアウト完全仕様）をリストする
+- 本番利用しない、既知の非実装（PAR, CIBA, Back-Channel Logout）をリストする
+- RP-Initiated Logout は `end_session_endpoint` と登録済み `post_logout_redirect_uri`。Front-Channel Logout はセッションに紐づく RP の iframe（`iss` と `sid`）
 
 ## 他プロジェクトとの契約
 
 発行する ID Token クレーム（最低限）:
 
 - `iss`, `sub`, `aud`, `exp`, `iat`, `nonce`
+- `sid`（IdP ブラウザセッション。Front-Channel Logout の照合に使う）
 - `email`, `email_verified`（未検証なら false）
 - `name`
 
@@ -105,7 +107,7 @@
 
 ## デモ
 
-- sample-rp でログイン → UserInfo 表示 → ログアウト
+- sample-rp でログイン → UserInfo 表示 → ログアウト（IdP セッションも終わる。再ログインで Consent を飛ばしてログイン画面になる）
 - 故意に redirect_uri を改ざんして拒否されること
 - 同じ code の二回交換が失敗すること
 
@@ -114,3 +116,5 @@
 - ソーシャルログインの完全仲介（後回し）
 - エンタープライズ IdP（SAML）
 - パスキー（WebAuthn）は推奨フェーズ。MVP を遅らせない
+- PAR、CIBA
+- Back-Channel Logout（IdP から RP サーバーへの logout_token POST）
