@@ -57,7 +57,7 @@
 ## ドメイン
 
 - ユーザー（email 一意、password_hash、disabled）
-- クライアント（confidential / public、redirect_uris / post_logout_redirect_uris 完全一致、frontchannel_logout_uri）
+- クライアント（confidential / public、redirect_uris / post_logout_redirect_uris 完全一致、frontchannel_logout_uri / backchannel_logout_uri）
 - 認可コード（hashed、60s、used_at）
 - リフレッシュトークン（hashed、family_id、ローテーション）
 - 同意（subject + client + scopes）
@@ -87,8 +87,8 @@
 - CORS は token endpoint に安易に `*` を付けない。通常の Web RP はサーバー側交換
 - モバイル（P15）は authorization code をアプリが受け取る。カスタム URL スキームより **claimed HTTPS** または Expo の推奨フロー。実装時は「public + PKCE」を崩さない
 - メール検証は MVP では省略可。その場合アカウント復旧を弱くする旨を README に書く
-- 本番利用しない、既知の非実装（PAR, CIBA, Back-Channel Logout）をリストする
-- RP-Initiated Logout は `end_session_endpoint` と登録済み `post_logout_redirect_uri`。Front-Channel Logout はセッションに紐づく RP の iframe（`iss` と `sid`）
+- 本番利用しない、既知の非実装（PAR, CIBA）をリストする
+- RP-Initiated Logout は `end_session_endpoint` と登録済み `post_logout_redirect_uri`。Front-Channel Logout はセッションに紐づく RP の iframe（`iss` と `sid`）。Back-Channel Logout は同じ RP へ `logout_token` JWT を POST する
 
 ## 他プロジェクトとの契約
 
@@ -117,4 +117,3 @@
 - エンタープライズ IdP（SAML）
 - パスキー（WebAuthn）は推奨フェーズ。MVP を遅らせない
 - PAR、CIBA
-- Back-Channel Logout（IdP から RP サーバーへの logout_token POST）
