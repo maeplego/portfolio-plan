@@ -19,7 +19,7 @@ Cursor ルール（`.cursor/rules/`）はこのファイルの要約である。
 | P02 | `cloud-platform/` | `cloud-platform/AGENTS.md` |
 | P03 | `media-platform/` | `media-platform/AGENTS.md` |
 | P04 | `workspace/` | `workspace/instructions.md` |
-| P05 | `calendar/` | `calendar/instructions.md` |
+| P05 | `calendar/` | `calendar/AGENTS.md` |
 | P06 | `commerce-platform/` | `commerce-platform/instructions.md` |
 | P07 | `recommend/` | `recommend/instructions.md` |
 | P08 | `content-platform/` | `content-platform/instructions.md` |

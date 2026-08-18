@@ -19,6 +19,10 @@
                     {
                         "name":  "pf-media",
                         "path":  "../pf-media"
+                    },
+                    {
+                        "name":  "pf-calendar",
+                        "path":  "../pf-calendar"
                     }
                 ],
     "settings":  {
