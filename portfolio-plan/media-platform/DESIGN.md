@@ -31,7 +31,7 @@
 | `pf-media-api` | メタデータ、presign、共有リンク、クォータ、ジョブ状態 API |
 | `pf-media-web` | マイドライブ UI（アイデア 13 の画面デモ） |
 | `pf-media-processor` | 画像派生（sharp）。ローカルは常駐ワーカー、本番は Lambda または同等 |
-| `pf-media-infra` | MinIO + Compose。AWS なら S3, SQS, Lambda, CloudFront のモジュール（P02 を利用） |
+| `pf-media-infra` | Garage + Compose。AWS なら S3, SQS, Lambda, CloudFront のモジュール（P02 を利用） |
 
 `pf-media-web` は製品デモ用。P04 などは API だけを呼ぶ。
 
@@ -42,8 +42,8 @@
 | API | Go, PostgreSQL |
 | Web | Next.js |
 | 処理 | Node.js + sharp、または Go + 制約のあるリサイズ。Lambda に載せるなら sharp レイヤーが現実的 |
-| オブジェクト | MinIO（開発）、S3 / R2（本番） |
-| キュー | 開発 Redis または MinIO 通知 + ワーカー。本番 SQS + DLQ |
+| オブジェクト | Garage（開発、S3 互換）、S3 / R2（本番） |
+| キュー | 開発 Redis または Garage 通知 + ワーカー。本番 SQS + DLQ |
 | 認証 | P01 OIDC。サービス間は後で M2M（client credentials）を検討 |
 
 ## 設計思想
@@ -67,7 +67,7 @@
 ## 実装順序
 
 1. ローカルディスク版の CRUD で権限モデルを固める（すぐ捨ててよい）
-2. MinIO + presign + complete + クォータ
+2. Garage + presign + complete + クォータ
 3. 共有リンク（期限、パスワード任意）
 4. キュー + processor（同期関数として単体テストしてから非同期化）
 5. DLQ、再実行 API、ピクセル爆弾対策

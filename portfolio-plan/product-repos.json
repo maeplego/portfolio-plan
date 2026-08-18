@@ -1,0 +1,8 @@
+{
+  "folders": [
+    { "name": "workspace", "path": ".", "project": null },
+    { "name": "pf-identity", "path": "../pf-identity", "project": "P01" },
+    { "name": "pf-cloud-o11y", "path": "../pf-cloud-o11y", "project": "P02" },
+    { "name": "pf-media", "path": "../pf-media", "project": "P03" }
+  ]
+}

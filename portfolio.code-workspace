@@ -1,13 +1,23 @@
 {
-  "folders": [
-    {
-      "name": "workspace",
-      "path": "."
-    },
-    {
-      "name": "pf-identity",
-      "path": "../pf-identity"
-    }
-  ],
-  "settings": {}
+    "folders":  [
+                    {
+                        "name":  "workspace",
+                        "path":  "."
+                    },
+                    {
+                        "name":  "pf-identity",
+                        "path":  "../pf-identity"
+                    },
+                    {
+                        "name":  "pf-cloud-o11y",
+                        "path":  "../pf-cloud-o11y"
+                    },
+                    {
+                        "name":  "pf-media",
+                        "path":  "../pf-media"
+                    }
+                ],
+    "settings":  {
+
+                 }
 }

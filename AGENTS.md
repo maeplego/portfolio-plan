@@ -10,4 +10,4 @@
 
 「P01 を実装して」の読み込み対象は `identity-platform/AGENTS.md`。
 
-`DESIGN.md` と指示ファイルは git 管理する。`chat-context/` と `.env` は管理しない。製品コードは兄弟ディレクトリの製品リポジトリ（例: `../pf-identity`）に置く。
+`DESIGN.md` と指示ファイルは git 管理する。`chat-context/` と `.env` は管理しない。製品コードは兄弟ディレクトリの製品リポジトリ（例: `../pf-identity`）に置く。新規 `pf-*` 追加時は `portfolio-plan/product-repos.json` を更新し `scripts/sync-workspace.ps1` で `portfolio.code-workspace` を再生成する。

@@ -17,7 +17,7 @@ Cursor ルール（`.cursor/rules/`）はこのファイルの要約である。
 | --- | --- | --- |
 | P01 | `identity-platform/` | `identity-platform/AGENTS.md` |
 | P02 | `cloud-platform/` | `cloud-platform/AGENTS.md` |
-| P03 | `media-platform/` | `media-platform/instructions.md` |
+| P03 | `media-platform/` | `media-platform/AGENTS.md` |
 | P04 | `workspace/` | `workspace/instructions.md` |
 | P05 | `calendar/` | `calendar/instructions.md` |
 | P06 | `commerce-platform/` | `commerce-platform/instructions.md` |
@@ -43,6 +43,18 @@ Cursor ルール（`.cursor/rules/`）はこのファイルの要約である。
 - 個人情報・本番相当のダンプ
 
 この `project` リポジトリはアイデア・設計・共通指示・Cursor ルールを管理する。製品コードは **兄弟ディレクトリの製品リポジトリ**（例: `../pf-identity`）に置く。入れ子の `.git` は作らない。
+
+## VS Code / Cursor ワークスペース
+
+複数の `pf-*` を同時に開くときは `portfolio.code-workspace` を使う。正本は `portfolio-plan/product-repos.json` である。
+
+新しい製品リポジトリを作ったら:
+
+1. `portfolio-plan/product-repos.json` に `{ "name": "pf-…", "path": "../pf-…", "project": "Pxx" }` を追加する
+2. `project/` で `.\scripts\sync-workspace.ps1` を実行する（存在しない path は警告してスキップ）
+3. 対象プロジェクトの `AGENTS.md` に製品リポジトリパスを書く（既存 P01–P03 と同様）
+
+`portfolio.code-workspace` は手編集せず、上記スクリプトで再生成する。
 
 ## チャット記録
 
