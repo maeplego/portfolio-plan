@@ -9,4 +9,4 @@ alwaysApply: true
 
 「P01 を実装して」の読み込み対象は `identity-platform/AGENTS.md`。
 
-`DESIGN.md` は git 管理する。`chat-context/` は管理しない。製品コードは兄弟の製品リポジトリに置く。
+`DESIGN.md` と `portfolio-plan/<project>/docs/` は git 管理する。`chat-context/` は管理しない。製品コードは兄弟の製品リポジトリに置く。書類の置き方は `portfolio-plan/documentation.md`。

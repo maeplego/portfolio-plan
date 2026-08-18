@@ -1,0 +1,144 @@
+# P05 API 仕様書
+
+| 項目 | 値 |
+| --- | --- |
+| プロジェクト | P05 calendar |
+| 対象スライス | 1–3 実装済みの HTTP。OpenAPI ファイルは未作成（本ファイルが人間向け正本） |
+| 最終更新 | 2026-08-18 |
+| 基準 | `http://localhost:8095`（Compose）。時刻は Instant の ISO-8601 |
+
+機械可読 OpenAPI は `packages/openapi` 予定。できたあと本ファイルは要約に落としてよい。
+
+## 共通
+
+Instant は `Temporal.Instant.toString()` 相当（例 `2026-03-02T00:00:00Z`）。エラー本文:
+
+```json
+{ "error": { "code": "slot_unavailable", "message": "slot unavailable" } }
+```
+
+ホスト API は `X-Dev-Host-Sub: <sub>`。`Content-Type: application/json`。
+
+## 運用
+
+| メソッド | パス | 認証 | 成功 | 説明 |
+| --- | --- | --- | --- | --- |
+| GET | `/health` | なし | 200 `{ "ok": true }` | liveness |
+| GET | `/ready` | なし | 200 / 503 | store ping |
+
+## 公開
+
+### GET `/public/:slug/slots`
+
+クエリ: `rangeStart`（必須）、`rangeEnd`（必須）、`now`（任意・テスト用）。
+
+成功 200:
+
+```json
+{
+  "slug": "casual-30",
+  "name": "Casual 30",
+  "durationMinutes": 30,
+  "hostTimeZone": "Asia/Tokyo",
+  "starts": ["2026-03-02T00:00:00Z"]
+}
+```
+
+| 条件 | 状態 |
+| --- | --- |
+| range 欠落・不正・14×24h 超 | 400 `invalid_request` |
+| slug なし | 404 `not_found` |
+
+PII フィールドを足さない。
+
+### POST `/public/:slug/book`
+
+```json
+{
+  "slotStart": "2026-03-02T00:00:00Z",
+  "name": "Guest A",
+  "email": "a@example.test",
+  "guestTimeZone": "America/Los_Angeles",
+  "idempotencyKey": "idem-aaaaaaaa"
+}
+```
+
+| 条件 | 状態 | 本文の要点 |
+| --- | --- | --- |
+| 新規確定 | 201 | `id`, `start`, `end`, `guestTimeZone`, `cancelToken` |
+| 同じ冪等キー・同じ内容 | 200 | 上に同じだが `cancelToken` なし |
+| オファー外・重なり | 409 | `slot_unavailable`。PII なし |
+| 冪等キーの中身不一致 | 409 | `conflict` |
+| バリデーション / 不正 TZ | 400 | |
+| slug なし | 404 | |
+
+`cancelToken` はログに出さない。再 GET できない。
+
+## ホスト `/v1`
+
+すべて開発ヘッダ必須。不足は 401。他人の id は 404。
+
+### POST `/v1/event-types`
+
+| フィールド | 制約 |
+| --- | --- |
+| slug | 1–64、`^[a-z0-9]+(?:-[a-z0-9]+)*$`、グローバル一意 |
+| name | 1–120 |
+| durationMinutes | 正の整数 |
+| bufferMinutes | 0 以上、省略時 0 |
+| minNoticeMinutes | 0 以上、省略時 0 |
+| hostTimeZone | IANA |
+| rules | `{ dayOfWeek: 1–7, startLocal, endLocal }[]` |
+
+201: id, slug, name, duration, buffer, minNotice, hostTimeZone, rules, overrides。slug 衝突 409。
+
+### GET `/v1/event-types`
+
+200 `{ "eventTypes": [ ... ] }`。自ホストのみ。
+
+### GET `/v1/event-types/:id`
+
+200 1 件。または 404。
+
+### PUT `/v1/event-types/:id/rules`
+
+`{ "rules": [ ... ] }` 全置換。200 は GET と同じ形。
+
+### PUT `/v1/event-types/:id/overrides`
+
+`{ "overrides": [ { "date": "YYYY-MM-DD", "blocked": true } ] }` 全置換。
+
+### GET `/v1/event-types/:id/slots`
+
+公開 slots と同じクエリ。本文は `{ "starts": [ ... ] }` のみ。
+
+### GET `/v1/event-types/:id/bookings`
+
+確定予約。ゲスト氏名・メールあり。公開には出さない。
+
+```json
+{
+  "bookings": [
+    {
+      "id": "...",
+      "start": "2026-03-02T00:00:00Z",
+      "end": "2026-03-02T00:30:00Z",
+      "guestName": "Guest A",
+      "guestEmail": "a@example.test",
+      "guestTimeZone": "America/Los_Angeles",
+      "status": "confirmed"
+    }
+  ]
+}
+```
+
+`cancelToken` / ハッシュは返さない。
+
+## 未実装（契約予約）
+
+| 予定 | スライス |
+| --- | --- |
+| `POST /bookings/:token/cancel` | 5 |
+| ICS ダウンロード | 5 |
+| P10 内部 API | 7 |
+| ホスト OIDC Bearer | 4 |

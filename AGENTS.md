@@ -7,6 +7,7 @@
 3. そのフォルダの `AGENTS.md`（なければ `instructions.md`）
 4. そこに列挙された overview / `DESIGN.md` / 元アイデア md
 5. そのフォルダの `chat-context/` をファイル名昇順で全部
+6. 要件・仕様・設計などの書類を書く／直すときは `portfolio-plan/documentation.md`。対象に `docs/` があれば `docs/README.md` から開く
 
 「P01 を実装して」の読み込み対象は `identity-platform/AGENTS.md`。
 

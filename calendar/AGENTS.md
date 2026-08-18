@@ -8,6 +8,7 @@
 4. `portfolio-plan/calendar/DESIGN.md`
 5. `portfolio-idea/11-booking-scheduler.md`
 6. `calendar/chat-context/` の `P05_*.md` をファイル名昇順で全て
+7. 書類の更新・面接説明では `portfolio-plan/documentation.md` と `portfolio-plan/calendar/docs/README.md`
 
 P10 結合時は `portfolio-plan/talent-platform/DESIGN.md` も読む。
 

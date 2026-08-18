@@ -12,5 +12,6 @@ alwaysApply: true
 - メソッド／小さな単位ごとにコミット。まとまった機能でもコミット
 - コミットメッセージはなぜを書く。`--no-verify` は使わない
 - 適度にリファクタし、意図が分かるコメントを残す（何をしているかより、なぜか）
-- DESIGN.md と `chat-context/` は git 管理外
+- `DESIGN.md` と `portfolio-plan/**/docs/` は git 管理する。`chat-context/` は管理しない
 - 一往復ごとに `chat-context/Pxx_NNNNN_要約.md` を新規作成する
+- 要件・仕様・設計などの正式書類は `portfolio-plan/documentation.md` に従う

@@ -1,0 +1,14 @@
+---
+description: 要件・仕様・設計など人間向け書類の置き方
+alwaysApply: true
+---
+
+# 書類
+
+詳細は `portfolio-plan/documentation.md`。要約:
+
+- 実装チャット用の短い設計は `portfolio-plan/<project>/DESIGN.md`
+- 要件定義・外部仕様・内部設計・テスト仕様・API・図表は `portfolio-plan/<project>/docs/`（Git 管理）
+- 未着手 Pxx に空の `docs/` は作らない。見本は `calendar/docs/`
+- 矛盾したらテストとコードが正。次に `DESIGN.md`。docs は追随
+- 未実装を受け入れ条件に「できる」と書かない

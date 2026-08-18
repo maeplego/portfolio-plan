@@ -265,6 +265,7 @@ flowchart TB
 | --- | --- |
 | 次に何を作るか決める | `portfolio-plan/00-overview.md` と `portfolio-plan/instructions.md` |
 | 特定プロジェクトを実装する | 共通指示 + そのプロジェクトの `AGENTS.md` + DESIGN.md + 元アイデア + `chat-context/` 一式 |
+| 要件定義・仕様・設計・テスト書類 | `portfolio-plan/documentation.md`。見本は `calendar/docs/`。`DESIGN.md` は実装チャット用の短文 |
 | 他プロジェクトとの API を実装する | 利用側と提供側、両方の指示と DESIGN.md |
 | インフラに載せる | アプリの DESIGN + `cloud-platform/DESIGN.md` |
 | 複数 Pxx の横断デモ | `portfolio-plan/integration-demo.md` + `cloud-platform/DESIGN.md` |
