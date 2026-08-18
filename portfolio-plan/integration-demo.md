@@ -69,7 +69,7 @@ docker compose -f compose.yaml --env-file .env up --build
 
 ## 連携デモ（Kubernetes）
 
-> **ステータス**: `pf-cloud-k8s` に骨組みあり。実機 smoke は **`docker-desktop` context 必須**（`scripts/cluster-smoke.ps1`）。standalone kind では検証しない。
+> **ステータス**: Docker Desktop Kubernetes で IdP ログイン → media ホームまで `oidc-smoke.ps1` が通る。standalone kind では検証しない。
 
 ### 0. kubectl context（必須）
 
@@ -126,15 +126,18 @@ kubectl wait --for=condition=ready pod -l app=platform-postgres -n platform --ti
 | P01 IdP | http://idp.localhost | issuer |
 | P01 admin | http://admin.localhost | |
 | P03 media web | http://media.localhost | OIDC 必須。未ログインは `/login` |
-| Grafana | http://grafana.localhost | 学習用 admin/admin |
+| Grafana | http://grafana.localhost | 学習用 admin/admin。Tempo を既定 datasource |
+| Garage S3 | http://garage.localhost | 署名付き GET/PUT（ブラウザと media-web） |
 
 ### 6. デモシナリオ（5 分）
 
-1. media web を開く → IdP ログインへリダイレクト
-2. デモユーザーでログイン → マイドライブ表示
-3. 画像をアップロード → 数秒後サムネ表示
-4. Grafana を開く → media-api の trace が Collector 経由で見える
-5. （任意）別ブラウザ / シークレットでユーザー B → A のファイルが見えない
+学習用デモユーザー（本番アカウントではない）。メール `demo@example.test`。パスワードは overlay `IDENTITY_SEED_DEMO_PASSWORD`（`pf-cloud-k8s` の `idp-env.yaml`）。
+
+1. [http://media.localhost](http://media.localhost) を開く → IdP ログインへリダイレクト
+2. 上記デモユーザーでログイン → 同意で許可 → マイドライブ（容量表示）
+3. 画像をアップロード → 数秒後サムネ表示（オブジェクト URL は `garage.localhost`）
+4. [http://grafana.localhost](http://grafana.localhost) → Tempo Explore で `media-api` の trace
+5. （任意）別ブラウザ / シークレットで別ユーザーを登録すると、A のファイルは見えない
 
 ### 7. 片付け
 
@@ -150,7 +153,7 @@ Docker Desktop Kubernetes を無効化してもよい。単体 Compose デモに
 ```
 Docker Desktop Kubernetes
 ┌──────────────────────────────────────────────────────────┐
-│ Ingress (nginx)  idp.localhost / media.localhost / grafana.localhost
+│ Ingress (nginx)  idp / media / grafana / garage.localhost
 ├──────────────────────────────────────────────────────────┤
 │ namespace: platform                                       │
 │   postgres (DB: identity, media)                          │
@@ -195,9 +198,9 @@ Docker Desktop Kubernetes
 2. `pf-cloud-k8s` リポジトリ作成、`product-repos.json` 登録（**完了**）
 3. overlay 骨組み（namespace / ingress / placeholder）（**完了**）
 4. platform（postgres + redis + garage）（**完了**）
-5. P01 + P03 manifest 接続、OIDC クライアント seed（**骨組み完了** — 実機検証待ち）
-6. P02 o11y 最小を platform に載せる（**完了**）
-7. `cluster-smoke.ps1`（**docker-desktop 必須**）（**完了** — 1.34.8 + load-images）、Ingress OIDC 実機 E2E（任意）
+5. P01 + P03 manifest 接続、OIDC クライアント seed（**完了**）
+6. P02 o11y 最小を platform に載せる（**完了**）。media-api は OTLP、Grafana に Tempo
+7. `cluster-smoke.ps1` + `oidc-smoke.ps1`（ログイン〜同意〜media ホーム）
 
 ## 関連ドキュメント
 
