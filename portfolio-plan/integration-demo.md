@@ -108,6 +108,7 @@ cd pf-cloud-k8s
 .\scripts\cluster-smoke.ps1
 .\scripts\expose-ingress.ps1
 .\scripts\oidc-smoke.ps1
+.\scripts\demo-smoke.ps1
 ```
 
 ### 4. 起動待ち
@@ -200,7 +201,7 @@ Docker Desktop Kubernetes
 4. platform（postgres + redis + garage）（**完了**）
 5. P01 + P03 manifest 接続、OIDC クライアント seed（**完了**）
 6. P02 o11y 最小を platform に載せる（**完了**）。media-api は OTLP、Grafana に Tempo
-7. `cluster-smoke.ps1` + `oidc-smoke.ps1`（ログイン〜同意〜media ホーム）
+7. `cluster-smoke.ps1` + `oidc-smoke.ps1` + `demo-smoke.ps1`（ログイン〜アップロード〜サムネ〜Tempo）
 
 ## 関連ドキュメント
 
