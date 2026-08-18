@@ -3,7 +3,7 @@
 | 項目 | 値 |
 | --- | --- |
 | プロジェクト | P05 calendar |
-| 対象スライス | 1–3 実装済みの HTTP。OpenAPI ファイルは未作成（本ファイルが人間向け正本） |
+| 対象スライス | 1–7 実装済みの HTTP。OpenAPI ファイルは未作成（本ファイルが人間向け正本） |
 | 最終更新 | 2026-08-18 |
 | 基準 | `http://localhost:8095`（Compose）。時刻は Instant の ISO-8601 |
 
@@ -74,6 +74,28 @@ PII フィールドを足さない。
 
 `cancelToken` はログに出さない。再 GET できない。
 
+### POST `/public/bookings/cancel`
+
+```json
+{ "cancelToken": "<平文トークン>" }
+```
+
+| 条件 | 状態 | 本文の要点 |
+| --- | --- | --- |
+| 有効トークン | 200 | `{ "status": "cancelled" }`。枠は exclusion 対象外になり再予約可 |
+| トークン欠落 | 400 | `invalid_request` |
+| 不明・取消済み | 404 | PII なし |
+
+### GET `/public/bookings/ics`
+
+クエリ: `token`（必須、`cancelToken` 平文）。
+
+| 条件 | 状態 | 本文 |
+| --- | --- | --- |
+| 有効 | 200 | `text/calendar`。`Content-Disposition: attachment` |
+| 欠落 | 400 | |
+| 不明 | 404 | |
+
 ## ホスト `/v1`
 
 すべて開発ヘッダ必須。不足は 401。他人の id は 404。
@@ -134,11 +156,54 @@ PII フィールドを足さない。
 
 `cancelToken` / ハッシュは返さない。
 
+## 内部 `/internal/v1`（P10）
+
+`CALENDAR_INTERNAL_TOKEN` が空なら **503** `unavailable`。設定時は `Authorization: Bearer ${CALENDAR_INTERNAL_TOKEN}` 必須。不正は 401。
+
+### POST `/internal/v1/event-types`
+
+ホスト API と同じイベントタイプフィールドに加え:
+
+| フィールド | 制約 |
+| --- | --- |
+| hostSub | 必須。P01 の `sub`（企業ユーザー） |
+| externalRef | 任意。同一 host 内で冪等。既存があれば 200 で返す（slug 衝突は起こさない） |
+
+201: 新規。200: `externalRef` 一致で既存返却。
+
+### GET `/internal/v1/hosts/:sub/event-types`
+
+200 `{ "eventTypes": [ ... ] }`。ホスト API と同形（`externalRef` 含む）。
+
+### GET `/internal/v1/bookings/:id`
+
+200:
+
+```json
+{
+  "booking": {
+    "id": "...",
+    "eventTypeId": "...",
+    "start": "...",
+    "end": "...",
+    "guestName": "...",
+    "guestEmail": "...",
+    "guestTimeZone": "...",
+    "status": "confirmed"
+  },
+  "eventType": {
+    "slug": "...",
+    "name": "...",
+    "hostTimeZone": "..."
+  }
+}
+```
+
+404: id なし。`cancelToken` は返さない。
+
 ## 未実装（契約予約）
 
-| 予定 | スライス |
+| 予定 | 備考 |
 | --- | --- |
-| `POST /bookings/:token/cancel` | 5 |
-| ICS ダウンロード | 5 |
-| P10 内部 API | 7 |
-| ホスト OIDC Bearer | 4 |
+| `calendar.booking.confirmed` イベント発行 | P10 結合時 |
+| OpenAPI ファイル | `packages/openapi` |

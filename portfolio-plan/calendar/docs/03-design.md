@@ -3,7 +3,7 @@
 | 項目 | 値 |
 | --- | --- |
 | プロジェクト | P05 calendar |
-| 対象スライス | 1–3 の実装。4–7 は構成上の予定のみ |
+| 対象スライス | 1–7 の実装 |
 | 最終更新 | 2026-08-18 |
 | 矛盾時の正 | 自動テストと製品コード、次に `DESIGN.md` |
 
@@ -158,13 +158,13 @@ Postgres は INSERT 文の評価と制約をストレージのロック下で行
 
 ## 7. デプロイ（現状）
 
-Compose: API `:8095`、Postgres `:5434`。`CALENDAR_DATABASE_URL` が空ならメモリ（複数プロセスで共有されない。デモに使わない）。
+Compose: Web `:3005`、API `:8095`、Postgres `:5434`、Mailhog `:8025`、worker。`CALENDAR_DATABASE_URL` が空ならメモリ（複数プロセスで共有されない。デモに使わない）。
 
-## 8. 後続スライスで増える内部要素
+## 8. スライス 4–7 で増えた内部要素
 
 | スライス | 設計インパクト |
 | --- | --- |
 | 4 Web + OIDC | book は Route Handler に移さない。BFF は API を呼ぶだけ |
 | 5 cancel | トークン照合はハッシュ比較。status 変更後は exclusion 対象外 |
 | 6 worker | `start_at`（UTC）とサーバー now でリマインド。ゲスト TZ は本文用 |
-| 7 P10 | 同じ Instant 契約。ホストは企業ユーザーの `sub` |
+| 7 P10 | 同じ Instant 契約。ホストは企業ユーザーの `sub`。`external_ref` で求人と event type を紐付け |

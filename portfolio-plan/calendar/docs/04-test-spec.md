@@ -3,7 +3,7 @@
 | 項目 | 値 |
 | --- | --- |
 | プロジェクト | P05 calendar |
-| 対象スライス | 1–3。自動化は `npm test`（slot-engine 13 + api 13） |
+| 対象スライス | 1–7。自動化は `npm test`（slot-engine 13 + api 24 + worker 3） |
 | 最終更新 | 2026-08-18 |
 | 矛盾時の正 | 製品リポジトリの vitest。本表と食い違ったらテストを直すか本表を追随 |
 
@@ -63,15 +63,36 @@ Clock はテストで東京 2026-03-01 00:00 などに固定する。
 | TS-B03 | 同時 2 book | `Promise.all` で同一 slot、別メール・別冪等キー。ステータス集合が `{201,409}`。409 の code は `slot_unavailable`。失敗 JSON に `@` が無い | FR-09 |
 | TS-B04 | 捏造 Instant | 東京 8:00（ルール外）を POST | 409。INSERT しない | FR-04 |
 | TS-B05 | 冪等再送 | 同じキー・同じ本文の 2 回目は 200。`cancelToken` 無し（再発行しない） | FR-10 |
+| TS-B06 | キャンセル | 201 の `cancelToken` で cancel → 200 `cancelled`。再 GET slots に Instant が戻る | |
+| TS-B07 | 不正 cancel トークン | 404。JSON に `@` なし | |
+| TS-B08 | ICS | cancelToken クエリで 200 `text/calendar`、`BEGIN:VCALENDAR` | |
 
-## 5. 未自動化（既知）
+## 4.1 内部 API
+
+| ID | 観点 | 期待 |
+| --- | --- | --- |
+| TS-I01 | externalRef 冪等 | 同一 host + ref の 2 回目 200、slug は初回のまま |
+| TS-I02 | ホスト別一覧 | `GET .../hosts/:sub/event-types` で 1 件 |
+| TS-I03 | 予約詳細 | public book 後 `GET .../bookings/:id` で event slug + guestEmail |
+| TS-I04 | 不正 Bearer | 401 |
+
+## 5. ワーカー
+
+| ID | 観点 | 期待 |
+| --- | --- | --- |
+| TS-W01 | 24h 窓 | 開始 24h 前後の予約だけ 24h 種別 |
+| TS-W02 | 1h 窓 | 開始 1h 前後の予約だけ 1h 種別 |
+| TS-W03 | 送信済みスキップ | `reminder_sent` ありなら再送しない |
+
+## 6. 未自動化（既知）
 
 | ID | 観点 | いまの確認方法 |
 | --- | --- | --- |
 | TS-M01 | Postgres gist が 23P01 を返す | Compose 起動後、同じ枠を並列 curl。将来 Testcontainers 可 |
-| TS-M02 | ゲスト TZ 切替 UI | スライス 4。API では `starts` が TZ クエリを持たないことで代替 |
-| TS-M03 | キャンセルリンク | スライス 5 |
+| TS-M02 | ゲスト TZ 切替 UI | `/book/:slug` 手動。API では `starts` が TZ クエリを持たないことで代替 |
+| TS-M03 | キャンセル画面 | `/cancel?token=` 手動。API は TS-B06 |
 | TS-M04 | 2 タブ手動デモ | UI 後。API では TS-B03 |
+| TS-M05 | Mailhog でリマインド本文 | Compose 手動 |
 
 失敗したテストを skip して緑にしない。Postgres が無い環境で TS-M01 を skip する場合は、未実施と README に書く。
 

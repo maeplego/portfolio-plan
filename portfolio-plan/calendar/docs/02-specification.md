@@ -3,7 +3,7 @@
 | 項目 | 値 |
 | --- | --- |
 | プロジェクト | P05 calendar |
-| 対象スライス | 1–4 の現行 API と Web。キャンセル API は未実装 |
+| 対象スライス | 1–7 の現行 API・Web・ワーカー |
 | 最終更新 | 2026-08-18 |
 | 矛盾時の正 | 自動テストと製品コード、次に `DESIGN.md`。HTTP の細部は [05-api.md](05-api.md) |
 
@@ -72,7 +72,8 @@ slug 重複は他ホストと衝突しても 409。公開 URL の一意性が目
 - 同じ event type + 同じ冪等キー:
   - 同じ slot と同じメール → 200。予約は増やさない。`cancelToken` は再発行しない（初回の平文は再送できない）
   - 中身が違う → 409 `conflict`（キーの使い回し）
-- キャンセル API は未実装。トークンを持っていても現状取り消せない（既知）
+- キャンセル: `POST /public/bookings/cancel` に平文 `cancelToken`。成功で `status: cancelled`、枠は再オファー
+- ICS: `GET /public/bookings/ics?token=` で `.ics` ダウンロード（キャンセル済みは 404）
 
 ### 4.3 同時予約
 
@@ -107,14 +108,24 @@ DST: ホスト TZ で存在しない壁時計は枠にしない。秋の重複�
 | イベント作成 | `/host/event-types/new` | 初期ルール付きで POST `/v1/event-types` |
 | イベント詳細 | `/host/event-types/:id` | ルール・オファー枠・確定予約 |
 
+| キャンセル | `/cancel?token=` | トークンで API cancel を呼ぶ。成功後は枠再表示の案内 |
+
 ゲスト TZ セレクタは `/book/:slug` のラベルのみ変更する。`starts` 配列は API が返した Instant のまま。
 
-キャンセル画面はスライス 5。
+予約完了画面から ICS ダウンロードとキャンセルページへのリンクあり。
 
-## 8. 既知の制限（現状を偽らない）
+## 8. リマインド（スライス 6）
+
+ワーカーが Postgres をポーリングし、開始 24 時間前・1 時間前にゲストメールへ通知（開発は Mailhog `:8025`）。`reminder_sent` で二重送信を防ぐ。
+
+## 9. 内部 API（スライス 7 — P10）
+
+Bearer `CALENDAR_INTERNAL_TOKEN`。求人ごとに `externalRef` 付き event type をプロビジョニングし、予約 id からゲスト・イベントメタデータを取得する。ゲスト向け公開 URL の slug は内部 API 作成時に指定。
+
+## 10. 既知の制限（現状を偽らない）
 
 - UI なし → **Web UI あり**（http://localhost:3005）。curl も引き続き可
-- ホスト認証は開発ヘッダ
-- キャンセル・メール・ICS・リマインドなし
+- ホスト認証は開発ヘッダまたは OIDC Bearer（`CALENDAR_DEV_AUTH=false`）
+- **`calendar.booking.confirmed` イベント未発行**（P10 結合時）
 - 公開 API のレート制限なし
 - 単体テストの同時 book はメモリ store。Postgres 上の同時 INSERT は Compose 手動または未自動化
