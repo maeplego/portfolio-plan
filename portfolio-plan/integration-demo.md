@@ -28,11 +28,13 @@
 - Windows 10/11 または macOS
 - [Docker Desktop](https://www.docker.com/products/docker-desktop/)（Compose 単体デモでも使用）
 - **連携デモ追加**: Docker Desktop → Settings → Kubernetes → **Enable Kubernetes**
-- Docker Desktop に割り当て RAM **10 GB 以上** 推奨（8 GB 最低、他アプリを閉じる）
+- Kubernetes バージョンは **1.34.x** を推奨。**1.36.x は kubeadm init が `wait-control-plane` で失敗することがある**（このマシンでは 1.34.8 で起動確認）
+- Docker Desktop に割り当て RAM **10 GB 以上** 推奨（8 GB 最低、他アプリを閉じる）。**2 GB 程度では kubeadm init がタイムアウトする**
+- `.wslconfig` の `memory=` 変更は Docker Desktop 再起動だけでは効かない。`wsl --shutdown` のあと Desktop を起動する
 - `kubectl`（Docker Desktop 同梱）
 - 兄弟リポジトリを clone 済み（後述「リポジトリ配置」）
 
-AWS アカウント・LocalStack・kind の別途インストールは **不要**（CI 用 kind overlay は将来）。
+AWS アカウント・LocalStack・**standalone kind** の別途インストールは **不要**（CI 用 kind overlay は将来。レビュア手順では使わない）
 
 ## リポジトリ配置
 
@@ -67,7 +69,17 @@ docker compose -f compose.yaml --env-file .env up --build
 
 ## 連携デモ（Kubernetes）
 
-> **ステータス**: `pf-cloud-k8s` に骨組みあり。CI/ローカル smoke は `scripts/smoke.ps1`（kustomize + client dry-run）。実 Pod 起動・OIDC は Docker Desktop / kind 上で別途確認。
+> **ステータス**: `pf-cloud-k8s` に骨組みあり。実機 smoke は **`docker-desktop` context 必須**（`scripts/cluster-smoke.ps1`）。standalone kind では検証しない。
+
+### 0. kubectl context（必須）
+
+```powershell
+kubectl config use-context docker-desktop
+kubectl config current-context   # docker-desktop であること
+kubectl get nodes
+```
+
+`kind-kind` 等の standalone kind context のまま apply しない。`scripts/up.ps1` / `cluster-smoke.ps1` は context 不一致で停止する。
 
 ### 1. Kubernetes を有効化
 
@@ -79,19 +91,22 @@ kubectl config current-context
 kubectl get nodes
 ```
 
-### 2. イメージをビルド
+### 2. イメージをビルドしてノードへ載せる
+
+Docker Desktop Kubernetes（kind モード）は **ホストの Docker イメージを自動では見ない**。`desktop-control-plane` の containerd へ import する。
 
 ```powershell
 cd pf-cloud-k8s
 .\scripts\build-images.ps1
+.\scripts\load-images.ps1
 ```
 
 ### 3. 連携 overlay を apply
 
 ```powershell
 cd pf-cloud-k8s
-.\scripts\smoke.ps1    # manifest 検証（コミット前 gate）
-.\scripts\up.ps1
+.\scripts\cluster-smoke.ps1
+# manifest smoke + build + apply + Pod Ready + /health 確認（docker-desktop のみ）
 ```
 
 ### 4. 起動待ち
@@ -166,8 +181,11 @@ Docker Desktop Kubernetes
 
 | 症状 | 確認 |
 | --- | --- |
+| kubeadm init / wait-control-plane timeout | RAM を 10 GB 前後に。`.wslconfig` 変更後は `wsl --shutdown` → Docker Desktop 起動。それでも失敗なら Kubernetes **1.36.x を 1.34.x に下げる** |
+| context が kind-kind | standalone `kind delete cluster` → Docker Desktop K8s を有効化 → `use-context docker-desktop` |
+| `assert-docker-desktop` で停止 | 上記のとおり Docker Desktop K8s を Ready にしてから再実行 |
 | Pod Pending | `kubectl describe pod`。Docker Desktop の CPU/RAM 上限 |
-| ImagePullBackOff | イメージをローカル build したか。`imagePullPolicy: IfNotPresent` |
+| ImagePullBackOff（pf-* ローカルイメージ） | `.\scripts\load-images.ps1` を実行。`imagePullPolicy: IfNotPresent` でもノードに無いと Hub へ取りに行く |
 | Ingress 404 | Ingress クラス・path 規則。`kubectl describe ingress` |
 | OIDC redirect 不一致 | client redirect URI が overlay の media URL と一致 |
 | Grafana に trace が無い | `OTEL_EXPORTER_OTLP_ENDPOINT` が platform collector を指すか |
@@ -180,7 +198,7 @@ Docker Desktop Kubernetes
 4. platform（postgres + redis + garage）（**完了**）
 5. P01 + P03 manifest 接続、OIDC クライアント seed（**骨組み完了** — 実機検証待ち）
 6. P02 o11y 最小を platform に載せる（**完了**）
-7. `build-images.ps1` / `up.ps1` / `smoke.ps1`（**完了**）、クラスタ実機 E2E（任意）
+7. `cluster-smoke.ps1`（**docker-desktop 必須**）（**完了** — 1.34.8 + load-images）、Ingress OIDC 実機 E2E（任意）
 
 ## 関連ドキュメント
 
