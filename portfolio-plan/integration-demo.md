@@ -13,15 +13,23 @@
 - 単体デモでは dev 認証・stub で **他 Pxx なしでも完結** する（`00-overview.md` の単独起動規約）。
 - 連携デモでは **本物の OIDC・共有 Postgres・Ingress** で横断フローを見せる。
 
-## 連携デモの初版スコープ（portfolio-integration）
+## 連携デモの overlay 群
 
-| 含める | リポジトリ | 役割 |
+12 GB の Docker Desktop Kubernetes を前提に、全 Pxx を一度は使うための **用途別 overlay 群** に分ける。
+
+| Overlay | 含める | 主目的 |
 | --- | --- | --- |
-| P01 IdP + admin | `pf-identity` | OIDC 発行。media web が PKCE ログイン |
-| P02 観測（最小） | `pf-cloud-o11y` | OTLP Collector + Grafana（トレース確認） |
-| P03 media | `pf-media` | api / web / processor。Garage 互換オブジェクト |
+| `portfolio-integration-a-foundation` | P01, P02, P03 | OIDC + media + o11y の最小 smoke |
+| `portfolio-integration-b-collab` | P01, P02, P03, P04, P11 | workspace / portal の連携 |
+| `portfolio-integration-c-scheduling-talent` | P01, P02, P05, P07, P10 | 採用ドメイン |
+| `portfolio-integration-d-commerce` | P01, P02, P03, P06, P07, P11, P12, P13 | commerce 本線 |
+| `portfolio-integration-e-content` | P01, P02, P03, P08, P11 | content / media / portal |
+| `portfolio-integration-f-ops` | P01, P02, P09, P12, P14, P15 | 業務 / 個人向け軽量群 |
 
-**含めない（初版）**: P04 以降、P06 フル、AWS S3→SQS→Lambda。追加は overlay に Namespace を足す形で拡張する。
+現時点の実装済み K8s overlay:
+
+- `portfolio-integration` + `docker-desktop`（foundation 相当）
+- `portfolio-integration-c-scheduling-talent` + `docker-desktop-c-scheduling-talent`
 
 ## 前提（レビュア環境）
 
@@ -69,7 +77,7 @@ docker compose -f compose.yaml --env-file .env up --build
 
 ## 連携デモ（Kubernetes）
 
-> **ステータス**: Docker Desktop Kubernetes で IdP ログイン → media ホームまで `oidc-smoke.ps1` が通る。standalone kind では検証しない。
+> **ステータス**: foundation overlay は IdP ログイン → media ホームまで `oidc-smoke.ps1` / `demo-smoke.ps1` が通る。scheduling-talent overlay は `cluster-smoke-c-scheduling-talent.ps1` で予約確定 → `interview` 更新まで確認する。standalone kind では検証しない。
 
 ### 0. kubectl context（必須）
 
@@ -93,7 +101,7 @@ kubectl get nodes
 
 ### 2. イメージをビルドしてノードへ載せる
 
-Docker Desktop Kubernetes（kind モード）は **ホストの Docker イメージを自動では見ない**。`desktop-control-plane` の containerd へ import する。
+Docker Desktop Kubernetes（kind モード）は **ホストの Docker イメージを自動では見ない**。`desktop-control-plane` の containerd へ import する。`build-images.ps1` は foundation に加え P05 / P10 イメージも build する。
 
 ```powershell
 cd pf-cloud-k8s
@@ -103,12 +111,22 @@ cd pf-cloud-k8s
 
 ### 3. 連携 overlay を apply
 
+#### foundation（P01 + P03 + o11y）
+
 ```powershell
 cd pf-cloud-k8s
 .\scripts\cluster-smoke.ps1
 .\scripts\expose-ingress.ps1
 .\scripts\oidc-smoke.ps1
 .\scripts\demo-smoke.ps1
+```
+
+#### scheduling-talent（P05 + P10）
+
+```powershell
+cd pf-cloud-k8s
+.\scripts\cluster-smoke-c-scheduling-talent.ps1
+.\scripts\expose-ingress.ps1
 ```
 
 ### 4. 起動待ち
@@ -127,10 +145,15 @@ kubectl wait --for=condition=ready pod -l app=platform-postgres -n platform --ti
 | P01 IdP | http://idp.localhost | issuer |
 | P01 admin | http://admin.localhost | |
 | P03 media web | http://media.localhost | OIDC 必須。未ログインは `/login` |
+| P05 calendar web | http://calendar.localhost | 公開予約 UI |
+| P05 calendar API | http://calendar-api.localhost | public / internal API |
+| P10 talent API | http://talent.localhost | talent API |
 | Grafana | http://grafana.localhost | 学習用 admin/admin。Tempo を既定 datasource |
 | Garage S3 | http://garage.localhost | 署名付き GET/PUT（ブラウザと media-web） |
 
 ### 6. デモシナリオ（5 分）
+
+#### foundation
 
 学習用デモユーザー（本番アカウントではない）。メール `demo@example.test`。パスワードは overlay `IDENTITY_SEED_DEMO_PASSWORD`（`pf-cloud-k8s` の `idp-env.yaml`）。
 
@@ -140,11 +163,28 @@ kubectl wait --for=condition=ready pod -l app=platform-postgres -n platform --ti
 4. [http://grafana.localhost](http://grafana.localhost)（学習用 admin/admin）→ ホーム **Media API traces** → Tempo Explore。`{resource.service.name="media-api"}`。`/health` は出さない
 5. （任意）別ブラウザ / シークレットで別ユーザーを登録すると、A のファイルは見えない
 
+#### scheduling-talent
+
+`cluster-smoke-c-scheduling-talent.ps1` は次を自動で確認する。
+
+1. P10 で job 作成
+2. P10 から P05 internal API で面接 event type を provision
+3. P10 で application 作成 + `document_passed`
+4. P10 で interview slots 取得
+5. P05 public booking API で予約
+6. `calendar.booking.confirmed` により P10 の応募が `interview` へ更新
+
+目視確認するときの URL:
+
+- [http://calendar.localhost](http://calendar.localhost)
+- [http://talent.localhost/health](http://talent.localhost/health)
+
 ### 7. 片付け
 
 ```powershell
 cd pf-cloud-k8s
 .\scripts\down.ps1
+.\scripts\down-c-scheduling-talent.ps1
 ```
 
 Docker Desktop Kubernetes を無効化してもよい。単体 Compose デモには影響しない。
@@ -154,14 +194,16 @@ Docker Desktop Kubernetes を無効化してもよい。単体 Compose デモに
 ```
 Docker Desktop Kubernetes
 ┌──────────────────────────────────────────────────────────┐
-│ Ingress (nginx)  idp / media / grafana / garage.localhost
+│ Ingress (nginx)  idp / media / calendar / talent / grafana / garage.localhost
 ├──────────────────────────────────────────────────────────┤
 │ namespace: platform                                       │
-│   postgres (DB: identity, media)                          │
+│   postgres (DB: identity, media, calendar, talent, ...)   │
 │   redis, garage (S3 互換), otel-collector                 │
 ├──────────────────────────────────────────────────────────┤
 │ namespace: p01        │ namespace: p03                     │
 │   idp, admin          │   api, web, processor              │
+│ namespace: p05        │ namespace: p10                     │
+│   api, web, worker    │   api                              │
 └──────────────────────────────────────────────────────────┘
 ```
 
@@ -192,6 +234,8 @@ Docker Desktop Kubernetes
 | Ingress 404 | Ingress クラス・path 規則。`kubectl describe ingress` |
 | OIDC redirect 不一致 | client redirect URI が overlay の media URL と一致 |
 | Grafana に trace が無い | `OTEL_EXPORTER_OTLP_ENDPOINT` が platform collector を指すか |
+| `password authentication failed for user "calendar"` | 既存 platform Postgres には `.\scripts\ensure-platform-databases.ps1` を実行して DB/user を追加 |
+| calendar-web が `Cannot find module '/app/server.js'` | `pf-calendar` web イメージを再 build（monorepo standalone 用 CMD） |
 
 ## 実装ロードマップ（P02）
 
@@ -201,7 +245,8 @@ Docker Desktop Kubernetes
 4. platform（postgres + redis + garage）（**完了**）
 5. P01 + P03 manifest 接続、OIDC クライアント seed（**完了**）
 6. P02 o11y 最小を platform に載せる（**完了**）。media-api は OTLP、Grafana に Tempo
-7. `cluster-smoke.ps1` + `oidc-smoke.ps1` + `demo-smoke.ps1`（ログイン〜アップロード〜サムネ〜Tempo）
+7. foundation smoke (`cluster-smoke.ps1` + `oidc-smoke.ps1` + `demo-smoke.ps1`）
+8. scheduling-talent smoke (`cluster-smoke-c-scheduling-talent.ps1`）
 
 ## 単体 Compose 連携デモ: P05 ↔ P10（予約確定 → 面接ステータス）
 

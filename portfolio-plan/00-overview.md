@@ -12,7 +12,7 @@
 
 就職活動上の見せ方は「15 個のバラバラな習作」ではなく、**1 つのポートフォリオ・エコシステム**である。ただし各プロジェクトは単独デモ可能で、他プロジェクトが落ちていても IdP モックやシードデータで動くことを必須とする。
 
-**ローカルデモは 2 モード。** 各 `pf-*/deploy/compose.yaml` の **単体デモ**（必須）と、Docker Desktop Kubernetes + `pf-cloud-k8s` の **連携デモ**（任意・横断確認用）。手順の正本は `portfolio-plan/integration-demo.md`。全 Pxx を 1 台で同時フル起動するのは非目標。
+**ローカルデモは 2 モード。** 各 `pf-*/deploy/compose.yaml` の **単体デモ**（必須）と、Docker Desktop Kubernetes + `pf-cloud-k8s` の **連携デモ**（任意・横断確認用）。連携デモは `portfolio-integration-a` 〜 `f` の **用途別 overlay 群** に分ける。手順の正本は `portfolio-plan/integration-demo.md`。全 Pxx を 1 台で同時フル起動するのは非目標。
 
 ## プロジェクト内訳
 
@@ -226,7 +226,7 @@ flowchart TB
 実装チャットで迷ったら、個別 DESIGN より先にこの節を優先する。
 
 1. **単独起動**: 各プロジェクトは `docker compose up` でデモできる。他プロジェクトは stub でよい
-2. **連携デモ（任意）**: 複数 Pxx の横断確認は Docker Desktop Kubernetes + `pf-cloud-k8s` の integration overlay。手順の正本は `portfolio-plan/integration-demo.md`。全 Pxx 同時フル起動は非目標
+2. **連携デモ（任意）**: 複数 Pxx の横断確認は Docker Desktop Kubernetes + `pf-cloud-k8s` の **用途別 integration overlay**（`portfolio-integration-a` 〜 `f`）。手順の正本は `portfolio-plan/integration-demo.md`。全 Pxx 同時フル起動は非目標
 3. **契約**: 同期 API は OpenAPI 3。非同期は CloudEvents 風 JSON（`type`, `source`, `id`, `time`, `data`）
 4. **ID**: ULID。連番を外部に出さない
 5. **金額**: 整数（最小通貨単位）。浮動小数点禁止

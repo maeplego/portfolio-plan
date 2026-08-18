@@ -31,7 +31,7 @@ Terraform と K8s と観測スタックはライフサイクルが違う。state
 | リポジトリ | 役割 |
 | --- | --- |
 | `pf-cloud-aws` | アイデア 16。VPC、ALB、ECS または ASG、RDS、GitHub OIDC、モジュール化 |
-| `pf-cloud-k8s` | アイデア 17。kustomize overlays（`docker-desktop`, `portfolio-integration`）。**連携デモの束ね役**。各 `pf-*/deploy/k8s/` を参照 |
+| `pf-cloud-k8s` | アイデア 17。kustomize overlays（foundation + `portfolio-integration-a` 〜 `f`）。**連携デモの束ね役**。各 `pf-*/deploy/k8s/` を参照 |
 | `pf-cloud-o11y` | アイデア 18。Collector、Prometheus、Loki、Tempo、Grafana の Compose と K8s マニフェスト |
 | `pf-cloud-docs` | 構成図、コスト、destroy 手順、SLO の書き方。コードを持たないでも可 |
 
@@ -47,7 +47,7 @@ Terraform と K8s と観測スタックはライフサイクルが違う。state
 手順・URL・デモシナリオの正本: `portfolio-plan/integration-demo.md`。
 
 - **非目標**: 15 Pxx を 1 クラスタで同時フル起動
-- **初版 overlay 名**: `portfolio-integration`（Namespace: `platform`, `p01`, `p03` 等）
+- **overlay 方針**: `portfolio-integration-a-foundation` 〜 `f-ops` の用途別分割
 - **共有 platform**: Postgres（DB 複数）、Redis、Garage/MinIO、OTel Collector、Ingress NGINX
 - **イメージ**: 各 `pf-*` の Dockerfile を再利用。overlay は tag / pullPolicy のみ差し替え
 
@@ -56,17 +56,21 @@ Terraform と K8s と観測スタックはライフサイクルが違う。state
 | 置き場所 | 内容 |
 | --- | --- |
 | `pf-cloud-k8s/deploy/base/` | Ingress クラス、platform Namespace 雛形、共通ラベル |
-| `pf-cloud-k8s/deploy/overlays/docker-desktop/` | ローカル向け（`imagePullPolicy: IfNotPresent`, hostPath 不要） |
-| `pf-cloud-k8s/deploy/overlays/portfolio-integration/` | P01 + P03 + o11y 最小の kustomization ルート |
+| `pf-cloud-k8s/deploy/overlays/docker-desktop/` | foundation overlay 用のローカル patch（`imagePullPolicy: IfNotPresent`） |
+| `pf-cloud-k8s/deploy/overlays/portfolio-integration/` | P01 + P03 + o11y 最小の foundation ルート |
+| `pf-cloud-k8s/deploy/overlays/portfolio-integration-c-scheduling-talent/` | P01 + P05 + P10 + platform の採用ドメイン連携 |
+| `pf-cloud-k8s/deploy/overlays/docker-desktop-c-scheduling-talent/` | scheduling-talent overlay 用ローカル patch |
 | `pf-identity/deploy/k8s/` | idp, admin の Deployment / Service / ConfigMap |
 | `pf-media/deploy/k8s/` | api, web, processor |
+| `pf-calendar/deploy/k8s/` | api, web, worker |
+| `pf-talent-api/deploy/k8s/` | talent api |
 | `pf-cloud-o11y/deploy/k8s/` | collector, grafana（Compose と同じ設定を K8s 化） |
 
 ### Docker Desktop と kind
 
 | 環境 | 用途 |
 | --- | --- |
-| **Docker Desktop Kubernetes** | レビュア向け連携デモ（Windows/macOS）。`docker-desktop` overlay |
+| **Docker Desktop Kubernetes** | レビュア向け連携デモ（Windows/macOS）。overlay ごとに `docker-desktop*` wrapper を用意 |
 | **kind** | CI smoke、Linux 開発者。将来 `overlays/kind/` を追加 |
 
 Compose 単体デモは Docker Desktop の **Compose のみ** でも動く。K8s 有効化は連携デモ時だけ必須。
@@ -95,7 +99,7 @@ Compose 単体デモは Docker Desktop の **Compose のみ** でも動く。K8s
 | アイデア | このプロジェクトでの実体 |
 | --- | --- |
 | 16 | `pf-cloud-aws` モジュール。最初の適用先は P08 または P09 |
-| 17 | `pf-cloud-k8s` のベース。最初の適用先は P06 |
+| 17 | `pf-cloud-k8s` のベースと overlay 群。最初の横断完成は P05 + P10 |
 | 18 | `pf-cloud-o11y`。全アプリの標準。フェーズ 0 で Compose を先に完成 |
 
 ## 実装順序
@@ -103,9 +107,9 @@ Compose 単体デモは Docker Desktop の **Compose のみ** でも動く。K8s
 1. `pf-cloud-o11y` の Compose。サンプルアプリで RED ダッシュボードとトレース
 2. 計装ガイドライン（ログ JSON キー名、`http.route` の正規化、禁止ラベル）
 3. **連携デモ設計の文書化**（`portfolio-plan/integration-demo.md`、本ファイル overlay 章）
-4. `pf-cloud-k8s` 骨組み + `portfolio-integration` overlay（P01 + P03 + o11y 最小）
-5. Docker Desktop / kind に同じ観測を載せる（overlay 分割）
-6. P06 がサービス 3 つ以上になったら P06 overlay を追加
+4. `pf-cloud-k8s` 骨組み + foundation overlay（P01 + P03 + o11y 最小）
+5. overlay 群を A-F に分割し、まず `portfolio-integration-c-scheduling-talent` を完成
+6. P04 / P11、P08、P06、P12 / P13、P09 / P14 / P15 API の順で overlay を拡張
 7. GitHub OIDC と `pf-cloud-aws` モジュール
 8. 安価な環境に 3-tier を 1 アプリ載せる。請求アラーム必須
 9. 障害注入手順（高レイテンシ、5xx、pod kill）を文書化。P12 のシナリオの素材になる
@@ -134,7 +138,8 @@ P12 への契約: アラート webhook の JSON 形を 1 つ決め、署名検�
 ## デモ
 
 - Compose で Grafana を開き、エラー注入するとトレースがつながること
-- **連携デモ**: IdP ログイン → media アップロード → Grafana に trace（`integration-demo.md`）
+- **連携デモ foundation**: IdP ログイン → media アップロード → Grafana に trace（`integration-demo.md`）
+- **連携デモ scheduling-talent**: P10 で job 作成 → P05 予約確定 → webhook で `interview` 更新
 - kind / Docker Desktop K8s で pod を消しても Deployment が戻ること
 - Terraform plan のスクリーンショット（秘密マスク）
 
