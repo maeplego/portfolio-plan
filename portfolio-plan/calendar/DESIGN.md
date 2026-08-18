@@ -41,8 +41,8 @@ pf-calendar/
 | 層 | 採用 |
 | --- | --- |
 | Web | Next.js, TypeScript |
-| API | NestJS または Go。日付テストの書きやすさで NestJS + `Temporal` または `date-fns-tz` を推奨 |
-| ワーカー | 同じ言語。BullMQ または同等 |
+| API | Hono。`packages/slot-engine`（`@js-temporal/polyfill`）を import する薄い HTTP 層。Go にはしない（TZ テストが二重になる）。NestJS にもしない（一人開発の予約 API に DI モジュールは過剰） |
+| ワーカー | 同じ TypeScript ランタイム。BullMQ または同等 |
 | DB | PostgreSQL。可能なら `tstzrange` + exclusion constraint |
 | メール | 開発 Mailhog、本番 Resend/SES |
 | 認証 | ホストは P01。ゲスト予約は非ログイン（メール + トークン） |
@@ -50,6 +50,7 @@ pf-calendar/
 ## 設計思想
 
 - **スロットはサーバーが計算する。** クライアントの ISO 文字列を信じない
+- **予約確定の正は `apps/api`。** Next.js の Route Handlers / Server Actions に book を置かない。P10 とリマインドワーカーが同じ HTTP 契約を叩く
 - **重複は DB が最後の砦。** アプリのチェックだけでは競合する
 - **外部カレンダーは副作用。** Google 同期が失敗しても予約は残す
 - **ゲスト PII を公開ページに出さない**

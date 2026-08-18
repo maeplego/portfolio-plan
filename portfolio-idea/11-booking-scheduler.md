@@ -71,7 +71,7 @@
 | 層 | 候補 |
 | --- | --- |
 | フロント | Next.js、TypeScript、date-fns-tz または Temporal（可能な環境） |
-| バックエンド | NestJS / Rails |
+| バックエンド | Hono（P05 の正。slot-engine を共有する薄い API）。NestJS / Rails は初期アイデアの候補であり採用しない |
 | DB | PostgreSQL（`tstzrange` と exclusion constraint があると強い） |
 | ジョブ | リマインド用ワーカー |
 | メール | SES / Resend |
