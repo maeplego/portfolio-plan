@@ -3,7 +3,7 @@
 | 項目 | 値 |
 | --- | --- |
 | プロジェクト | P05 calendar |
-| 対象スライス | 1–10。自動化は `npm test`（slot-engine 13 + api 27 + worker 5。integration 1 は DB あり時のみ） |
+| 対象スライス | 1–11。自動化は `npm test`（slot-engine 13 + api 30 + worker 5。integration 1 は DB あり時のみ） |
 | 最終更新 | 2026-08-18 |
 | 矛盾時の正 | 製品リポジトリの vitest。本表と食い違ったらテストを直すか本表を追随 |
 

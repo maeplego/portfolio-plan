@@ -3,7 +3,7 @@
 | 項目 | 値 |
 | --- | --- |
 | プロジェクト | P05 calendar |
-| 対象スライス | 1–10 実装済みの HTTP。OpenAPI は `packages/openapi/openapi.yaml` と `GET /openapi.yaml` |
+| 対象スライス | 1–11 実装済みの HTTP。OpenAPI は `packages/openapi/openapi.yaml` と `GET /openapi.yaml` |
 | 最終更新 | 2026-08-18 |
 | 基準 | `http://localhost:8095`（Compose）。時刻は Instant の ISO-8601 |
 
@@ -34,6 +34,21 @@
 ```
 
 ヘッダ: `Content-Type: application/json`、`X-Calendar-Event-Type: calendar.booking.confirmed`。`CALENDAR_WEBHOOK_URL` 未設定時 worker は配信をスキップ。
+
+## Dev webhook（P10 結合の土台）
+
+P10 結合がまだ無い場合の **疎通スタブ**。worker が POST する outbox 配信を受けて 200 を返す。
+
+### POST `/webhooks/calendar`
+
+ヘッダ: `X-Calendar-Event-Type: calendar.booking.confirmed`
+
+本文: `calendar.booking.confirmed` エンベロープ（`id`, `type`, `occurredAt`, `data` を含む）。
+
+| 条件 | 状態 |
+| --- | --- |
+| 正しいペイロード + ヘッダ | 200 `{ "ok": true }` |
+| ヘッダ欠落 / 形式不正 | 400 `invalid_request` |
 
 ## 共通
 

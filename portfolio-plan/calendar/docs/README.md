@@ -3,7 +3,7 @@
 | 項目 | 値 |
 | --- | --- |
 | プロジェクト | P05 calendar |
-| 対象スライス | 1–10 実装済み（slot-engine → Postgres integration） |
+| 対象スライス | 1–11 実装済み（slot-engine → Postgres integration → webhook stub） |
 | 最終更新 | 2026-08-18 |
 | 矛盾時の正 | `../pf-calendar` のテストとコード、次に `../DESIGN.md` |
 
@@ -32,3 +32,4 @@
 | 8 booking.confirmed | 実装済み | outbox + `CALENDAR_WEBHOOK_URL` |
 | 9 OpenAPI | 実装済み | `packages/openapi`、`GET /openapi.yaml` |
 | 10 Postgres TS-M01 | 実装済み | `postgres.integration.test.ts`（DB 未起動時 skip） |
+| 11 webhook receiver stub | 実装済み | `POST /webhooks/calendar`（outbox delivery の疎通確認） |

@@ -69,6 +69,7 @@ pf-calendar/
 8. 予約確定イベント `calendar.booking.confirmed`（outbox + worker webhook）
 9. `packages/openapi` と `GET /openapi.yaml`
 10. Postgres 並列 book の integration テスト（TS-M01）
+11. dev 用 webhook 受信スタブ（`POST /webhooks/calendar`）
 
 ## 実装上の注意点
 
