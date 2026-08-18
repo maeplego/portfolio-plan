@@ -203,6 +203,99 @@ Docker Desktop Kubernetes
 6. P02 o11y 最小を platform に載せる（**完了**）。media-api は OTLP、Grafana に Tempo
 7. `cluster-smoke.ps1` + `oidc-smoke.ps1` + `demo-smoke.ps1`（ログイン〜アップロード〜サムネ〜Tempo）
 
+## 単体 Compose 連携デモ: P05 ↔ P10（予約確定 → 面接ステータス）
+
+> **ステータス**: Compose 単体デモで P05 → P10 webhook 経由の `interview` 更新を確認済み。
+
+### 概要
+
+P05 calendar の予約確定イベント `calendar.booking.confirmed` が outbox → worker → webhook → P10 talent-api に届き、応募ステータスが `interview` に更新されるフローを確認する。
+
+### 前提
+
+- Docker Desktop（Compose 対応）
+- 兄弟ディレクトリに `pf-calendar` と `pf-talent-api` が clone 済み
+
+### 手順
+
+#### 1. pf-talent-api を起動
+
+```powershell
+cd pf-talent-api/deploy
+copy .env.example .env
+docker compose up -d --build
+```
+
+`http://localhost:8090/health` → `{ "ok": true }`
+
+#### 2. pf-calendar を起動（webhook URL を talent-api に向ける）
+
+```powershell
+cd pf-calendar/deploy
+copy .env.example .env
+```
+
+`.env` に以下を追記（talent-api の webhook エンドポイント）:
+
+```
+CALENDAR_WEBHOOK_URL=http://host.docker.internal:8090/webhooks/calendar
+```
+
+```powershell
+docker compose up -d --build
+```
+
+| URL | 用途 |
+| --- | --- |
+| http://localhost:3005 | P05 Web UI |
+| http://localhost:8095/health | P05 API |
+| http://localhost:8090/health | P10 API |
+
+#### 3. P10 で求人と応募を作成
+
+```powershell
+# 求人作成
+$job = Invoke-RestMethod -Method POST -Uri http://localhost:8090/v1/jobs `
+  -ContentType 'application/json' `
+  -Body '{"employerSub":"employer-1","title":"Backend Engineer","status":"published"}'
+$job.id
+
+# P05 にイベントタイプをプロビジョン（externalRef = job.id）
+# .env に CALENDAR_INTERNAL_TOKEN を設定しておくこと
+Invoke-RestMethod -Method POST `
+  -Uri "http://localhost:8090/v1/jobs/$($job.id)/provision-interview-event-type"
+
+# 応募作成（calendarExternalRef = job.id で自動紐付け）
+$app = Invoke-RestMethod -Method POST `
+  -Uri "http://localhost:8090/v1/jobs/$($job.id)/applications" `
+  -ContentType 'application/json' `
+  -Body '{"candidateSub":"candidate-1","resumeSnapshot":"3 years Go experience"}'
+$app.id
+```
+
+#### 4. P05 で公開予約
+
+1. `http://localhost:3005/host` でイベントタイプ一覧を確認（provision で作った `interview-30m-*` が存在）
+2. `http://localhost:3005/book/<slug>` で予約（ゲスト名・メールを入力）
+
+#### 5. ステータス確認
+
+worker が outbox を拾い webhook を POST する（デフォルト 60 秒ポーリング）。
+
+```powershell
+# 応募ステータスが interview に変わったか確認
+Invoke-RestMethod -Uri "http://localhost:8090/v1/applications/$($app.id)"
+```
+
+期待: `status` が `"interview"`、`interviewBookingId` がセットされている。
+
+#### 6. 片付け
+
+```powershell
+cd pf-calendar/deploy; docker compose down -v
+cd pf-talent-api/deploy; docker compose down -v
+```
+
 ## 関連ドキュメント
 
 - `portfolio-plan/00-overview.md` — エコシステム全体・単独起動規約
