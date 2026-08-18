@@ -18,13 +18,31 @@
 
 ## jobs / applications
 
+### GET `/v1/jobs`
+
+求人一覧。フィルタは次スライスで追加。
+
 ### POST `/v1/jobs`
 
 入力:
 
 ```json
-{ "employerSub": "employer-1", "title": "Backend Engineer", "status": "published" }
+{
+  "employerSub": "employer-1",
+  "title": "Backend Engineer",
+  "status": "published",
+  "employmentType": "full_time",
+  "location": "Tokyo",
+  "remote": true,
+  "salaryMin": 5000000,
+  "salaryMax": 8000000,
+  "skills": ["Go", "PostgreSQL"],
+  "description": "..."
+}
 ```
+
+`employmentType`: `full_time` | `contract` | `part_time` | `internship`（デフォルト `full_time`）。
+`salaryMin` / `salaryMax`: 整数（最小通貨単位）。nullable。
 
 ### POST `/v1/jobs/:id/applications`
 
@@ -41,8 +59,37 @@
 入力:
 
 ```json
-{ "status": "applied" }
+{ "status": "document_passed" }
 ```
+
+状態遷移ルール（不正遷移は `409 invalid_transition`）:
+
+- `applied` → `document_passed` | `rejected`
+- `document_passed` → `interview` | `rejected`
+- `interview` → `offered` | `rejected`
+- `offered` / `rejected` → （終端）
+
+## 候補者プロフィール
+
+### PUT `/v1/profiles/:sub`
+
+入力:
+
+```json
+{
+  "sub": "candidate-1",
+  "displayName": "Alice",
+  "skills": ["TypeScript"],
+  "desiredEmploymentTypes": ["full_time"],
+  "desiredMinSalary": 4000000,
+  "desiredRemote": true,
+  "bio": "..."
+}
+```
+
+### GET `/v1/profiles/:sub`
+
+存在しない場合 `404 not_found`。
 
 ### PUT `/v1/applications/:id/calendar-link`
 
