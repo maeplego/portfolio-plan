@@ -23,6 +23,10 @@
                     {
                         "name":  "pf-calendar",
                         "path":  "../pf-calendar"
+                    },
+                    {
+                        "name":  "pf-talent-api",
+                        "path":  "../pf-talent-api"
                     }
                 ],
     "settings":  {

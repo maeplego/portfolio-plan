@@ -5,6 +5,7 @@
     { "name": "pf-cloud-o11y", "path": "../pf-cloud-o11y", "project": "P02" },
     { "name": "pf-cloud-k8s", "path": "../pf-cloud-k8s", "project": "P02" },
     { "name": "pf-media", "path": "../pf-media", "project": "P03" },
-    { "name": "pf-calendar", "path": "../pf-calendar", "project": "P05" }
+    { "name": "pf-calendar", "path": "../pf-calendar", "project": "P05" },
+    { "name": "pf-talent-api", "path": "../pf-talent-api", "project": "P10" }
   ]
 }
