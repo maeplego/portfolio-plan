@@ -12,6 +12,6 @@
 
 P10 結合時は `portfolio-plan/talent-platform/DESIGN.md` も読む。
 
-製品コードはワークスペースの兄弟 `../pf-calendar`（`packages/slot-engine`, `apps/api`, `deploy`。後続スライスで `apps/web`, `apps/worker`）。このフォルダは設計・指示・チャット記録用。
+製品コードはワークスペースの兄弟 `../pf-calendar`（`packages/slot-engine`, `apps/api`, `apps/web`, `deploy`。後続スライスで `apps/worker`）。このフォルダは設計・指示・チャット記録用。
 
 チャット記録の次ファイルは `chat-context/P05_XXXXX_要約.md`（既存最大連番 + 1）。
