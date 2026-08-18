@@ -137,7 +137,7 @@ kubectl wait --for=condition=ready pod -l app=platform-postgres -n platform --ti
 1. [http://media.localhost](http://media.localhost) を開く → IdP ログインへリダイレクト
 2. 上記デモユーザーでログイン → 同意で許可 → マイドライブ（容量表示）
 3. 画像をアップロード → 数秒後サムネ表示（オブジェクト URL は `garage.localhost`）
-4. [http://grafana.localhost](http://grafana.localhost) → Tempo Explore で `media-api` の trace
+4. [http://grafana.localhost](http://grafana.localhost)（学習用 admin/admin）→ ホーム **Media API traces** → Tempo Explore。`{resource.service.name="media-api"}`。`/health` は出さない
 5. （任意）別ブラウザ / シークレットで別ユーザーを登録すると、A のファイルは見えない
 
 ### 7. 片付け
