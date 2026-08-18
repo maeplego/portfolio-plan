@@ -121,3 +121,40 @@ feat(password): Argon2id のハッシュと検証を追加
 - 単独で `compose up` またはテストが通る状態を優先する
 - 他プロジェクトへのハード依存はスタブで開始してよい（overview の代替表）
 - ID は ULID、時刻は timestamptz、金額は整数、API 名は仕様どおり
+
+## Kubernetes マニフェスト（連携デモ）
+
+各 `pf-*` 製品リポジトリに **Compose と並行** で `deploy/k8s/` を置く。manifest の束ね役は兄弟 `pf-cloud-k8s`（overlay で参照）。
+
+### ディレクトリ
+
+```
+pf-*/
+  deploy/
+    compose.yaml          # 単体デモ（必須）
+    .env.example
+    k8s/
+      kustomization.yaml  # 当製品の Deployment / Service / ConfigMap
+      deployment-*.yaml
+      service-*.yaml
+```
+
+- **本文は製品側**、`pf-cloud-k8s` は base + overlay + 他製品 kustomization への `resources:` 参照
+- overlay 名: `portfolio-integration`（初版）。手順は `portfolio-plan/integration-demo.md`
+
+### 必須規約
+
+| 項目 | 規約 |
+| --- | --- |
+| ヘルス | `GET /health`（liveness）、`GET /ready`（readiness probe） |
+| 秘密 | Git に平文 Secret を置かない。`.env.example` + overlay 用 `secretGenerator`（ローカル）または外部注入 |
+| 観測 | `OTEL_EXPORTER_OTLP_ENDPOINT` で platform の Collector を指す（連携 overlay 時） |
+| イメージ | 各製品 Dockerfile と同じ。tag は overlay で上書き可 |
+| DB | 連携時は platform Postgres の **別 DB 名**（例: `identity`, `media`）。単体 Compose は従来どおり専用 Postgres 可 |
+| Ingress | path ベース（`/idp`, `/media`, `/grafana`）。issuer / redirect URI は overlay ConfigMap で固定 |
+
+### 追加タイミング
+
+- 単体 Compose が動いてから `deploy/k8s/` を追加してよい（空の kustomization + README から開始可）
+- 連携デモに載せる Pxx から順に manifest を埋める（初版: P01, P03, P02 o11y 最小）
+

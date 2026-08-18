@@ -31,11 +31,46 @@ Terraform と K8s と観測スタックはライフサイクルが違う。state
 | リポジトリ | 役割 |
 | --- | --- |
 | `pf-cloud-aws` | アイデア 16。VPC、ALB、ECS または ASG、RDS、GitHub OIDC、モジュール化 |
-| `pf-cloud-k8s` | アイデア 17。kind 用ベースマニフェスト、kustomize overlays、アプリは overlay で接続 |
+| `pf-cloud-k8s` | アイデア 17。kustomize overlays（`docker-desktop`, `portfolio-integration`）。**連携デモの束ね役**。各 `pf-*/deploy/k8s/` を参照 |
 | `pf-cloud-o11y` | アイデア 18。Collector、Prometheus、Loki、Tempo、Grafana の Compose と K8s マニフェスト |
 | `pf-cloud-docs` | 構成図、コスト、destroy 手順、SLO の書き方。コードを持たないでも可 |
 
-`pf-cloud-k8s` に P06 の Deployment 本文を全部は書かない。P06 側に `deploy/` を置き、こちらは **ベース（Ingress, 制限, 観測 sidecar 規約）** を提供する。
+`pf-cloud-k8s` に P06 の Deployment 本文を全部は書かない。P06 側に `deploy/k8s/` を置き、こちらは **ベース（Ingress, platform 共有リソース, 観測 sidecar 規約）** と **overlay での参照** を提供する。
+
+## ローカルデモの 2 モード
+
+| モード | リポジトリ | 用途 |
+| --- | --- | --- |
+| **単体 Compose** | 各 `pf-*/deploy/compose.yaml` | その Pxx だけをレビュアが起動。stub / dev 認証可 |
+| **連携 K8s** | `pf-cloud-k8s` overlay | P01 + P02 + P03 など横断フロー。Docker Desktop Kubernetes |
+
+手順・URL・デモシナリオの正本: `portfolio-plan/integration-demo.md`。
+
+- **非目標**: 15 Pxx を 1 クラスタで同時フル起動
+- **初版 overlay 名**: `portfolio-integration`（Namespace: `platform`, `p01`, `p03` 等）
+- **共有 platform**: Postgres（DB 複数）、Redis、Garage/MinIO、OTel Collector、Ingress NGINX
+- **イメージ**: 各 `pf-*` の Dockerfile を再利用。overlay は tag / pullPolicy のみ差し替え
+
+### overlay 責務分担
+
+| 置き場所 | 内容 |
+| --- | --- |
+| `pf-cloud-k8s/deploy/base/` | Ingress クラス、platform Namespace 雛形、共通ラベル |
+| `pf-cloud-k8s/deploy/overlays/docker-desktop/` | ローカル向け（`imagePullPolicy: IfNotPresent`, hostPath 不要） |
+| `pf-cloud-k8s/deploy/overlays/portfolio-integration/` | P01 + P03 + o11y 最小の kustomization ルート |
+| `pf-identity/deploy/k8s/` | idp, admin の Deployment / Service / ConfigMap |
+| `pf-media/deploy/k8s/` | api, web, processor |
+| `pf-cloud-o11y/deploy/k8s/` | collector, grafana（Compose と同じ設定を K8s 化） |
+
+### Docker Desktop と kind
+
+| 環境 | 用途 |
+| --- | --- |
+| **Docker Desktop Kubernetes** | レビュア向け連携デモ（Windows/macOS）。`docker-desktop` overlay |
+| **kind** | CI smoke、Linux 開発者。将来 `overlays/kind/` を追加 |
+
+Compose 単体デモは Docker Desktop の **Compose のみ** でも動く。K8s 有効化は連携デモ時だけ必須。
+
 
 ## 技術スタック
 
@@ -67,11 +102,13 @@ Terraform と K8s と観測スタックはライフサイクルが違う。state
 
 1. `pf-cloud-o11y` の Compose。サンプルアプリで RED ダッシュボードとトレース
 2. 計装ガイドライン（ログ JSON キー名、`http.route` の正規化、禁止ラベル）
-3. kind クラスタに同じ観測を載せる
-4. P06 がサービス 3 つ以上になったら `pf-cloud-k8s` のベース + P06 overlay
-5. GitHub OIDC と `pf-cloud-aws` モジュール
-6. 安価な環境に 3-tier を 1 アプリ載せる。請求アラーム必須
-7. 障害注入手順（高レイテンシ、5xx、pod kill）を文書化。P12 のシナリオの素材になる
+3. **連携デモ設計の文書化**（`portfolio-plan/integration-demo.md`、本ファイル overlay 章）
+4. `pf-cloud-k8s` 骨組み + `portfolio-integration` overlay（P01 + P03 + o11y 最小）
+5. Docker Desktop / kind に同じ観測を載せる（overlay 分割）
+6. P06 がサービス 3 つ以上になったら P06 overlay を追加
+7. GitHub OIDC と `pf-cloud-aws` モジュール
+8. 安価な環境に 3-tier を 1 アプリ載せる。請求アラーム必須
+9. 障害注入手順（高レイテンシ、5xx、pod kill）を文書化。P12 のシナリオの素材になる
 
 ## 実装上の注意点
 
@@ -97,7 +134,8 @@ P12 への契約: アラート webhook の JSON 形を 1 つ決め、署名検�
 ## デモ
 
 - Compose で Grafana を開き、エラー注入するとトレースがつながること
-- kind で pod を消しても Deployment が戻ること
+- **連携デモ**: IdP ログイン → media アップロード → Grafana に trace（`integration-demo.md`）
+- kind / Docker Desktop K8s で pod を消しても Deployment が戻ること
 - Terraform plan のスクリーンショット（秘密マスク）
 
 ## 非目標

@@ -12,12 +12,14 @@
 
 就職活動上の見せ方は「15 個のバラバラな習作」ではなく、**1 つのポートフォリオ・エコシステム**である。ただし各プロジェクトは単独デモ可能で、他プロジェクトが落ちていても IdP モックやシードデータで動くことを必須とする。
 
+**ローカルデモは 2 モード。** 各 `pf-*/deploy/compose.yaml` の **単体デモ**（必須）と、Docker Desktop Kubernetes + `pf-cloud-k8s` の **連携デモ**（任意・横断確認用）。手順の正本は `portfolio-plan/integration-demo.md`。全 Pxx を 1 台で同時フル起動するのは非目標。
+
 ## プロジェクト内訳
 
 | ID | プロジェクト | 含める元アイデア | リポジトリ方針 | 役割 |
 | --- | --- | --- | --- | --- |
 | P01 | identity-platform | 14 | 製品モノレポ `../pf-identity` | 全アプリ共通の OIDC IdP |
-| P02 | cloud-platform | 16, 17, 18 | ポリレポ | AWS 3-tier、K8s、可観測性 |
+| P02 | cloud-platform | 16, 17, 18 | ポリレポ（`pf-cloud-o11y`, `pf-cloud-k8s`, `pf-cloud-aws`） | AWS 3-tier、K8s、可観測性。連携デモは `pf-cloud-k8s` |
 | P03 | media-platform | 13, 28 | ポリレポ | ファイルストレージ + 画像派生パイプライン |
 | P04 | workspace | 01, 02, 12, 26 | ポリレポ | カンバン + Wiki + チャット + 共同編集 |
 | P05 | calendar | 11 | モノレポ | 予約・日程調整（他製品が利用する共有能力） |
@@ -224,15 +226,16 @@ flowchart TB
 実装チャットで迷ったら、個別 DESIGN より先にこの節を優先する。
 
 1. **単独起動**: 各プロジェクトは `docker compose up` でデモできる。他プロジェクトは stub でよい
-2. **契約**: 同期 API は OpenAPI 3。非同期は CloudEvents 風 JSON（`type`, `source`, `id`, `time`, `data`）
-3. **ID**: ULID。連番を外部に出さない
-4. **金額**: 整数（最小通貨単位）。浮動小数点禁止
-5. **時刻**: DB は `timestamptz`（UTC）。表示はユーザー TZ。勤怠のみ業務日境界を Asia/Tokyo で明文化
-6. **認可**: すべての API で「誰のリソースか」をサーバー側検証。UI の非表示は認可ではない
-7. **観測**: `trace_id` をログに出す。HTTP パスラベルは正規化する
-8. **秘密**: Git にシークレットを置かない。`.env.example` のみ
-9. **デモデータ**: 実在人物・実家計・実カード番号を使わない
-10. **失敗の見せ方**: README に既知の制限を書く。未実装を「将来」と偽らない
+2. **連携デモ（任意）**: 複数 Pxx の横断確認は Docker Desktop Kubernetes + `pf-cloud-k8s` の integration overlay。手順の正本は `portfolio-plan/integration-demo.md`。全 Pxx 同時フル起動は非目標
+3. **契約**: 同期 API は OpenAPI 3。非同期は CloudEvents 風 JSON（`type`, `source`, `id`, `time`, `data`）
+4. **ID**: ULID。連番を外部に出さない
+5. **金額**: 整数（最小通貨単位）。浮動小数点禁止
+6. **時刻**: DB は `timestamptz`（UTC）。表示はユーザー TZ。勤怠のみ業務日境界を Asia/Tokyo で明文化
+7. **認可**: すべての API で「誰のリソースか」をサーバー側検証。UI の非表示は認可ではない
+8. **観測**: `trace_id` をログに出す。HTTP パスラベルは正規化する
+9. **秘密**: Git にシークレットを置かない。`.env.example` のみ
+10. **デモデータ**: 実在人物・実家計・実カード番号を使わない
+11. **失敗の見せ方**: README に既知の制限を書く。未実装を「将来」と偽らない
 
 ## リポジトリ命名
 
@@ -264,5 +267,6 @@ flowchart TB
 | 特定プロジェクトを実装する | 共通指示 + そのプロジェクトの `AGENTS.md` + DESIGN.md + 元アイデア + `chat-context/` 一式 |
 | 他プロジェクトとの API を実装する | 利用側と提供側、両方の指示と DESIGN.md |
 | インフラに載せる | アプリの DESIGN + `cloud-platform/DESIGN.md` |
+| 複数 Pxx の横断デモ | `portfolio-plan/integration-demo.md` + `cloud-platform/DESIGN.md` |
 
 `DESIGN.md` は git 管理する。`chat-context/` は管理しない。製品コードは兄弟の製品リポジトリ。
