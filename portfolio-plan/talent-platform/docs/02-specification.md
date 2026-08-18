@@ -105,3 +105,29 @@ P05 calendar の `GET /public/:slug/slots` を利用して候補スロットを�
 - P07 が未接続または失敗時は P10 内の `skills` overlap でフォールバック
 - 返り値には `source: "recommend" | "fallback"` を含む
 
+### ファセット件数
+
+### `GET /v1/jobs/facets`
+
+現在の検索条件（`q`, `employmentType`, `remote`, `skills`, `salaryMin`, `salaryMax`）を使い、published jobs への facet counts を返す。
+
+- 成功: `200 { total, employmentType, remote, skills }`
+
+### 管理通報
+
+### `POST /v1/reports`
+
+通報を作成する。
+
+入力:
+
+```json
+{ "reporterSub": "candidate-1", "jobId": "job-id", "reason": "spam" }
+```
+
+成功: `201 { id, reporterSub, jobId, reason, status: "open", createdAt }`
+
+### `GET /v1/reports`
+
+通報一覧を返す（MVP では `open` のみ表示）。
+

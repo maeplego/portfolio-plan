@@ -112,6 +112,26 @@ P05 calendar の候補スロットを返す。application が `document_passed` 
 
 `source` が `recommend` の場合は P07 の結果、`fallback` の場合は P10 内の skills overlap。
 
+## ファセット件数
+
+### GET `/v1/jobs/facets`
+
+現在の検索条件に基づき published jobs を集計して facet counts を返す。
+
+## 管理通報
+
+### POST `/v1/reports`
+
+入力:
+
+```json
+{ "reporterSub": "candidate-1", "jobId": "job-id", "reason": "spam" }
+```
+
+### GET `/v1/reports`
+
+通報一覧を返す（`open` のみを扱う MVP）。 
+
 ### POST `/v1/jobs`
 
 入力:

@@ -44,10 +44,13 @@
    - `GET /v1/applications/:id/interview-slots`
    - `document_passed` または `interview` の応募のみ
    - job の `employerSub` と `job.id` を使って P05 の event type を特定する
-11. 類似求人を返せる
+11. ✅ 類似求人を返せる
    - `GET /v1/jobs/:id/similar`
    - P07 recommend API があればそれを優先
    - 未接続時は skills overlap でフォールバック
+12. ✅ ファセット件数と管理通報の最小形
+   - `GET /v1/jobs/facets`（同じフィルタ条件を入力に応じて集計）
+   - `POST /v1/reports` / `GET /v1/reports`（管理レビュー用の通報保存）
 
 ## 非機能要件
 
