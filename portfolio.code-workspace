@@ -27,6 +27,10 @@
                     {
                         "name":  "pf-talent-api",
                         "path":  "../pf-talent-api"
+                    },
+                    {
+                        "name":  "pf-workspace",
+                        "path":  "../pf-workspace"
                     }
                 ],
     "settings":  {
