@@ -97,3 +97,11 @@ P05 calendar の `GET /public/:slug/slots` を利用して候補スロットを�
 - application が `document_passed` または `interview` でない場合は `409 invalid_state`
 - 対応する event type が無ければ `404`
 
+### `GET /v1/jobs/:id/similar`
+
+類似求人一覧を返す。
+
+- `RECOMMEND_API_URL` が設定され、P07 `/v1/similar-items?namespace=jobs&item_id=&k=` が成功する場合はその結果を使う
+- P07 が未接続または失敗時は P10 内の `skills` overlap でフォールバック
+- 返り値には `source: "recommend" | "fallback"` を含む
+

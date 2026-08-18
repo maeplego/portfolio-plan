@@ -77,3 +77,10 @@
 - applied 状態で `GET /v1/applications/:id/interview-slots`
 - `409 invalid_state`
 
+### TS-R01 類似求人の fallback
+- `GET /v1/jobs/:id/similar`
+- P07 未接続時に `skills` overlap で類似求人を返す
+
+### TS-R02 類似求人の recommend 優先
+- `RECOMMEND_API_URL` 設定時、P07 `similar-items` の結果を優先する
+

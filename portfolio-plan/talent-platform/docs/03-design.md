@@ -46,6 +46,12 @@ MVP では別 worker を作らず同期実行とする。将来 `pf-talent-searc
 
 P10 は slot 計算を再実装しない。P05 を shared capability として利用する。
 
+## P07 類似求人
+
+- `RECOMMEND_API_URL` があるときは P07 `similar-items` を使う
+- 無い / 失敗時は P10 内で `skills` overlap を計算してフォールバックする
+- P10 側は fallback を持つことで、推薦が未学習・停止中でも求人詳細を壊さない
+
 ## webhook 受信処理
 
 1. `X-Calendar-Event-Type` が `calendar.booking.confirmed` であることを検証

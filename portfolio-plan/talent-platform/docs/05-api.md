@@ -91,6 +91,27 @@ P05 calendar の候補スロットを返す。application が `document_passed` 
 }
 ```
 
+## 類似求人
+
+### GET `/v1/jobs/:id/similar`
+
+クエリ:
+
+- `k` 任意（既定 5、最大 20）
+
+成功例:
+
+```json
+{
+  "source": "fallback",
+  "jobs": [
+    { "id": "01...", "title": "Go Dev", "skills": ["Go"] }
+  ]
+}
+```
+
+`source` が `recommend` の場合は P07 の結果、`fallback` の場合は P10 内の skills overlap。
+
 ### POST `/v1/jobs`
 
 入力:
