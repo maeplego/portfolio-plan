@@ -151,7 +151,7 @@ pf-*/
 | 観測 | `OTEL_EXPORTER_OTLP_ENDPOINT` で platform の Collector を指す（連携 overlay 時） |
 | イメージ | 各製品 Dockerfile と同じ。tag は overlay で上書き可 |
 | DB | 連携時は platform Postgres の **別 DB 名**（例: `identity`, `media`）。単体 Compose は従来どおり専用 Postgres 可 |
-| Ingress | path ベース（`/idp`, `/media`, `/grafana`）。issuer / redirect URI は overlay ConfigMap で固定 |
+| Ingress | ホスト名ベース（`idp.localhost`, `media.localhost`, `grafana.localhost`）。issuer / redirect URI は overlay で固定。パス prefix は Next.js / OIDC と相性が悪い |
 
 ### 追加タイミング
 

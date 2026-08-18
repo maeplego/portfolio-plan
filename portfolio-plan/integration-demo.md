@@ -106,7 +106,8 @@ cd pf-cloud-k8s
 ```powershell
 cd pf-cloud-k8s
 .\scripts\cluster-smoke.ps1
-# manifest smoke + build + apply + Pod Ready + /health 確認（docker-desktop のみ）
+.\scripts\expose-ingress.ps1
+.\scripts\oidc-smoke.ps1
 ```
 
 ### 4. 起動待ち
@@ -116,17 +117,16 @@ kubectl get pods -A
 kubectl wait --for=condition=ready pod -l app=platform-postgres -n platform --timeout=300s
 ```
 
-### 5. URL 一覧（初版・予定）
+### 5. URL 一覧
 
-Ingress は `localhost` ベース。実装時に `pf-cloud-k8s/docs/urls.md` と同期する。
+ホスト名ベース（`pf-cloud-k8s/docs/urls.md`）。Docker Desktop の kind ノードは 80 を公開しないため `expose-ingress.ps1` が `localhost:80` を NodePort へプロキシする。
 
-| 用途 | URL（予定） | 備考 |
+| 用途 | URL | 備考 |
 | --- | --- | --- |
-| P01 IdP | http://localhost/idp/ または :8080 NodePort | issuer URL は overlay で固定 |
-| P01 admin | http://localhost/admin/ | |
-| P03 media web | http://localhost/media/ | OIDC 必須 |
-| P03 media API | クラスタ内 / Ingress 経由 | web から |
-| Grafana | http://localhost/grafana/ | 匿名 or 固定 admin（学習用） |
+| P01 IdP | http://idp.localhost | issuer |
+| P01 admin | http://admin.localhost | |
+| P03 media web | http://media.localhost | OIDC 必須。未ログインは `/login` |
+| Grafana | http://grafana.localhost | 学習用 admin/admin |
 
 ### 6. デモシナリオ（5 分）
 
@@ -150,8 +150,7 @@ Docker Desktop Kubernetes を無効化してもよい。単体 Compose デモに
 ```
 Docker Desktop Kubernetes
 ┌──────────────────────────────────────────────────────────┐
-│ Ingress (nginx)                                           │
-│   /idp  /admin  /media  /grafana  …                       │
+│ Ingress (nginx)  idp.localhost / media.localhost / grafana.localhost
 ├──────────────────────────────────────────────────────────┤
 │ namespace: platform                                       │
 │   postgres (DB: identity, media)                          │
