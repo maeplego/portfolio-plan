@@ -3,7 +3,7 @@
 | 項目 | 値 |
 | --- | --- |
 | プロジェクト | P10 talent-platform |
-| 対象スライス | 最小フロー（jobs/applications + webhook） |
+| 対象スライス | 最小フロー + 検索フィルタ + 保存検索 |
 | 最終更新 | 2026-08-18 |
 
 ## 共通エラー形
@@ -32,6 +32,41 @@
 | `salaryMax` | int | `8000000` | 求人の salaryMin がこの値以下 |
 
 フィルタなしの場合は全件返す。検索は published のみ対象。
+
+## 保存検索
+
+### POST `/v1/saved-searches`
+
+入力:
+
+```json
+{
+  "candidateSub": "candidate-1",
+  "name": "Remote Go",
+  "query": "go",
+  "remote": true,
+  "skills": ["Go"],
+  "salaryMin": 5000000
+}
+```
+
+### GET `/v1/candidates/:sub/saved-searches`
+
+候補者の保存検索一覧を返す。
+
+### POST `/v1/saved-searches/:id/run`
+
+保存検索を現在時点の求人に対して再実行する。
+
+出力:
+
+```json
+{
+  "savedSearch": { "id": "01...", "lastRunAt": "2026-08-18T08:00:00.000Z" },
+  "matchedJobs": [{ "id": "01...", "title": "Go Remote" }],
+  "matchedCount": 1
+}
+```
 
 ### POST `/v1/jobs`
 

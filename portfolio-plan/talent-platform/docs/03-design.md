@@ -3,7 +3,7 @@
 | 項目 | 値 |
 | --- | --- |
 | プロジェクト | P10 talent-platform |
-| 対象スライス | P10 最小（in-memory） |
+| 対象スライス | P10 最小 + 検索フィルタ + 保存検索（in-memory） |
 | 最終更新 | 2026-08-18 |
 | 矛盾時の正 | `../pf-talent-api` |
 
@@ -21,6 +21,19 @@
   - `status`: `applied` | `document_passed` | `interview` | `rejected`
   - webhook 連携キー: `calendarExternalRef`
   - `interviewBookingId`（webhook 時にセット）
+- `SavedSearch`
+  - `id`, `candidateSub`, `name`
+  - 検索条件: `query`, `employmentType`, `remote`, `skills`, `salaryMin`, `salaryMax`
+  - `lastRunAt`
+
+## 保存検索の実行
+
+1. 候補者が検索条件を `SavedSearch` として保存する
+2. `run` endpoint で現在の published 求人に対して同条件を再適用する
+3. 一致した求人を `matchedJobs` として返す
+4. `lastRunAt` を更新する
+
+MVP では別 worker を作らず同期実行とする。将来 `pf-talent-search` や通知バッチへ切り出す前段階。
 
 ## webhook 受信処理
 

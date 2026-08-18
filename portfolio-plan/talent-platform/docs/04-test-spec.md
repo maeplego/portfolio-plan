@@ -3,7 +3,7 @@
 | 項目 | 値 |
 | --- | --- |
 | プロジェクト | P10 talent-platform |
-| 対象スライス | P10 最小（webhook + provision） |
+| 対象スライス | P10 最小 + 検索 + 保存検索 |
 | 最終更新 | 2026-08-18 |
 | 矛盾時の正 | `../pf-talent-api` の vitest |
 
@@ -57,4 +57,15 @@
 
 ### TS-F05 q キーワードフィルタ
 - `GET /v1/jobs?q=kubernetes` → title/description に含む求人
+
+### TS-SS01 保存検索の作成と一覧
+- `POST /v1/saved-searches` → `201`
+- `GET /v1/candidates/:sub/saved-searches` → 保存内容
+
+### TS-SS02 保存検索の実行
+- `POST /v1/saved-searches/:id/run` → `matchedJobs`, `matchedCount`
+- `lastRunAt` が更新される
+
+### TS-SS03 未知の保存検索実行は 404
+- `POST /v1/saved-searches/unknown/run` → `404`
 

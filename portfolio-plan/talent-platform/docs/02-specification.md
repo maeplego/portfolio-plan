@@ -3,7 +3,7 @@
 | 項目 | 値 |
 | --- | --- |
 | プロジェクト | P10 talent-platform |
-| 対象スライス | P10 最小（jobs/applications + webhook受信） |
+| 対象スライス | P10 最小 + 検索フィルタ + 保存検索 |
 | 最終更新 | 2026-08-18 |
 | 矛盾時の正 | `../DESIGN.md` と `../pf-talent-api` |
 
@@ -76,4 +76,16 @@ MVP では `calendarExternalRef` は **`jobId` と同じ値**で初期化する�
 ### `GET /v1/applications/:id`
 
 出力: application。存在しない場合 `404 not_found`。
+
+### `POST /v1/saved-searches`
+
+候補者の保存検索を作成する。`name` と検索条件を保存し、後続の新着判定に使う。
+
+### `GET /v1/candidates/:sub/saved-searches`
+
+候補者に紐づく保存検索一覧を返す。
+
+### `POST /v1/saved-searches/:id/run`
+
+保存検索を現在時点で再実行し、`matchedJobs` と `matchedCount` を返す。MVP では非同期ジョブ化せず同期で返す。
 

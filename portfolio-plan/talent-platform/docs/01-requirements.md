@@ -3,7 +3,7 @@
 | 項目 | 値 |
 | --- | --- |
 | プロジェクト | P10 talent-platform |
-| 対象スライス | P10 学習用最小：jobs + applications、P05 `calendar.booking.confirmed` webhook 受信と status 更新 |
+| 対象スライス | P10 最小 + プロフィール + 検索フィルタ + 保存検索 |
 | 最終更新 | 2026-08-18 |
 | 矛盾時の正 | `../DESIGN.md` と `../pf-talent-api` のテスト・コード、次に本書類 |
 
@@ -11,7 +11,7 @@
 
 - 求人（jobs）と応募（applications）を最小モデルで保持する。
 - P05 予約確定（`calendar.booking.confirmed`）を webhook 受信し、応募ステータスを `interview` に更新する。
-- MVP では検索・推薦・画面は扱わない（次スライスで拡張）。
+- 推薦・画面はまだ扱わない。検索と保存検索は最小形のみ扱う。
 
 ## アクター
 
@@ -34,6 +34,12 @@
    - `POST /v1/jobs/:id/provision-interview-event-type`
    - `CALENDAR_INTERNAL_TOKEN` と `CALENDAR_API_URL` が必要
    - `externalRef = job.id` で `interview` 用 event type を作る
+8. 候補者は保存検索を登録できる
+   - `POST /v1/saved-searches`
+   - `GET /v1/candidates/:sub/saved-searches`
+9. 保存検索の新着マッチを手動実行できる
+   - `POST /v1/saved-searches/:id/run`
+   - 返り値に `matchedJobs` と `matchedCount` を含む
 
 ## 非機能要件
 
