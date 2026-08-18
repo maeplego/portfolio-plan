@@ -20,7 +20,18 @@
 
 ### GET `/v1/jobs`
 
-求人一覧。フィルタは次スライスで追加。
+求人一覧。クエリパラメータでフィルタ:
+
+| パラメータ | 型 | 例 | 意味 |
+| --- | --- | --- | --- |
+| `q` | string | `kubernetes` | title / description のキーワード部分一致 |
+| `employmentType` | enum | `full_time` | 雇用形態 |
+| `remote` | bool | `true` | リモート可否 |
+| `skills` | csv | `Go,PostgreSQL` | スキルタグ（OR 一致） |
+| `salaryMin` | int | `5000000` | 求人の salaryMax がこの値以上 |
+| `salaryMax` | int | `8000000` | 求人の salaryMin がこの値以下 |
+
+フィルタなしの場合は全件返す。検索は published のみ対象。
 
 ### POST `/v1/jobs`
 

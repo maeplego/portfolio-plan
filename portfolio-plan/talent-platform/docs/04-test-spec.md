@@ -43,3 +43,18 @@
 ### TS-J02 拡張フィールド付き求人作成
 - skills, salaryMin/Max, remote 等が保持される
 
+### TS-F01 employmentType フィルタ
+- `GET /v1/jobs?employmentType=contract` → contract のみ
+
+### TS-F02 remote フィルタ
+- `GET /v1/jobs?remote=true` → リモート可のみ
+
+### TS-F03 skills フィルタ
+- `GET /v1/jobs?skills=Go` → Go を含む求人のみ
+
+### TS-F04 salary フィルタ
+- `GET /v1/jobs?salaryMin=5000000` → salaryMax ≥ 5000000 の求人
+
+### TS-F05 q キーワードフィルタ
+- `GET /v1/jobs?q=kubernetes` → title/description に含む求人
+
