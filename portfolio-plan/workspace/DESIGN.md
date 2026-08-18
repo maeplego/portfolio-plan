@@ -30,17 +30,16 @@
 
 スケールと障害影響でプロセスを分ける。ドメインモデル（ワークスペース、メンバー）は 1 つの API が正。
 
-| リポジトリ | 役割 | 元アイデア |
+開始は **1 製品リポジトリ** `../pf-workspace`（`apps/api` + `apps/collab` + `apps/web` + `deploy`）。collab / chat を独立デプロイしたくなったら下表どおり分割する。空の collab リポジトリを先に作らない（P10 の search と同じ段階化）。
+
+| 将来の分割先 | 役割 | 元アイデア |
 | --- | --- | --- |
-| `pf-workspace-web` | シェル（左ナビ）、ボード、Wiki ツリー、チャット UI、エディタ | すべて |
-| `pf-workspace-api` | ワークスペース、権限、カンバン、Wiki メタデータ、検索インデックス更新、通知設定 | 01, 02 |
+| `apps/web`（のち `pf-workspace-web`） | シェル（左ナビ）、ボード、Wiki ツリー、チャット UI、エディタ | すべて |
+| `apps/api`（のち `pf-workspace-api`） | ワークスペース、権限、カンバン、Wiki メタデータ、検索インデックス更新、通知設定 | 01, 02 |
 | `pf-workspace-collab` | Yjs / Hocuspocus。文書と Wiki 本文の CRDT 同期 | 26, 02 の本文 |
 | `pf-workspace-chat` | WebSocket、メッセージ永続化、presence、未読 | 12 |
-| `pf-workspace-infra` | Compose（api, collab, chat, redis, postgres, web） |  |
 
-モノレポにしない理由: collab と chat は sticky 接続でスケール単位が違う。api をデプロイしても編集中セッションを落としたくない。
-
-モノレポでもよかった点（採用しなかった）: 共有 TypeScript 型。代わりに OpenAPI から web の型を生成する。
+collab と chat を後から分ける理由: sticky 接続でスケール単位が違う。api をデプロイしても編集中セッションを落としたくない。共有 TypeScript 型は OpenAPI 生成で補う。
 
 ## 技術スタック
 
@@ -79,11 +78,11 @@ Wiki ページ作成: API が `page` 行と collab document id を作る。編�
 
 一気に 4 機能を始めない。
 
-1. ワークスペース CRUD、メンバー、OIDC ログイン（web + api）
-2. カンバン MVP（DnD、カード詳細）— 画面デモが最も早い
-3. Wiki ツリー + 単一ユーザー Markdown（まだ CRDT なし）
-4. collab を Wiki 本文と独立ドキュメントに接続。2 ブラウザデモ
-5. チャット（履歴 REST + WS + seq）
+1. ✅ ワークスペース CRUD、メンバー、OIDC ログイン準備（web + api）。単体デモは `WORKSPACE_DEV_AUTH`
+2. ✅ カンバン MVP（DnD、カード詳細、楽観ロック）。永続化はメモリ
+3. ✅ Wiki ツリー + 単一ユーザー Markdown（まだ CRDT なし）。本文は API が正。guest は published のみ
+4. ✅ collab を Wiki 本文と独立ドキュメントに接続。2 ブラウザデモ
+5. ✅ チャット（履歴 REST + WS + seq）
 6. 横断検索、メンション、添付（P03）
 7. スプリントバーンダウン、Wiki 履歴 diff
 
@@ -94,7 +93,7 @@ Wiki ページ作成: API が `page` 行と collab document id を作る。編�
 - typing イベントは永続化しない。debounce する
 - 巨大 diff や巨大 Y.Doc のサイズ上限
 - Markdown プレビューの XSS。共同編集でもサニタイズは表示側
-- IME と Yjs の既知問題を README に書く
+- 日本語 IME は composition 中に Y.Text へ送らない（確定時に一括）。README に残る制限は変換中の同時編集
 - 検索から権限外ページを出さない（アイデア 02 の核心）
 - リアルタイムを 3 種類（カード移動、CRDT、チャット）混ぜた単一ソケットにしない。プロトコルが腐る
 
