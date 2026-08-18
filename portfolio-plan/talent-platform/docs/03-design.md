@@ -35,6 +35,17 @@
 
 MVP では別 worker を作らず同期実行とする。将来 `pf-talent-search` や通知バッチへ切り出す前段階。
 
+## P05 面接スロット提示
+
+1. P10 で application を読む
+2. `status` が `document_passed` か `interview` であることを確認
+3. job を読み、`employerSub` と `job.id` を取得
+4. P05 internal API `GET /internal/v1/hosts/:sub/event-types` を呼ぶ
+5. `externalRef = job.id` の event type を探す
+6. その slug に対して P05 public slots API を呼び、候補スロットをそのまま返す
+
+P10 は slot 計算を再実装しない。P05 を shared capability として利用する。
+
 ## webhook 受信処理
 
 1. `X-Calendar-Event-Type` が `calendar.booking.confirmed` であることを検証

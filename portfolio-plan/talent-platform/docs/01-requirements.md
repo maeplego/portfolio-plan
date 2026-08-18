@@ -40,6 +40,10 @@
 9. 保存検索の新着マッチを手動実行できる
    - `POST /v1/saved-searches/:id/run`
    - 返り値に `matchedJobs` と `matchedCount` を含む
+10. 書類通過後の応募に対して P05 の面接候補スロットを提示できる
+   - `GET /v1/applications/:id/interview-slots`
+   - `document_passed` または `interview` の応募のみ
+   - job の `employerSub` と `job.id` を使って P05 の event type を特定する
 
 ## 非機能要件
 

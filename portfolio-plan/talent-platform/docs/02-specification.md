@@ -89,3 +89,11 @@ MVP では `calendarExternalRef` は **`jobId` と同じ値**で初期化する�
 
 保存検索を現在時点で再実行し、`matchedJobs` と `matchedCount` を返す。MVP では非同期ジョブ化せず同期で返す。
 
+### `GET /v1/applications/:id/interview-slots`
+
+P05 calendar の `GET /public/:slug/slots` を利用して候補スロットを返す。P10 側ではまず internal API でホストの event type 一覧を取得し、`externalRef = job.id` の event type を探して slug を特定する。
+
+- `rangeStart`, `rangeEnd` は必須
+- application が `document_passed` または `interview` でない場合は `409 invalid_state`
+- 対応する event type が無ければ `404`
+

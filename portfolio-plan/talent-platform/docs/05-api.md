@@ -68,6 +68,29 @@
 }
 ```
 
+## P05 slot 連携
+
+### GET `/v1/applications/:id/interview-slots`
+
+クエリ:
+
+- `rangeStart` 必須
+- `rangeEnd` 必須
+
+P05 calendar の候補スロットを返す。application が `document_passed` または `interview` のときのみ利用可。
+
+成功例:
+
+```json
+{
+  "slug": "interview-30m-demo",
+  "name": "Interview 30m",
+  "durationMinutes": 30,
+  "hostTimeZone": "Asia/Tokyo",
+  "starts": ["2026-08-19T01:00:00Z"]
+}
+```
+
 ### POST `/v1/jobs`
 
 入力:

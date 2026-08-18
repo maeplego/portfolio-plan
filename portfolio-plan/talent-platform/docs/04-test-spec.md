@@ -69,3 +69,11 @@
 ### TS-SS03 未知の保存検索実行は 404
 - `POST /v1/saved-searches/unknown/run` → `404`
 
+### TS-I01 書類通過後の応募に対して P05 スロットを返す
+- `GET /v1/applications/:id/interview-slots`
+- internal API で event type を引き、public slots API の `starts` を返す
+
+### TS-I02 書類通過前は面接スロットを引けない
+- applied 状態で `GET /v1/applications/:id/interview-slots`
+- `409 invalid_state`
+
