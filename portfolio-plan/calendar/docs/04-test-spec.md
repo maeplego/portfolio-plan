@@ -3,7 +3,7 @@
 | 項目 | 値 |
 | --- | --- |
 | プロジェクト | P05 calendar |
-| 対象スライス | 1–7。自動化は `npm test`（slot-engine 13 + api 24 + worker 3） |
+| 対象スライス | 1–10。自動化は `npm test`（slot-engine 13 + api 27 + worker 5。integration 1 は DB あり時のみ） |
 | 最終更新 | 2026-08-18 |
 | 矛盾時の正 | 製品リポジトリの vitest。本表と食い違ったらテストを直すか本表を追随 |
 
@@ -76,6 +76,13 @@ Clock はテストで東京 2026-03-01 00:00 などに固定する。
 | TS-I03 | 予約詳細 | public book 後 `GET .../bookings/:id` で event slug + guestEmail |
 | TS-I04 | 不正 Bearer | 401 |
 
+## 4.2 ドメインイベント
+
+| ID | 観点 | 期待 |
+| --- | --- | --- |
+| TS-E01 | 新規 book | outbox に `calendar.booking.confirmed` 1 件 |
+| TS-E02 | 冪等再送 | outbox 件数は増えない |
+
 ## 5. ワーカー
 
 | ID | 観点 | 期待 |
@@ -83,12 +90,13 @@ Clock はテストで東京 2026-03-01 00:00 などに固定する。
 | TS-W01 | 24h 窓 | 開始 24h 前後の予約だけ 24h 種別 |
 | TS-W02 | 1h 窓 | 開始 1h 前後の予約だけ 1h 種別 |
 | TS-W03 | 送信済みスキップ | `reminder_sent` ありなら再送しない |
+| TS-W04 | outbox 配信 | webhook 成功で `delivered_at` 更新 |
 
 ## 6. 未自動化（既知）
 
 | ID | 観点 | いまの確認方法 |
 | --- | --- | --- |
-| TS-M01 | Postgres gist が 23P01 を返す | Compose 起動後、同じ枠を並列 curl。将来 Testcontainers 可 |
+| TS-M01 | Postgres gist が 23P01 を返す | `postgres.integration.test.ts`。`CALENDAR_DATABASE_URL` 必須。未起動時 skip |
 | TS-M02 | ゲスト TZ 切替 UI | `/book/:slug` 手動。API では `starts` が TZ クエリを持たないことで代替 |
 | TS-M03 | キャンセル画面 | `/cancel?token=` 手動。API は TS-B06 |
 | TS-M04 | 2 タブ手動デモ | UI 後。API では TS-B03 |

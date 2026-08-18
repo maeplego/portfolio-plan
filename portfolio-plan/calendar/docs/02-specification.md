@@ -126,6 +126,6 @@ Bearer `CALENDAR_INTERNAL_TOKEN`。求人ごとに `externalRef` 付き event ty
 
 - UI なし → **Web UI あり**（http://localhost:3005）。curl も引き続き可
 - ホスト認証は開発ヘッダまたは OIDC Bearer（`CALENDAR_DEV_AUTH=false`）
-- **`calendar.booking.confirmed` イベント未発行**（P10 結合時）
+- **`calendar.booking.confirmed` は outbox + webhook 配信済み**（P10 受信側は未実装）
 - 公開 API のレート制限なし
 - 単体テストの同時 book はメモリ store。Postgres 上の同時 INSERT は Compose 手動または未自動化

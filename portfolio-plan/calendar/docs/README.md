@@ -3,7 +3,7 @@
 | 項目 | 値 |
 | --- | --- |
 | プロジェクト | P05 calendar |
-| 対象スライス | 1–7 実装済み（slot-engine → 内部 API） |
+| 対象スライス | 1–10 実装済み（slot-engine → Postgres integration） |
 | 最終更新 | 2026-08-18 |
 | 矛盾時の正 | `../pf-calendar` のテストとコード、次に `../DESIGN.md` |
 
@@ -29,3 +29,6 @@
 | 5 キャンセル + ICS | 実装済み | 05-api 公開 cancel/ics、06-diagrams 状態 |
 | 6 リマインドワーカー | 実装済み | 03-design §8、Compose Mailhog |
 | 7 P10 内部 API | 実装済み | 05-api `/internal/v1/*`、DESIGN P10 契約 |
+| 8 booking.confirmed | 実装済み | outbox + `CALENDAR_WEBHOOK_URL` |
+| 9 OpenAPI | 実装済み | `packages/openapi`、`GET /openapi.yaml` |
+| 10 Postgres TS-M01 | 実装済み | `postgres.integration.test.ts`（DB 未起動時 skip） |

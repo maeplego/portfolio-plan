@@ -66,6 +66,9 @@ pf-calendar/
 5. キャンセルリンク、ICS
 6. リマインドワーカー
 7. 内部 API（P10 用）: `createEventTypeForJob` や `listHostAvailability`。これが揃うまで P10 はテキスト希望日時でよい
+8. 予約確定イベント `calendar.booking.confirmed`（outbox + worker webhook）
+9. `packages/openapi` と `GET /openapi.yaml`
+10. Postgres 並列 book の integration テスト（TS-M01）
 
 ## 実装上の注意点
 

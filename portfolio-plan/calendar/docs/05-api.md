@@ -3,11 +3,37 @@
 | 項目 | 値 |
 | --- | --- |
 | プロジェクト | P05 calendar |
-| 対象スライス | 1–7 実装済みの HTTP。OpenAPI ファイルは未作成（本ファイルが人間向け正本） |
+| 対象スライス | 1–10 実装済みの HTTP。OpenAPI は `packages/openapi/openapi.yaml` と `GET /openapi.yaml` |
 | 最終更新 | 2026-08-18 |
 | 基準 | `http://localhost:8095`（Compose）。時刻は Instant の ISO-8601 |
 
-機械可読 OpenAPI は `packages/openapi` 予定。できたあと本ファイルは要約に落としてよい。
+機械可読 OpenAPI は `packages/openapi/openapi.yaml`。API は `GET /openapi.yaml` で同内容を返す。本ファイルは人間向け要約。
+
+## ドメインイベント（P10）
+
+予約 **新規確定**（201、冪等再送 200 ではない）時に `outbox_events` へ enqueue。worker が `CALENDAR_WEBHOOK_URL` へ POST する。
+
+```json
+{
+  "id": "...",
+  "type": "calendar.booking.confirmed",
+  "occurredAt": "2026-03-02T00:00:00Z",
+  "data": {
+    "bookingId": "...",
+    "eventTypeId": "...",
+    "externalRef": "job-1",
+    "hostSub": "employer-1",
+    "slug": "interview-30",
+    "start": "...",
+    "end": "...",
+    "guestName": "...",
+    "guestEmail": "...",
+    "guestTimeZone": "..."
+  }
+}
+```
+
+ヘッダ: `Content-Type: application/json`、`X-Calendar-Event-Type: calendar.booking.confirmed`。`CALENDAR_WEBHOOK_URL` 未設定時 worker は配信をスキップ。
 
 ## 共通
 
@@ -205,5 +231,4 @@ PII フィールドを足さない。
 
 | 予定 | 備考 |
 | --- | --- |
-| `calendar.booking.confirmed` イベント発行 | P10 結合時 |
-| OpenAPI ファイル | `packages/openapi` |
+| P10 側 webhook 受信と応募ステータス更新 | pf-talent-api |
