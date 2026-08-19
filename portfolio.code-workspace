@@ -41,6 +41,10 @@
                         "path":  "../pf-developer-scanner"
                     },
                     {
+                        "name":  "pf-commerce",
+                        "path":  "../pf-commerce"
+                    },
+                    {
                         "name":  "pf-recommend",
                         "path":  "../pf-recommend"
                     }
