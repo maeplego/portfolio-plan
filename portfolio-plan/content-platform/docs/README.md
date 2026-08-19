@@ -25,5 +25,6 @@
 | 1 Markdown + CMS 下書き/公開 + 短縮 MVP | 実装済み | 要件 FR、仕様の公開/下書き、設計のホットパス、TS-* |
 | 2 OG / Draft Mode | 実装済み（MDX/Tailwind は未） | 仕様の Draft Mode。OG は公開記事のみ |
 | 3 記事に紐づく短縮の日次グラフ UI | 実装済み | 管理画面バー。API `/v1/links/{id}/stats` |
+| シード「15 にまとめた理由」 | 実装済み | `why-fifteen-products`。やらなかったことを記事に書く |
 | 4 P03 / P01 / レート制限 / k6 | 計画 | |
 | overlay E | 実装済み（P08。P11 なし） | `pf-cloud-k8s` `e-content` |

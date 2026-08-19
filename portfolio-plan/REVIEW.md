@@ -6,7 +6,7 @@
 | Default path | Browser + optional Docker Compose. **Kubernetes is optional** |
 | Last updated | 2026-08-19 |
 
-This page is the **layer 0 / layer 1** path. Do not start with Docker Desktop Kubernetes. Overlay A–F are a deeper demo for infrastructure interviews (`integration-demo.md`).
+Last verified on this machine (2026-08-19): `.\scripts\review-up.ps1 -Pack p04 -UseLocalImages` then `http://localhost:3006/health`, `8096/health`, and `8097/health` returned 200 / `{"ok":true}`. Followed by `.\scripts\review-down.ps1 -Pack p04`.
 
 ## 0. Browser only (about 5 minutes)
 
@@ -30,7 +30,9 @@ $env:GHCR_OWNER = "github-username"   # after those repos publish public GHCR im
 .\scripts\review-up.ps1 -Pack p01-p03   # or p04 / p06
 ```
 
-`review-up.ps1` runs `docker compose pull` then `up -d --no-build`. It does not rebuild images.
+`review-up.ps1` with GHCR (`GHCR_OWNER` set) runs `docker compose pull` then `up -d --no-build`.
+
+On a developer machine, **`-UseLocalImages` builds** from each product `deploy/compose.yaml` (first run is slow; later runs use cache). You do not need to pre-tag `pf-*:latest` by hand.
 
 | Pack | What you see | URLs |
 | --- | --- | --- |
@@ -44,7 +46,7 @@ Developer machine without GHCR:
 .\scripts\review-up.ps1 -Pack p04 -UseLocalImages
 ```
 
-Images must already be tagged (`pf-workspace-web:latest`, …).
+First run compiles the workspace images. Later runs reuse the Docker cache.
 
 ## 3-point live demo (when Compose is up)
 
@@ -66,7 +68,7 @@ Images must already be tagged (`pf-workspace-web:latest`, …).
 ## Known limits
 
 - Compose packs use **dev auth** for media / workspace / commerce. Full OIDC across apps is the **optional** K8s foundation overlay
-- GHCR tags exist only after each `pf-*` repo runs the example workflow in `pf-cloud-k8s/docs/example-github-push-ghcr.yml`. Until then use `-UseLocalImages` or each product `docker compose up --build`
+- GHCR tags exist only after each `pf-*` repo runs the example workflow in `pf-cloud-k8s/docs/example-github-push-ghcr.yml`. Until then use `-UseLocalImages` (builds locally)
 - 12 GB Docker Desktop Kubernetes, ~28 image import, overlay switching: **not** the recruiter path
 - No real card numbers, no real household data, no production AWS
 
