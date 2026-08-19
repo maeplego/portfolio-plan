@@ -16,13 +16,15 @@
 | --- | --- | --- |
 | 単体 / HTTP | そのリポジトリの正本コマンド（`go test ./...`、`npm test`、`python -m pytest`、`mvn test` など） | ジョブ失敗 |
 | 依存の脆弱性 | Node: `npm audit --audit-level=high`、または Next/Expo 推移的 HIGH を `scripts/npm-audit-allowlist.json` で理由付き除外。Go: `govulncheck`。Python: `pip-audit` | ジョブ失敗。`npm audit --force` は使わない |
-| ファイルシステムスキャン | Trivy `fs`。`HIGH,CRITICAL`。action は `aquasecurity/trivy-action` の **v0.36.0 コミット** にピン（2026-03 の tag 改ざん事故のあと）。デモ用 Kubernetes の `config` スキャンは latest タグ等で常時赤になるため既定ジョブには入れない | 未修正（fix 無し）は `ignore-unfixed`。修正がある HIGH は落とす。Next 15 同梱の postcss / sharp は `.trivyignore`（`npm-audit-allowlist.json` と同じ理由） |
+| ファイルシステムスキャン | Trivy `fs`。`HIGH,CRITICAL`。action は `aquasecurity/trivy-action` の **v0.36.0 コミット** にピン（2026-03 の tag 改ざん事故のあと）。デモ用 Kubernetes の `config` スキャンは latest タグ等で常時赤になるため既定ジョブには入れない | 未修正（fix 無し）は `ignore-unfixed`。修正がある HIGH は落とす。Next 15 同梱の postcss / sharp は `.trivyignore`（`npm-audit-allowlist.json` と同じ理由）。`pf-developer-scanner` の `testdata/` は意図した脆弱フィクスチャなので `skip-dirs` |
 | 自リポジトリの kustomize | `deploy/k8s/` がある製品は `kubectl kustomize`（組み立てだけ）。ホスト runner に apiserver が無いので `apply` しない | 参照切れ |
 | Compose ファイル | `deploy/compose.yaml` があるとき `docker compose config`（起動はしない） | 構文 |
 
 `pf-cloud-k8s` はスクリプト構文と overlay のイメージ集合、`deploy/base` / `platform` / `ingress` の dry-run。A–F overlay の kustomize は **兄弟 `pf-*` の checkout が必要なので GitHub 上のこのリポジトリ単体では回さない。** 手元は `.\scripts\test-scripts.ps1`。
 
 `pf-cloud-aws` は従来どおり `terraform fmt` と `validate`（`backend=false`）。**`apply` は CI に無い。**
+
+`pf-developer-templates` のソースは `{{MODULE}}` のまま置く。CI の checkout 上だけ `example.com/template` に置換してから `go test` する。
 
 ## 既定では回さない（ローカルまたは workflow_dispatch）
 
