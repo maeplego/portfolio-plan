@@ -71,7 +71,7 @@ pf-recommend/
 2. ✅ 協調フィルタ（item-item cosine）と時間 split 評価レポート（`packages/metrics`。ランダム split は未実装）
 3. ✅ コールドスタートフォールバック（未知ユーザーは popularity、`fallback: true`）
 4. ✅ モデル registry とホットスワップ（`manifest.json` を最後に書くファイル registry。学習中の HTTP train は置かない。Postgres / MinIO は未接続）
-5. P06 アダプタ（商品閲覧イベント → interactions）
+5. ✅ P06 アダプタ（BFF `Product.similar` / `recommended` が namespace=commerce の SKU を呼ぶ。失敗時はカタログ順。events POST は任意・未配線）
 6. P10 アダプタ（応募・ブックマーク）。タグ overlap より精度が悪いなら出さない。推論側の `GET /v1/similar-items?namespace=jobs&item_id=&k=` は実装済み（未知 id は 404 で P10 フォールバック）
 
 ## 実装上の注意点
@@ -84,9 +84,9 @@ pf-recommend/
 
 ## 他プロジェクトとの契約
 
-P06 は BFF の `Product.similar` とホームの `recommended` から呼ぶ。失敗時は人気商品。
+P06 は BFF の `Product.similar` とホームの `recommended` から呼ぶ。失敗時・空・未マップ SKU は人気（カタログ順）。item_id は SKU。
 
-P10 は同様にフォールバック（新着）。推薦を必須経路にしない。
+P10 は skill overlap フォールバック。CF の overlap 合計がローカル `rankSimilarJobs` より厳密に低ければ出さない。
 
 ## デモ
 

@@ -19,6 +19,6 @@
 | POST | `/v1/incidents/{id}/resolve` | 同上 | resolve |
 | POST | `/v1/incidents/{id}/comments` | 同上 | タイムライン |
 | POST | `/v1/demo/alerts` | 同上 | 擬似 5xx |
-| POST | `/v1/integrations/{key}/events` | HMAC | ingest |
+| POST | `/v1/training/score` | なし | `{ actions }` を採点。未知操作は 400。クラスタ操作なし |
 
-計画: ランブック CRUD、訓練セッション。
+計画: ランブック CRUD、訓練履歴。

@@ -3,7 +3,7 @@
 | 項目 | 値 |
 | --- | --- |
 | プロジェクト | P06 commerce-platform |
-| 対象スライス | スライス 2 の公開 HTTP。OpenAPI は未作成 |
+| 対象スライス | スライス 6 の公開 HTTP / GraphQL。OpenAPI は未作成 |
 | 最終更新 | 2026-08-19 |
 | 矛盾時の正 | 自動テストと製品コード、次に `DESIGN.md` |
 | 基準 | `http://localhost:8099`（Compose の gateway。catalog/inventory/order は内部） |
@@ -120,6 +120,18 @@ ops のみ。イベントから `commerce_orders` 投影を作り直す。200 `{
 
 `sku, name, description, priceMinor, currency, imageUrl`。201。重複 SKU 409。buyer は 403。
 
-### POST `/v1/ops/stock-inbound`
+### GET `/v1/ops/stock`
 
-`{ "productId", "qty", "reason" }`。201 `{ productId, qty, reservedQty, availableQty }`。
+ops。cursor ページング。`items`: sku, name, qty, reservedQty, availableQty。`nextCursor`。
+
+### GET `/v1/ops/stock/stream`
+
+SSE `event: stock.updated`。認証はヘッダまたは `devUser` / `devRole` クエリ。
+
+### GET `/v1/ops/notifications`
+
+ops。notify のログ。
+
+## GraphQL BFF（`http://localhost:8110`）
+
+`POST /graphql`。スキーマは `product` / `products`。REST 下位: catalog products、inventory available、catalog reviews。

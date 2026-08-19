@@ -59,6 +59,14 @@
 
 204。ハードデリート。
 
+### GET `/v1/export.csv?month=YYYY-MM`
+
+`text/csv`。ヘッダ `occurredOn,amountYen,kind,categoryName,memo`。自分のその月だけ。
+
+### POST `/v1/import`
+
+`{ "csv": "..." }`。ヘッダ必須。小数円は 400。カテゴリは名前と kind で突合。201 `{ imported, errors }`。
+
 Transaction:
 
 | 欄 | 型 | 意味 |

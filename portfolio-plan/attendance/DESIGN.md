@@ -56,7 +56,7 @@ pf-attendance/
 ## 実装順序
 
 1. ✅ 従業員マスタ、打刻、日次労働時間（休憩控除）のテスト — `../pf-attendance` 2026-08-19。Asia/Tokyo、整数分、Compose。夜勤なし
-2. 月次カレンダー UI
+2. ✅ 月次カレンダー UI — `GET /v1/me/month-summary` + `/calendar`
 3. 修正・休暇申請と承認
 4. 工数按分（合計 ≤ 勤務）
 5. 月次締めと CSV

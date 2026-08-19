@@ -12,7 +12,7 @@
 | 用語 | 意味 |
 | --- | --- |
 | 公開記事 | `status=published` かつ `publishedAt` が現在以前 |
-| 下書き | `status=draft`。公開 URL では存在しないものとして扱う |
+| 下書き | `status=draft`。未ログインの公開 URL では 404。Draft Mode + 編集者 cookie のときだけ同じ URL で見える |
 | 短縮コード | 7 文字（カスタム時は 3–32）。記事 slug とは別空間 |
 | 許可ホスト | デモで短縮してよい宛先の hostname |
 
@@ -25,7 +25,8 @@ API の時刻は UTC RFC3339。DB は `timestamptz`。表示は ISO 日付で足
 | 操作 | 仕様 |
 | --- | --- |
 | 記事一覧 `/` | 公開記事のみ。下書き行なし |
-| 記事詳細 `/posts/{slug}` | 非公開は 404（401 にしない。存在漏洩を減らす） |
+| 記事詳細 `/posts/{slug}` | 非公開は 404（401 にしない）。Draft Mode かつ編集者なら下書きを表示しバナーを出す |
+| OG `/posts/{slug}/opengraph-image` | 公開記事の題名。下書きの題は出さない |
 | RSS / sitemap | 公開記事のみ |
 | `GET /{code}` | 302 Location。不明・無効・期限切れは 404 |
 | `/admin` | ログイン画面は見える。記事 API は 401 |
@@ -39,7 +40,9 @@ API の時刻は UTC RFC3339。DB は `timestamptz`。表示は ISO 日付で足
 | 記事作成 | 既定は draft。slug 衝突 409 |
 | 公開 / 再下書き | Publish で `publishedAt` を初回セット。Unpublish は status だけ draft に戻す（publishedAt は残してよい） |
 | プレビュー `/admin/preview/{slug}` | 未ログインは 404 |
+| Draft Mode `POST /api/draft` | 編集者のみ enable。cookie だけでは下書きを公開しない |
 | 短縮作成 | 公開済み記事のみ。宛先は `CONTENT_PUBLIC_URL/posts/{slug}` |
+| 日次グラフ | 管理画面。`GET /v1/links/{id}/stats` の `daily` をバー表示 |
 
 ## 5. 短縮の拒否
 

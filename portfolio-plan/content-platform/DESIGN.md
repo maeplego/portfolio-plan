@@ -54,10 +54,10 @@
 ## 実装順序
 
 1. Markdown の静的ブログ（記事 1 本）
-2. DB 駆動 CMS、下書き、RSS、sitemap
-3. OG 画像、Draft Mode
-4. 短縮サービス MVP（リダイレクト + 作成 API）
-5. 管理画面から記事に紐づけ、日次グラフ
+2. ✅ DB 駆動 CMS、下書き、RSS、sitemap
+3. ✅ OG 画像、Draft Mode（Tailwind+MDX は未）
+4. ✅ 短縮サービス MVP（リダイレクト + 作成 API）
+5. ✅ 管理画面から記事に紐づけ、日次グラフ
 6. P03、P01、レート制限、k6 の簡単な計測を README に
 
 ## 実装上の注意点

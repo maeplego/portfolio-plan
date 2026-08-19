@@ -3,7 +3,7 @@
 | 項目 | 値 |
 | --- | --- |
 | プロジェクト | P06 commerce-platform |
-| 対象スライス | スライス 3（イベントストア）。プロセス分割はスライス 2 |
+| 対象スライス | スライス 6。プロセス分割 + イベントストア + outbox + BFF |
 | 最終更新 | 2026-08-19 |
 | 矛盾時の正 | 自動テストと製品コード、次に `DESIGN.md` |
 
@@ -14,19 +14,23 @@
 ```
 pf-commerce/                    1 git リポジトリ（8 リポジトリにはしない）
   packages/                     薄い共有（money, id, clock, auth, httpjson）
-  apps/catalog                  商品マスタ HTTP。DB `catalog`
-  apps/inventory                在庫 HTTP。DB `inventory`
-  apps/order                    チェックアウト。決済モックはここ。DB `orders`
+  apps/catalog                  商品マスタ + レビュー HTTP。DB `catalog`
+  apps/inventory                在庫 HTTP + SSE hub。DB `inventory`
+  apps/order                    チェックアウト。outbox。DB `orders`
+  apps/payment                  決済モック。メモリ
+  apps/notify                   通知ログ。メモリ
   apps/api                      公開 gateway。カート。DB `gateway`
-  apps/storefront               Next.js。REST クライアントは :8099 のみ
-  deploy/                       Compose + `k8s/`（overlay D）
+  apps/bff                      GraphQL（購入者）。catalog/inventory を集約
+  apps/storefront               Next.js。REST + 任意で BFF
+  apps/ops-web                  Next.js。在庫グリッド
+  deploy/                       Compose。`k8s/` は overlay D 用の既存 5 ワークロード
 ```
 
-注文確定の正は `apps/order` の **イベントストリーム**。`commerce_orders` は一覧投影。gateway は公開契約とカート。
+注文確定の正は `apps/order` の **イベントストリーム**。`commerce_orders` は一覧投影。`commerce_outbox` は同じ TX で書く。gateway は公開 REST。BFF は購入者の読み取り集約だけ。
 
 ## 2. なぜ 8 リポジトリにしないか
 
-在庫と注文は独立デプロイしたい。ポリレポ 8 本は配線と版合わせが先に壊れる。スライス 2 は **同一リポジトリ・別プロセス・別 DB**。決済はまだ order 内モック。overlay D は P01+P02+P03+P06。
+在庫と注文は独立デプロイしたい。ポリレポ 8 本は配線と版合わせが先に壊れる。スライス 4–6 も **同一リポジトリ・別プロセス**。overlay D はまだ catalog/inventory/order/gateway/storefront。
 
 ## 3. 引当と同時購入
 
@@ -47,7 +51,9 @@ order は inventory を HTTP で呼ぶ。同期の短いコマンド。2PC は�
 
 ## 4. 冪等
 
-`(buyer_sub, idempotency_key)` は order DB で一意。gateway はカートを行に展開してから order に渡す。決済モックも `pay:` + キーで再課金しない。カード番号フィールドなし。
+`(buyer_sub, idempotency_key)` は order DB で一意。gateway はカートを行に展開してから order に渡す。payment は `pay:` + キーで再課金しない。カード番号フィールドなし。
+
+notify 対象イベントは `PaymentRecorded` → `OrderPaid`、`OrderCancelled` → `OrderCancelled`。Append と同じ TX / mutex で outbox 行を書く。order がドレインして notify に POST。id はイベント id で冪等。
 
 ## 5. 金額
 

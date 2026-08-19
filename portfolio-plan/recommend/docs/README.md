@@ -3,7 +3,7 @@
 | 項目 | 値 |
 | --- | --- |
 | プロジェクト | P07 recommend |
-| 対象スライス | 人気 + item-item、時間 split、registry、jobs similar-items。P06 アダプタは計画 |
+| 対象スライス | 人気 + item-item、時間 split、registry、jobs similar-items。P06 commerce namespace + overlay C/D 配線済み。events POST は任意 |
 | 最終更新 | 2026-08-19 |
 | 矛盾時の正 | `../pf-recommend` のテストとコード、次に `../DESIGN.md` |
 
@@ -26,5 +26,5 @@
 | item-item + 時間 split | 実装済み | 設計、テスト |
 | コールドスタート fallback | 実装済み | 仕様 |
 | ファイル registry | 実装済み。Postgres/MinIO は未接続（計画） | 設計 |
-| P06 アダプタ | 計画 | |
-| P10 配線 | 推論 API は実装。overlay 配線は計画 | 05-api |
+| P06 アダプタ | 実装済み（SKU item_id。events POST 未配線） | |
+| P10 配線 | 推論 API + overlay C。未知 ULID は 404 → skill overlap。品質ゲートあり | 05-api |

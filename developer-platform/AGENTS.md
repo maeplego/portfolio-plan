@@ -18,9 +18,11 @@
 - `../pf-developer-scanner` — 脆弱性・シークレット・Dockerfile ルールの CLI（アイデア 21）。MVP。exploit / PoC なし
 - `../pf-developer-cli` — `pf-dev new` / `pf-dev scan`（アイデア 23）。テンプレは P04/P06 実体
 - `../pf-developer-templates` — `go-api` と `go-next`（template.json + 実ファイル）
-- `../pf-developer-portal` — 手置き OpenAPI カタログ、リファレンス、example モック（アイデア 29）。MVP
+- `../pf-developer-portal` — 手置き OpenAPI カタログ、リファレンス、example モック、oasdiff Action / `oasdiff-gate`（アイデア 29）
+- `../pf-developer-ci-dash` — 公開 GitHub Actions の読み取りダッシュボード（アイデア 15）。PAT は git に置かない
+- `../pf-developer-review` — PR diff / コメントの GitHub API BFF（アイデア 08）。ローカル git パスは扱わない
 
-`pf-developer-ci-dash` / `pf-developer-review` は未作成。exploit / PoC は書かない。
+`pf-developer-web` 横断シェルは未着手。scanner は overlay 非搭載。exploit / PoC は書かない。
 
 このフォルダは設計・指示・チャット記録用。入れ子 Git は作らない。
 

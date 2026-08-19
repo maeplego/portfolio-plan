@@ -24,11 +24,13 @@ flowchart LR
     UC3[連携 overlay を起動する]
     UC4[モジュールを validate する]
     UC5[AWS に apply する_非目標]
+    UC6[REVIEW Compose pack]
   end
   Rev --> UC1
   Rev --> UC2
   Rev --> UC3
   Rev --> UC4
+  Rev --> UC6
   App --> UC1
 ```
 

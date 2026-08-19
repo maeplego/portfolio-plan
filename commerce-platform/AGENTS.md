@@ -13,8 +13,8 @@
 9. `commerce-platform/chat-context/` の `P06_*.md` をファイル名昇順で全て
 10. 書類の更新・面接説明では `portfolio-plan/documentation.md` と `portfolio-plan/commerce-platform/docs/README.md`
 
-K8s は P02、画像は P03、推薦は P07。overlay D は P01+P02+P03+P06 サブセット（P07/P11/P12/P13 は後続）。
+K8s は P02、画像は P03、推薦は P07。overlay D は P01+P02+P03+P06 フル + P07（P11/P12/P13 は後続）。
 
-製品コードはワークスペースの兄弟 `../pf-commerce`（`apps/catalog` / `apps/inventory` / `apps/order` / `apps/api` gateway、`apps/storefront`、`deploy`）。このフォルダは設計・指示・チャット記録用。
+製品コードはワークスペースの兄弟 `../pf-commerce`（`apps/catalog` / `inventory` / `order` / `payment` / `notify` / `api` gateway / `bff` / `storefront` / `ops-web`、`deploy`）。このフォルダは設計・指示・チャット記録用。
 
 チャット記録の次ファイルは `chat-context/P06_XXXXX_要約.md`（既存最大連番 + 1）。

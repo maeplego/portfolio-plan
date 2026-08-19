@@ -71,6 +71,14 @@ Post:
 
 公開記事のみ。短縮 API をサーバから呼ぶ。201 `{ post, link }`。
 
+### POST `/api/draft` / DELETE `/api/draft`
+
+編集者のみ Draft Mode を切替。GET は `{ draft, editor }`。
+
+### GET `/api/short-links` / `?id=`
+
+編集者。短縮一覧、または 1 件の日次 stats。
+
 ## 短縮
 
 ### POST `/v1/links`

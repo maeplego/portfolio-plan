@@ -3,7 +3,7 @@
 | 項目 | 値 |
 | --- | --- |
 | プロジェクト | P06 commerce-platform |
-| 対象スライス | シーケンス・状態・ER はスライス 2。画面は実装済み。overlay D は P06 サブセット |
+| 対象スライス | シーケンスはスライス 6。overlay D は P06 サブセット（新サービス未搭載） |
 | 最終更新 | 2026-08-19 |
 | 矛盾時の正 | 自動テストと製品コード、次に `DESIGN.md` |
 | 記法 | Mermaid。ユースケースは UML 楕円の代替としてフロー |
@@ -54,7 +54,8 @@ sequenceDiagram
   participant GW as gateway
   participant Ord as order
   participant Inv as inventory
-  participant Pay as payment mock
+  participant Pay as payment
+  participant Ntf as notify
   Buyer->>GW: POST /v1/checkout + Idempotency-Key
   GW->>Ord: POST /v1/checkout
   Ord->>Inv: Reserve (1 TX)
@@ -62,8 +63,10 @@ sequenceDiagram
   Ord->>Pay: Charge(no PAN)
   Pay-->>Ord: paymentId
   Ord->>Inv: Consume
+  Note over Ord: outbox OrderPaid（同一 TX）
   Ord-->>GW: 201 paid
   GW-->>Buyer: 201 paid
+  Ord->>Ntf: POST notification
 ```
 
 ## 4. 在庫不足（同時 2 人）
@@ -116,6 +119,8 @@ erDiagram
   inventory_reservations }o--|| commerce_orders : order_id 論理
   commerce_orders ||--|{ commerce_order_lines : lines
   commerce_order_events }o--|| commerce_orders : stream_id
+  commerce_outbox }o--|| commerce_orders : aggregate_id
+  catalog_reviews }o--|| catalog_products : product_id
   cart_items }o--|| catalog_products : product_id 論理
 ```
 

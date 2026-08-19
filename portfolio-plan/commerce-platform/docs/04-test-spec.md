@@ -3,7 +3,7 @@
 | 項目 | 値 |
 | --- | --- |
 | プロジェクト | P06 commerce-platform |
-| 対象スライス | 2。自動化はリポジトリルートの `go test ./...` |
+| 対象スライス | 2–6。自動化は `go test ./...` と `apps/bff` の `npm test` |
 | 最終更新 | 2026-08-19 |
 | 矛盾時の正 | 製品リポジトリの Go テスト。本表と食い違ったらテストを直すか本表を追随 |
 
@@ -13,8 +13,9 @@
 | --- | --- | --- |
 | money | DB なし | 負数・通貨・overflow |
 | inventory / order | メモリ Store + 固定 Clock | 不足、補償、TTL、同時引当 |
-| HTTP | httptest。gateway は catalog/inventory/order を別サーバとして接続 | 公開契約、401/403、冪等 200、float 価格、同時 409 |
+| HTTP | httptest。gateway は catalog/inventory/order/payment/notify を別サーバとして接続 | 公開契約、401/403、冪等 200、float 価格、同時 409、ops グリッド、notify |
 | 注文 ES | Given events / When command / Then events | 不正遷移、リプレイ |
+| BFF | Node test。DataLoader あり/なしの REST 回数 | N+1 |
 
 exploit / PoC は書かない。カード番号を fixture に置かない。
 
@@ -65,11 +66,18 @@ exploit / PoC は書かない。カード番号を fixture に置かない。
 | TS-H06 | 同時 HTTP | 201 と 409 が 1 ずつ |
 | TS-H07 | 購入者の入庫 | 403 |
 | TS-H08 | `priceMinor: 12.5` | 400 |
-| TS-H09 | 他人の GET order | 403 |
+| TS-H10 | ops 在庫グリッド | 200。SKU 行がある |
+| TS-H11 | paid のあと ops notifications | `OrderPaid` が 1 件 |
+| TS-P01 | 決済冪等 | 同じキーは同じ charge id |
+| TS-N01 | notify 冪等 | 同じ id は 1 行 |
+| TS-O01 | outbox drain | paid で 1 通。再 drain で増えない |
+| TS-G01 | DataLoader あり | 3 商品で inventory REST 1 回 |
+| TS-G02 | DataLoader なし | 3 商品で inventory REST 3 回 |
 
 ## 6. 未自動化
 
 - Compose 実機の `/demo` 同時クリック（契約は TS-H06）
-- overlay D 実機は `cluster-smoke-d-commerce.ps1`（手動・Docker Desktop）
+- ops-web ブラウザの SSE（契約は hub 単体と入庫 HTTP）
+- overlay D 実機は `cluster-smoke-d-commerce.ps1`（手動・Docker Desktop）。BFF `recommended` と ops Ingress を含む
 - Postgres 並列 UPDATE の integration タグ
 - 予約 TTL ワーカー

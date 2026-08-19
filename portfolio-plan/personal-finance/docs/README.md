@@ -3,7 +3,7 @@
 | 項目 | 値 |
 | --- | --- |
 | プロジェクト | P14 personal-finance |
-| 対象スライス | 1 実装済み（オンライン CRUD + 月次予算/グラフ + PWA インストール） |
+| 対象スライス | 1 実装済み + CSV 入出力。IndexedDB / 同期 / P01 は計画 |
 | 最終更新 | 2026-08-19 |
 | 矛盾時の正 | `../pf-finance` のテストとコード、次に `../DESIGN.md` |
 
@@ -25,5 +25,6 @@
 | 1 オンライン CRUD + グラフ + インストール | 実装済み | 要件 FR、仕様の月次、API、TS-M*/H* |
 | 2 IndexedDB とオフラインキュー | 計画 | DESIGN 実装順 3。Service Worker はシェルのみ |
 | 3 同期 API / LWW + tombstone | 計画 | 実装順 4。削除はいまハードデリート |
-| 4 CSV / P01 / ダークモード / アカウント削除 | 計画 | 実装順 5–6 |
+| 4 CSV | 実装済み | `GET /v1/export.csv` `POST /v1/import`。整数円。カテゴリ名突合 |
+| 4 残り P01 / ダークモード / アカウント削除 | 計画 | 実装順 6 |
 | overlay F | 実装済み | `pf-finance/deploy/k8s/`。Compose が正 |

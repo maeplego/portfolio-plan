@@ -16,6 +16,8 @@
     { "name": "pf-developer-cli", "path": "../pf-developer-cli", "project": "P11" },
     { "name": "pf-developer-templates", "path": "../pf-developer-templates", "project": "P11" },
     { "name": "pf-developer-portal", "path": "../pf-developer-portal", "project": "P11" },
+    { "name": "pf-developer-ci-dash", "path": "../pf-developer-ci-dash", "project": "P11" },
+    { "name": "pf-developer-review", "path": "../pf-developer-review", "project": "P11" },
     { "name": "pf-content-blog", "path": "../pf-content-blog", "project": "P08" },
     { "name": "pf-content-shortener", "path": "../pf-content-shortener", "project": "P08" },
     { "name": "pf-content-infra", "path": "../pf-content-infra", "project": "P08" },

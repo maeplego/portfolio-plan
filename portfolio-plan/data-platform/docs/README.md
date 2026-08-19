@@ -3,7 +3,7 @@
 | 項目 | 値 |
 | --- | --- |
 | プロジェクト | P13 data-platform |
-| 対象スライス | 架空 CSV → 品質ゲート → dbt marts。Metabase と P06/P10 コネクタは計画 |
+| 対象スライス | 架空 CSV → 品質ゲート → dbt marts。Metabase は任意 profile。P06/P10 コネクタは計画 |
 | 最終更新 | 2026-08-19 |
 | 矛盾時の正 | `../pf-data` のテストとコード、次に `../DESIGN.md` |
 
@@ -24,5 +24,5 @@
 | --- | --- | --- |
 | 架空 CSV DAG + dbt test | 実装済み | 要件、KPI |
 | 壊れた CSV で mart 維持 | 実装済み | 仕様、TS |
-| Metabase | 計画 | |
+| Metabase | 任意（`--profile bi`）。最小 KPI は `bi/dashboards/marts_kpis.sql` | |
 | P06 / P10 コネクタ | 計画 | 受け入れに含めない |

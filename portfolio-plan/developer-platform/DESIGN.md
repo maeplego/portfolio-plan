@@ -26,7 +26,7 @@
 
 内部開発者プラットフォーム（Internal Developer Platform）のミニ版。新しいサービスの **作り方・正しさの見方・壊し方の防ぎ方** を一箇所に揃える。5 アイデアは別製品に見えるが、価値は「標準で作 → 仕様がポータルに出る → CI が見える → PR をレビュー → 依存をスキャン」という一本の流れ。
 
-**scanner は MVP。** CLI は空テンプレ禁止だったが、P04 / P06 の実ファイルをテンプレート化したので CLI スライスは完成扱いしてよい。portal MVP は overlay B（`portal.localhost`）。CI dashboard / review は未着手。
+**scanner は MVP（K8s overlay 非搭載）。** CLI は P04 / P06 実ファイルテンプレで完成扱い。portal MVP は overlay B（`portal.localhost`）。oasdiff Action、CI dashboard、review BFF は 2026-08-19 に追加。横断 web シェルは未着手。
 
 ## リポジトリ構成（ポリレポ）
 
@@ -50,14 +50,14 @@
 | --- | --- |
 | CLI / scanner | Go。単一バイナリ、GitHub Releases |
 | テンプレート | 実ファイル + `template.json`。生成後に `go test` / `npm test` が通ること |
-| Portal / CI / Review | Next.js + 小さな Go/TS API |
+| Portal / CI / Review | Go + 埋め込み HTML（portal / ci-dash / review）。`pf-developer-web` は未着手 |
 | 脆弱性 DB | OSV API。キャッシュ |
-| 仕様差分 | oasdiff |
-| 認証 | P01。GitHub PAT はユーザーごとに暗号化保存 |
+| 仕様差分 | oasdiff Action + `oasdiff-gate` |
+| 認証 | 公開 repo はトークンなし可。任意 `GITHUB_TOKEN` は環境変数のみ。暗号化保存と P01 ログインは未着手 |
 
 ## 設計思想
 
-- **生成物の品質が CLI の本体。** ツールのプロンプトより、strict TS、`/health`、graceful shutdown、OTel。CLI は P04/P06 実体ベース。scanner は MVP のまま。portal MVP は手置き YAML の HTML リファレンスと example モック。CI dashboard / review は未着手。
+- **生成物の品質が CLI の本体。** ツールのプロンプトより、strict TS、`/health`、graceful shutdown、OTel。CLI は P04/P06 実体ベース。scanner は MVP のまま。portal は手置き YAML の HTML リファレンスと example モック。仕様差分は oasdiff Action（fixture + PR の `specs/`）と `cmd/oasdiff-gate`。CI dash / review は公開 repo の GitHub API 読み取り（書き込みコメントは任意トークン）。
 - **攻撃ではなく修正。** スキャナーに exploit / PoC を置かない
 - **仕様を CI ゲートにする。** ポータルの見た目より breaking change で fail する Action
 - **GitHub を再実装しすぎない。** Review は GitHub API を BFF。自前 git 実行はパストラバーサルが怖いので避ける
@@ -65,12 +65,12 @@
 ## 実装順序（プロジェクト内）
 
 1. ✅ **scanner MVP**（`../pf-developer-scanner`）。Go.mod / npm lock + OSV、Dockerfile ルール、シークレット検出（マスク）、Markdown、重大度ゲート。exploit / PoC なし。2026-08-19
-2. ✅ **portal MVP**（`../pf-developer-portal`）。手置き OpenAPI（payments / P06 catalog 子集 / P08 posts 子集）をカタログとリファレンスで表示。`/mock/{slug}` は example 優先、スキーマ検証で 400。oasdiff / 管理アップロードは未着手。2026-08-19
-3. ✅ **CLI + templates**（`../pf-developer-cli`, `../pf-developer-templates`）。`pf-dev new` が P04 workspace / P06 commerce の実ファイル（health/ready、OTel env、OIDC stub、catalog、httptest）をコピーする。生成物は `go test` / `npm test`。scanner は subprocess。2026-08-19
-4. **openapi-diff Action** — 未着手
-5. **CI dashboard**（公開リポジトリの webhook）— 未着手
-6. **code review UI** — 未着手
-7. **web シェル** でつなぐ — 未着手
+2. ✅ **portal MVP**（`../pf-developer-portal`）。手置き OpenAPI（payments / P06 catalog 子集 / P08 posts 子集）をカタログとリファレンスで表示。`/mock/{slug}` は example 優先、スキーマ検証で 400。管理アップロードは未着手。2026-08-19
+3. ✅ **CLI + templates**（`../pf-developer-cli`, `../pf-developer-templates`）。`pf-dev new` が P04 workspace / P06 commerce の実ファイル（health/ready、OTel env、OIDC stub、catalog、httptest）をコピーする。生成物は `go test` / `npm test`。scanner は subprocess。テンプレに oasdiff workflow を同梱。2026-08-19
+4. ✅ **openapi-diff Action**（`pf-developer-portal/.github/workflows/openapi-breaking.yml` + `testdata/openapi` + `cmd/oasdiff-gate`）。upstream `oasdiff/oasdiff-action` が breaking fixture で fail、compatible で green。2026-08-19
+5. ✅ **CI dashboard**（`../pf-developer-ci-dash`）。公開 Actions の allowlist 読み取り。任意 HMAC webhook。PAT は git に置かない。2026-08-19
+6. ✅ **code review UI**（`../pf-developer-review`）。GitHub API BFF。ローカル path 拒否。巨大 diff は切り詰め。2026-08-19
+7. **web シェル** でつなぐ — 未着手（portal / dash / review は別ポート）
 
 ## 実装上の注意点
 

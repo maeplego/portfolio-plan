@@ -20,7 +20,7 @@
 | [05-api.md](05-api.md) | API 仕様書。health/ready、OTLP、demo-api |
 | [06-diagrams.md](06-diagrams.md) | ユースケース、構成、シーケンス |
 
-kustomize の URL 一覧と overlay 切替は運用ランブックとして `../pf-cloud-k8s/docs/` に残す。DESIGN と重複する方針は本ディレクトリを正とする。
+kustomize の URL 一覧と overlay 切替は運用ランブックとして `../pf-cloud-k8s/docs/` に残す。採用担当者は `portfolio-plan/REVIEW.md`。DESIGN と重複する方針は本ディレクトリを正とする。
 
 ## スライスと書類の対応
 
@@ -34,7 +34,7 @@ kustomize の URL 一覧と overlay 切替は運用ランブックとして `../
 | 6 overlay B collab + P11 portal | 実装済み | `portal.localhost`。scanner は非搭載 |
 | 7 overlay E content | 実装済み | P08。P11 は計画 |
 | 8 overlay F ops | 実装済み | P09 / P12 / P14 / P15 API。Expo は非搭載 |
-| 8b overlay D commerce | 実装済み（サブセット） | P06。P07/P11/P12/P13 は計画 |
+| 8b overlay D commerce | 実装済み | P06 フル + P07。P11/P12/P13 は計画 |
 | 9 Terraform モジュール + GitHub OIDC | 実装済み（モジュール） | 設計の 3-tier。apply は計画ではなく非目標 |
 | 10 学習アカウントへ 3-tier 載せる | **非目標** | README のコスト・destroy のみ |
 | 11 障害注入手順の文書化 | 計画 | o11y debug エンドポイントは実装済み。P12 題材は後続 |

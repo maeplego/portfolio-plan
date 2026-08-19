@@ -61,7 +61,7 @@ Spark はデータ量が見合わないので使わない。README に「規模�
 2. dbt モデルと test
 3. MinIO への extract と Dagster DAG
 4. 壊れた CSV で fail するデモ
-5. Metabase 3 枚
+5. ✅ Metabase は Compose `--profile bi` 任意。最小経路は `bi/dashboards/marts_kpis.sql`（marts のみ）
 6. P06 の日次 export コネクタ
 7. P10 の非個人集計コネクタ（任意）
 

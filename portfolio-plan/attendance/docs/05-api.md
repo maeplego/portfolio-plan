@@ -54,6 +54,10 @@
 
 `workMinutes` / `breakMinutes` は整数。`status` は `absent` \| `clocked_in` \| `on_break` \| `clocked_out`。
 
+### GET `/v1/me/month-summary?month=YYYY-MM`
+
+200 `{ "month", "zone": "Asia/Tokyo", "days": [ { workDate, workMinutes, breakMinutes, status, punchCount } ] }`。`days` はその月の暦日すべて（8月は 31）。他人の打刻は 0。不正な month は 400。
+
 ## 打刻
 
 ### POST `/v1/punches`

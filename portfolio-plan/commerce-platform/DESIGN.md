@@ -30,19 +30,21 @@ K8s 化では `cloud-platform/DESIGN.md`。商品画像は `media-platform/DESIG
 
 サービスごとに DB とデプロイが独立する前提なのでポリレポ。共有ライブラリは薄く（CloudEvents、auth middleware）。共有ライブラリを厚くするとモノリスの分割にしかならない。
 
-| リポジトリ | 役割 | アイデア |
+**実装は 1 git リポジトリ `pf-commerce` の `apps/`。** 下表はプロセス境界の名前であり、8 本の git にはしていない。
+
+| プロセス（apps/） | 役割 | アイデア |
 | --- | --- | --- |
-| `pf-commerce-catalog` | 商品マスタ | 05 |
-| `pf-commerce-inventory` | 在庫残高、移動、引当 | 05, 06 |
-| `pf-commerce-ops-web` | 在庫ダッシュボード、出荷 | 06 |
-| `pf-commerce-cart` | カート。Redis でも Postgres でも可 | 05 |
-| `pf-commerce-order` | コマンド、イベントストア、投影 | 05, 25 |
-| `pf-commerce-payment` | 決済モック、冪等キー | 05 |
-| `pf-commerce-notify` | メール | 05 |
-| `pf-commerce-bff` | GraphQL。購入者画面専用 | 24 |
-| `pf-commerce-storefront` | 購入者 Next.js | 24 |
-| `pf-commerce-gateway` | 公開入口、JWT、レート制限。BFF と ops を振り分け | 05 |
-| `pf-commerce-infra` | Compose、後に P02 の kustomize overlay | 05, 17 |
+| catalog | 商品マスタ・レビュー | 05, 24 |
+| inventory | 在庫残高、移動、引当、SSE | 05, 06 |
+| ops-web | 在庫ダッシュボード | 06 |
+| order | コマンド、イベントストア、投影、outbox | 05, 25 |
+| payment | 決済モック、冪等キー | 05 |
+| notify | メール相当のログ（SMTP なし） | 05 |
+| bff | GraphQL。購入者画面専用 | 24 |
+| storefront | 購入者 Next.js | 24 |
+| api（gateway） | 公開入口。カート。BFF と ops を振り分け | 05 |
+
+カートは gateway。RabbitMQ は未導入（outbox ポーリング）。
 
 `pf-commerce-order` に支払いや在庫を戻さない。補償はイベントで行う。
 
@@ -52,7 +54,7 @@ K8s 化では `cloud-platform/DESIGN.md`。商品画像は `media-platform/DESIG
 | --- | --- |
 | サービス | Go + PostgreSQL（サービスごとスキーマまたはコンテナ） |
 | メッセージ | RabbitMQ。初期 Kafka 禁止 |
-| BFF | TypeScript, GraphQL Yoga または Apollo、DataLoader |
+| BFF | TypeScript, graphql-js + 自前バッチ（DataLoader 相当）。Yoga/Apollo は未使用 |
 | Storefront / Ops | Next.js |
 | 決済 | 完全モック。Stripe テストモードは任意。本物のカード禁止 |
 | 観測 | P02 の OTLP |
@@ -76,7 +78,7 @@ K8s 化では `cloud-platform/DESIGN.md`。商品画像は `media-platform/DESIG
 
 ## 在庫（06）
 
-`stock_movements` が正、`stock_balances` はトランザクション内更新。引当は `reservations` + TTL。ダッシュボードは cursor ページングと Redis Pub/Sub。
+`stock_movements` が正、`stock_balances` はトランザクション内更新。引当は `reservations` + TTL。ダッシュボードは cursor ページングと **プロセス内 Pub/Sub + SSE**（Redis は未導入）。
 
 ## GraphQL（24）
 
@@ -86,12 +88,12 @@ K8s 化では `cloud-platform/DESIGN.md`。商品画像は `media-platform/DESIG
 
 1. **モジュラモノリス**（1 リポジトリ一時でも可）で購入〜在庫不足までテスト
 2. catalog / inventory / order を抽出。決済はまだ order 内モックでも可（同一リポジトリの `apps/`。8 git リポジトリにはしない）
-3. overlay D（P01+P02+P03+P06）。P07/P11/P12/P13 は後続
+3. overlay D（P01+P02+P03+P06 フルスライス + P07）。P11/P12/P13 は後続
 4. ✅ 注文をイベントストア化（テスト: Given/When/Then）。checkout はプロセスマネージャ。決済は order 内モック
-5. payment と notify を抽出。outbox
-6. ops-web のグリッドとライブ更新
-7. BFF + storefront。DataLoader なしのトレースを残してから導入
-8. P03 画像、P07 推薦スロット
+5. ✅ payment と notify を抽出。outbox
+6. ✅ ops-web のグリッドとライブ更新
+7. ✅ BFF + storefront。DataLoader なしのトレースを残してから導入
+8. ✅ P07 推薦スロット（BFF fail-closed to popularity。P03 画像は未接続）
 
 ## 実装上の注意点
 
@@ -105,7 +107,7 @@ K8s 化では `cloud-platform/DESIGN.md`。商品画像は `media-platform/DESIG
 ## 他プロジェクトとの契約
 
 - P01: 購入者と ops でロールを分ける。ops は workspace とは別クライアントでも可
-- P07: `GET` 互換の `userId` / `itemId`。クリックイベントは任意
+- P07: `GET /v1/similar-items?namespace=commerce&item_id={sku}` と `GET /v1/recommend`。失敗時はカタログ順。クリック events POST は任意
 - P13: 日次で `orders` 投影のエクスポート（CSV/JSON）を MinIO へ
 - P12: 在庫サービスを止める障害を訓練シナリオにできるが、P12 から本番コマンドは叩かない
 

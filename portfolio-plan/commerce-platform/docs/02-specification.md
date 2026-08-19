@@ -3,7 +3,7 @@
 | 項目 | 値 |
 | --- | --- |
 | プロジェクト | P06 commerce-platform |
-| 対象スライス | スライス 2 の現行 API・storefront |
+| 対象スライス | スライス 6 までの現行 API・storefront・ops-web・BFF |
 | 最終更新 | 2026-08-19 |
 | 矛盾時の正 | 自動テストと製品コード、次に `DESIGN.md`。HTTP の細部は [05-api.md](05-api.md) |
 
@@ -50,18 +50,25 @@
 
 ## 6. 決済
 
-モック。リクエストに PAN / CVV を置かない。成功時 `paymentId`（ULID）だけが注文に残る。失敗注入はテスト専用。
+別プロセス `apps/payment`。リクエストに PAN / CVV を置かない。成功時 `paymentId`（ULID）だけが注文に残る。失敗注入は `POST /v1/test/fail-next`（テスト用）。
 
-## 7. 画面（スライス 2）
+支払い確定とキャンセルは order の outbox から notify へ。notify は SMTP を送らずメッセージログを持つ。
+
+## 7. 画面
 
 | 画面 | 仕様 |
 | --- | --- |
 | `/` | カタログ。ブラウザから REST |
-| `/products/:id` | 1 点チェックアウト。購入者セレクト |
+| `/products/:id` | 1 点チェックアウト。BFF があれば在庫+レビューを GraphQL |
 | `/demo` | buyer-a / buyer-b の 2 ペイン。MUG-1 を同時購入 |
+| ops-web `:3010` | 在庫グリッド、入庫、SSE フィード、notify 一覧 |
 
-P01 ログイン画面は未実装。ユーザー切替は dev ヘッダ。
+P01 ログイン画面は未実装。ユーザー切替は dev ヘッダ。SSE は `devUser` / `devRole` クエリ（EventSource がカスタムヘッダを付けられないため）。
 
-## 8. 既知の制限
+## 8. GraphQL（BFF :8110）
 
-レート制限なし。GraphQL なし。注文タイムライン（イベント列）なし。出荷なし。購入者から見えるのは gateway のみ。
+`POST /graphql`。クエリ `products` / `product(id)`。ネスト `inventory { availableQty }` と `reviews`。REST gateway は残す。クエリ文字列が長すぎると `query too expensive`。
+
+## 9. 既知の制限
+
+レート制限なし。RabbitMQ / Redis なし。overlay D に payment/notify/bff/ops-web は載せていない。購入者から見える REST は gateway、GraphQL は BFF。

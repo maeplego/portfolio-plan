@@ -65,6 +65,14 @@
                         "path":  "../pf-developer-portal"
                     },
                     {
+                        "name":  "pf-developer-ci-dash",
+                        "path":  "../pf-developer-ci-dash"
+                    },
+                    {
+                        "name":  "pf-developer-review",
+                        "path":  "../pf-developer-review"
+                    },
+                    {
                         "name":  "pf-content-blog",
                         "path":  "../pf-content-blog"
                     },

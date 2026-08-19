@@ -28,7 +28,7 @@
 | 項目 | 理由 |
 | --- | --- |
 | AWS への `terraform apply` / 本番相当の常時稼働 | 非目標。課金と秘密の正本を個人アカウントに置かない |
-| overlay D への P07 / P11 / P12 / P13 | 計画。いまの D は P06 サブセット |
+| overlay D への P11 / P12 / P13 | 計画。いまの D は P06 フル + P07 |
 | overlay E への P11 portal | 計画。B には portal を載せた |
 | サービスメッシュ、マルチリージョン、長期保持の課金最適化 | 非目標 |
 | 15 Pxx を 1 クラスタで同時フル起動 | 非目標 |
@@ -44,7 +44,7 @@
 
 ## 4. 前提・制約
 
-- 単体デモは各 `pf-*/deploy/compose.yaml`。連携デモは Docker Desktop Kubernetes
+- 単体デモは各 `pf-*/deploy/compose.yaml`。連携デモは Docker Desktop Kubernetes。採用の既定は REVIEW.md の Compose パック（K8s オフで可）
 - standalone kind をレビュア手順の正にしない
 - Terraform state の完成形は S3 + lock だが、apply しないならローカル validate で足りる
 - NAT 二重、多 AZ RDS を個人課金で再現しない
@@ -61,6 +61,7 @@
 | FR-06 | アプリは `/health` と `/ready` を持つ | kubelet とデモ smoke |
 | FR-07 | Terraform モジュールは fmt + validate できる | 面接で 3-tier をコードとして示す |
 | FR-08 | README に学習用・destroy・概算コストを書く | 誤 apply と放置課金 |
+| FR-09 | レビュアが K8s なしで 3 点セットを Compose パック起動できる | 12 GB overlay を既定にしない |
 
 ## 6. 非機能要件
 
@@ -78,6 +79,6 @@
 
 1. `pf-cloud-o11y` Compose で Grafana が開き、demo-api の `/work` がトレースにつながる
 2. debug slow / fail で p95 または 5xx がダッシュボードに出る
-3. Docker Desktop Kubernetes で foundation / scheduling-talent / collab / e-content / f-ops いずれかの smoke が通る（手順は `integration-demo.md`）
+3. 採用経路: `REVIEW.md` の Compose パックを起動できる。K8s overlay smoke は任意（`integration-demo.md`）
 4. `terraform -chdir=envs/dev-p09-attendance init -backend=false` のあと `validate` が成功する
 5. README に「本番 apply しない」「destroy / コスト」がある

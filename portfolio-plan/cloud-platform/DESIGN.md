@@ -44,7 +44,7 @@ Terraform と K8s と観測スタックはライフサイクルが違う。state
 | **単体 Compose** | 各 `pf-*/deploy/compose.yaml` | その Pxx だけをレビュアが起動。stub / dev 認証可 |
 | **連携 K8s** | `pf-cloud-k8s` overlay | P01 + P02 + P03 など横断フロー。Docker Desktop Kubernetes |
 
-手順・URL・デモシナリオの正本: `portfolio-plan/integration-demo.md`。
+手順・URL・デモシナリオの正本: `portfolio-plan/integration-demo.md`。採用担当者の既定は `portfolio-plan/REVIEW.md`（Compose。K8s は任意）。
 
 - **非目標**: 15 Pxx を 1 クラスタで同時フル起動
 - **overlay 方針**: `portfolio-integration-a-foundation` 〜 `f-ops` の用途別分割
@@ -60,7 +60,7 @@ Terraform と K8s と観測スタックはライフサイクルが違う。state
 | `pf-cloud-k8s/deploy/overlays/portfolio-integration/` | P01 + P03 + o11y 最小の foundation ルート |
 | `pf-cloud-k8s/deploy/overlays/portfolio-integration-a-foundation/` | 上記の別名（overlay 群 A の正本 ID） |
 | `pf-cloud-k8s/deploy/overlays/docker-desktop-a-foundation/` | foundation overlay 用ローカル patch |
-| `pf-cloud-k8s/deploy/overlays/portfolio-integration-d-commerce/` | P01 + P03 + P06 + platform。P07/P11/P12/P13 なし |
+| `pf-cloud-k8s/deploy/overlays/portfolio-integration-d-commerce/` | P01 + P03 + P06 フル + P07 + platform。P11/P12/P13 なし |
 | `pf-cloud-k8s/deploy/overlays/docker-desktop-d-commerce/` | d-commerce 用ローカル patch |
 | `pf-cloud-k8s/deploy/overlays/portfolio-integration-e-content/` | P01 + P03 + P08 + platform。P11 なし |
 | `pf-cloud-k8s/deploy/overlays/docker-desktop-e-content/` | e-content 用ローカル patch |
@@ -68,8 +68,9 @@ Terraform と K8s と観測スタックはライフサイクルが違う。state
 | `pf-cloud-k8s/deploy/overlays/docker-desktop-f-ops/` | f-ops 用ローカル patch |
 | `pf-identity/deploy/k8s/` | idp, admin の Deployment / Service / ConfigMap |
 | `pf-media/deploy/k8s/` | api, web, processor |
-| `pf-commerce/deploy/k8s/` | catalog, inventory, order, gateway, storefront |
+| `pf-commerce/deploy/k8s/` | catalog, inventory, order, payment, notify, gateway, bff, storefront, ops-web |
 | `pf-talent-api/deploy/k8s/` | talent api |
+| `pf-recommend/deploy/k8s/` | recommend api + train initContainer（overlay C/D） |
 | `pf-cloud-o11y/deploy/k8s/` | collector, grafana（Compose と同じ設定を K8s 化） |
 
 ### Docker Desktop と kind
@@ -130,6 +131,7 @@ Compose 単体デモは Docker Desktop の **Compose のみ** でも動く。K8s
 - 月額見積と `destroy` を README の上の方に書く
 - 観測スタック自身のディスク使用量（数日保持）を制限する
 - アプリ側は Collector 経由。各アプリが Jaeger に直接送ると P02 の意味が消える
+- overlay 切替のたびに platform を消さない分割は後続。いまは overlay スコープ build/load と digest skip で起動を短くする
 
 ## 他プロジェクトとの契約
 

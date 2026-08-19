@@ -23,5 +23,6 @@
 | TS-A01 | API 隔離 | alice の習慣を bob が GET/PUT | 404、一覧 0 件 | api `app.test.ts` |
 | TS-A02 | 日付形式 | ログ日付に `...T00:00:00Z` | 400 | 同上 |
 | TS-A03 | シード | demo vs other | demo 5 件、other 0 | 同上 |
+| TS-ST01 | 30 日窓 | 完了 3 日、今日 8/19 | from 7/21、rate 3/30、ストリーク 2 | `stats.test.ts` |
 | TS-M01 | 手動 | Expo でチェック → 再起動 | SQLite に残る | なし |
 | TS-M02 | 手動 | Compose `/ready` | 200 | なし |

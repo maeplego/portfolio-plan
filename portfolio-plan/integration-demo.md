@@ -2,6 +2,10 @@
 
 採用担当者・レビュアが **複数 Pxx の横断動作** を確認するための手順の正本。製品コードは兄弟 `pf-*` と `pf-cloud-k8s` に置く。
 
+## 採用担当者の既定経路（K8s ではない）
+
+面接の 3 点セットとブラウザ手順は **[REVIEW.md](REVIEW.md)**。Compose レビューパック（`review-up.ps1 -Pack p01-p03|p04|p06`、`--build` なし）が層 1。本ファイルの overlay A–F はインフラ深掘り用の任意デモである。終わったら `pf-cloud-k8s` で `.\scripts\cleanup.ps1`。
+
 ## 2 つのローカルデモモード
 
 | モード | 目的 | 起動方法 | 必須？ |
@@ -22,7 +26,7 @@
 | `portfolio-integration-a-foundation` | P01, P02, P03 | OIDC + media + o11y の最小 smoke |
 | `portfolio-integration-b-collab` | P01, P02, P03, P04, P11 portal | workspace の連携 + OpenAPI ポータル |
 | `portfolio-integration-c-scheduling-talent` | P01, P02, P05, P07, P10 | 採用ドメイン |
-| `portfolio-integration-d-commerce` | P01, P02, P03, P06（P07 / P11 / P12 / P13 は後続） | commerce 本線（P06 サブセット） |
+| `portfolio-integration-d-commerce` | P01, P02, P03, P06, P07（P11 / P12 / P13 は後続） | commerce 本線 |
 | `portfolio-integration-e-content` | P01, P02, P03, P08（P11 は後続） | content / media |
 | `portfolio-integration-f-ops` | P01, P02, P09, P12, P14, P15 API | 業務 / 個人向け軽量群 |
 
@@ -33,12 +37,14 @@
 - `portfolio-integration-c-scheduling-talent` + `docker-desktop-c-scheduling-talent`
 - `portfolio-integration-b-collab` + `docker-desktop-b-collab`（P04 + P11 portal。scanner なし）
 - `portfolio-integration-e-content` + `docker-desktop-e-content`（P08。P11 portal は未搭載）
-- `portfolio-integration-d-commerce` + `docker-desktop-d-commerce`（P06 サブセット。P07/P11/P12/P13 は未搭載）
+- `portfolio-integration-d-commerce` + `docker-desktop-d-commerce`（P06 フル + P07。P11/P12/P13 は未搭載）
 - `portfolio-integration-f-ops` + `docker-desktop-f-ops`（P09 / P12 / P14 / P15 API。Expo は非搭載）
 
 ## overlay の切り替え（12 GB 制約）
 
 用途別 overlay は **同時に全部載せない**。切り替え時は前の overlay を down してから apply する。
+
+`cluster-smoke.ps1` / `cluster-smoke-c-scheduling-talent.ps1` は **その overlay のイメージだけ** build/load する（`-Overlay a-foundation` / `c-scheduling-talent`）。2 回目は `-SkipBuild -SkipLoad`。`load-images.ps1` はホストとノードのイメージ ID が同じなら `docker save` を省略する。platform を常駐させたままアプリ NS だけ入れ替える kustomize 分割は **未実装（後続）**。既存 overlay パスはそのまま。
 
 | 切り替え | 手順 |
 | --- | --- |
@@ -98,7 +104,7 @@ docker compose -f compose.yaml --env-file .env up --build
 
 ## 連携デモ（Kubernetes）
 
-> **ステータス**: foundation overlay は IdP ログイン → media ホームまで `oidc-smoke.ps1` / `demo-smoke.ps1` が通る。scheduling-talent overlay は Docker Desktop Kubernetes（context `docker-desktop`）上で `cluster-smoke-c-scheduling-talent.ps1` が予約確定 → `interview` まで通り、`http://talent.localhost` と `http://talent-api.localhost/health` を Ingress 確認済み（2026-08-19）。b-collab overlay は P04 + P11 portal（`portal.localhost`）。e-content は P08（blog + shortener。P11 なし）。d-commerce は P06 サブセット（P01+P02+P03+P06。P07/P11/P12/P13 なし）。f-ops は P09 / P12 / P14 / P15 API（Expo なし。P12 は Postgres）。standalone kind では検証しない。
+> **ステータス**: foundation overlay は IdP ログイン → media ホームまで `oidc-smoke.ps1` / `demo-smoke.ps1` が通る。scheduling-talent overlay は Docker Desktop Kubernetes（context `docker-desktop`）上で `cluster-smoke-c-scheduling-talent.ps1` が予約確定 → `interview` まで通り、`http://talent.localhost` と `http://talent-api.localhost/health` を Ingress 確認済み（2026-08-19）。b-collab overlay は P04 + P11 portal（`portal.localhost`）。e-content は P08（blog + shortener。P11 なし）。d-commerce は P06 フル + P07（P01+P02+P03+P06+P07。P11/P12/P13 なし）。f-ops は P09 / P12 / P14 / P15 API（Expo なし。P12 は Postgres）。standalone kind では検証しない。
 
 ### 0. kubectl context（必須）
 
@@ -122,7 +128,7 @@ kubectl get nodes
 
 ### 2. イメージをビルドしてノードへ載せる
 
-Docker Desktop Kubernetes（kind モード）は **ホストの Docker イメージを自動では見ない**。`desktop-control-plane` の containerd へ import する。`build-images.ps1` は foundation に加え P04 / P05 / P08 / P09 / P10 / P12 / P14 / P15 API / P06 イメージも build する。overlay 指定: `-Overlay e-content` / `-Overlay f-ops` / `-Overlay d-commerce`。
+Docker Desktop Kubernetes（kind モード）は **ホストの Docker イメージを自動では見ない**。`desktop-control-plane` の containerd へ import する。`build-images.ps1` の既定 `-Overlay all` は全イメージ。スモークは overlay スコープを渡す。指定: `a-foundation` / `b-collab` / `c-scheduling-talent` / `d-commerce` / `e-content` / `f-ops`。任意で `-Bake`（docker buildx bake）。
 
 ```powershell
 cd pf-cloud-k8s
@@ -137,6 +143,7 @@ cd pf-cloud-k8s
 ```powershell
 cd pf-cloud-k8s
 .\scripts\cluster-smoke.ps1
+# 2 回目: .\scripts\cluster-smoke.ps1 -SkipBuild -SkipLoad
 .\scripts\expose-ingress.ps1
 .\scripts\oidc-smoke.ps1
 .\scripts\demo-smoke.ps1
@@ -166,7 +173,7 @@ cd pf-cloud-k8s
 .\scripts\expose-ingress.ps1
 ```
 
-#### commerce（P06 サブセット。P07 / P11 / P12 / P13 なし）
+#### commerce（P06 フル + P07。P11 / P12 / P13 なし）
 
 ```powershell
 cd pf-cloud-k8s
@@ -273,7 +280,7 @@ kubectl wait --for=condition=ready pod -l app=platform-postgres -n platform --ti
 
 #### commerce（P06）
 
-`cluster-smoke-d-commerce.ps1` は gateway health、カート、在庫 1 の同時 checkout（201 と 409 `inventory_shortage`）、Ingress を確認する。管理は開発認証。決済はモック（カードなし）。学習用シードは `MUG-1` / `TEE-1` / `STK-1`。
+`cluster-smoke-d-commerce.ps1` は gateway health、カート、在庫 1 の同時 checkout（201 と 409 `inventory_shortage`）、BFF `recommended`、Ingress（storefront / api / bff / ops）を確認する。管理は開発認証。決済はモック（カードなし）。学習用シードは `MUG-1` / `TEE-1` / `STK-1`。P07 失敗時はカタログ順。
 
 目視確認するときの URL:
 
@@ -297,15 +304,13 @@ kubectl wait --for=condition=ready pod -l app=platform-postgres -n platform --ti
 
 ```powershell
 cd pf-cloud-k8s
-.\scripts\down.ps1
-.\scripts\down-c-scheduling-talent.ps1
-.\scripts\down-b-collab.ps1
-.\scripts\down-e-content.ps1
-.\scripts\down-d-commerce.ps1
-.\scripts\down-f-ops.ps1
+.\scripts\cleanup.ps1                  # overlay（既定）。down-*.ps1 を全部呼ぶ
+.\scripts\cleanup.ps1 -Level cluster   # + platform / ingress-nginx NS。K8s は切らない
+.\scripts\cleanup.ps1 -Level images    # + ローカル pf-* タグ。GHCR は触らない
+.\scripts\cleanup.ps1 -Level full -Yes # + 兄弟 pf-*/deploy の compose down -v
 ```
 
-Docker Desktop Kubernetes を無効化してもよい。単体 Compose デモには影響しない。
+個別の `down-*.ps1` も残している。Docker Desktop Kubernetes の無効化は Settings から手動。`docker system prune -a` はスクリプト既定に含めない。
 
 ## 論理アーキテクチャ
 
@@ -381,7 +386,7 @@ Docker Desktop Kubernetes
 9. b-collab smoke（P04 + P11 portal。`cluster-smoke-b-collab.ps1`）。scanner / CI dash は非搭載
 10. e-content smoke（P08。`cluster-smoke-e-content.ps1`）。P11 portal は後続
 11. f-ops smoke（P09 / P12 / P14 / P15 API。`cluster-smoke-f-ops.ps1`）
-12. d-commerce smoke（P06 サブセット。`cluster-smoke-d-commerce.ps1`）。P07 / P11 / P12 / P13 は後続
+12. d-commerce smoke（P06 フル + P07。`cluster-smoke-d-commerce.ps1`）。P11 / P12 / P13 は後続
 
 ## 単体 Compose 連携デモ: P05 ↔ P10（予約確定 → 面接ステータス）
 
@@ -478,6 +483,8 @@ cd pf-talent-api/deploy; docker compose down -v
 
 ## 関連ドキュメント
 
+- `portfolio-plan/REVIEW.md` — 採用担当者（ブラウザ / Compose パック。K8s は任意）
 - `portfolio-plan/00-overview.md` — エコシステム全体・単独起動規約
 - `portfolio-plan/cloud-platform/DESIGN.md` — P02 技術正本・overlay 責務
 - `portfolio-plan/instructions.md` — 各 pf-* の `deploy/k8s/` 規約
+- `../pf-cloud-k8s/docs/ghcr.md` — GHCR 例（`GITHUB_TOKEN` のみ）

@@ -29,7 +29,7 @@
 
 ## 3. 連携デモ
 
-手順の正本は `portfolio-plan/integration-demo.md`。
+手順の正本は `portfolio-plan/integration-demo.md`。採用担当者の既定は `portfolio-plan/REVIEW.md`（Compose パック）。overlay は任意。
 
 - context は `docker-desktop`。standalone kind のまま apply しない
 - overlay は同時に全部載せない。切替は先に down
