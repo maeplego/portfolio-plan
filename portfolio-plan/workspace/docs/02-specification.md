@@ -3,8 +3,8 @@
 | 項目 | 値 |
 | --- | --- |
 | プロジェクト | P04 workspace |
-| 対象スライス | 1–5 の現行 API・Web |
-| 最終更新 | 2026-08-18 |
+| 対象スライス | 1–6 の現行 API・Web |
+| 最終更新 | 2026-08-19 |
 | 矛盾時の正 | 自動テストと製品コード、次に `DESIGN.md`。HTTP の細部は [05-api.md](05-api.md) |
 
 ユーザーと呼び出し側から見た振る舞い。内部のマップ構造は [03-design.md](03-design.md)。
@@ -47,6 +47,9 @@
 | collab 編集 | 可 | 可 | 閲覧のみ（read-only WS） | 否 |
 | チャンネル参照 | 可 | 可 | 可 | 否 |
 | メッセージ投稿 | 可 | 可 | 否 | 否 |
+| 横断検索 | 可 | 可 | 可（draft 除外） | 否 |
+| 添付追加 | 可 | 可 | 否 | 否 |
+| 添付参照 | 可（親と同じ） | 可 | 可（親と同じ） | 否 |
 
 guest のボード画面は「閲覧のみ」と表示する。UI を隠しても API は 403 を返す。
 
@@ -79,14 +82,15 @@ guest のボード画面は「閲覧のみ」と表示する。UI を隠して�
 
 | 画面 | 仕様 |
 | --- | --- |
-| `/` | ワークスペース一覧。作成フォーム。ボード追加。メンバー追加（owner）。Wiki / Docs へのリンク。OIDC 有効かつ未ログインなら `/login` |
+| `/` | ワークスペース一覧。作成フォーム。ボード追加。メンバー追加（owner）。Wiki / Docs / Chat / 検索へのリンク。OIDC 有効かつ未ログインなら `/login` |
 | `/boards/:boardId` | 3 列カンバン。カード追加、DnD 移動、カード詳細モーダル。guest は DnD 無効 |
 | `/wiki/:workspaceId` | Wiki ツリー |
 | `/wiki/:workspaceId/pages/:pageId` | Wiki エディタ（collab または textarea） |
 | `/docs/:workspaceId` | 独立ドキュメント一覧 |
 | `/docs/:workspaceId/:documentId` | 共同編集エディタ |
 | `/chat/:workspaceId` | チャンネル一覧 |
-| `/chat/:workspaceId/:channelId` | タイムライン。guest は投稿フォームなし |
+| `/chat/:workspaceId/:channelId` | タイムライン。guest は投稿フォームなし。自分宛メンションは強調 |
+| `/search/:workspaceId` | 横断検索結果。種別バッジ。`?user=` を維持 |
 | `/login` `/callback` `/logout` | OIDC。開発モードでは使わない |
 
 開発モードのユーザー切替は `/?user=demo-user-a` と `demo-user-b`。A のワークスペースは B の一覧に出ない。
@@ -112,14 +116,33 @@ guest のボード画面は「閲覧のみ」と表示する。UI を隠して�
 ## 9. チャット
 
 - ワークスペース作成時に `general` チャンネルが 1 つ付く。追加は member 以上。
-- 投稿: `POST /v1/channels/:id/messages` `{ "body" }`。成功すると `seq` が +1。空・4000 超は 400。guest 403。
+- 投稿: `POST /v1/channels/:id/messages` `{ "body", "attachmentFileId"? }`。成功すると `seq` が +1。空かつ添付なし、または 4000 超は 400。guest 403。`mentions` は本文の `@sub` をメンバーに解決した配列。
 - 履歴: `GET /v1/channels/:id/messages?afterSeq=N`。`afterSeq` 省略で全件。本文はプレーンテキスト（HTML にしない）。
-- 配信: 永続化したあと `/chat/ws?ticket=&channelId=` で `{ type: "message", message }`。Yjs ソケットとは別。
+- 配信: 永続化したあと `/chat/ws?ticket=&channelId=` で `{ type: "message", message }`（`mentions` を含む）。Yjs ソケットとは別。
 - typing: WS で `{ type: "typing" }`。サーバーは永続化せず `{ type: "typing", sub }` を配る。クライアントは 400ms debounce。
 - 再接続: WS open 時に `afterSeq` で差分 GET。
-- 画面: `/chat/:workspaceId` と `/chat/:workspaceId/:channelId`
+- 画面: `/chat/:workspaceId` と `/chat/:workspaceId/:channelId`。既知メンバーの `@` 補完。メール / Push / 未読は出さない。
 
-## 10. エラー形
+## 10. 横断検索
+
+- `GET /v1/workspaces/:id/search?q=&types=`
+- `q` 空（空白のみ含む）は 400。非所属 403。
+- `types` 省略時は `page,document,card,message`。未知の種別は 400。
+- 照合はメモリの大小無視部分一致。Wiki 本文は API スナップショット（その場の Y.Doc ではない）。
+- guest の page ヒットは `FilterGuestPages` と同じ（draft と draft 配下の published は出ない）。カードとメッセージは閲覧できる範囲どおりヒットする。
+- ヒット: `{ type, id, title, snippet, hrefHints }`。Wiki は pageId、カードは boardId+cardId、チャットは channelId+seq。
+- 画面: ホームの各ワークスペースに検索欄 → `/search/:workspaceId?q=`。権限外を UI で隠すことは認可ではない。
+
+## 11. 添付
+
+- チャット: 投稿の任意 `attachmentFileId`。purpose=chat のファイルだけ。
+- Wiki: `POST /v1/pages/:id/attachments` `{ "fileId" }`。Markdown に画像 URL を貼る。プレビューは既存どおり raw HTML / `javascript:` 禁止。
+- `MEDIA_API_URL` があるとき: P03 `presign`（`purpose=wiki|chat`）→ `complete` → workspace に fileId だけ保存。
+- 未設定時: `POST /v1/uploads` でメモリ + 一時ファイル。`GET /v1/files/:id/content?t=` が署名 URL 相当（20MB を超えない）。
+- ファイルバイトを Yjs に載せない。guest は追加 403。参照は親リソースと同じ ACL（トークン付き GET は親に貼られた URL を開く）。
+- 単体 Compose に media は含めない。
+
+## 12. エラー形
 
 ```json
 { "error": { "code": "not_found" | "forbidden" | "conflict" | "invalid_request", "message": "..." } }
@@ -127,8 +150,9 @@ guest のボード画面は「閲覧のみ」と表示する。UI を隠して�
 
 | HTTP | code | とき |
 | --- | --- | --- |
-| 400 | invalid_request | JSON 不正、ページの循環親、本文超過、部屋名が ULID でない |
-| 401 | unauthorized / プレーン | 未認証、期限切れチケット、内部トークン欠如 |
+| 400 | invalid_request | JSON 不正、ページの循環親、本文超過、部屋名が ULID でない、空の検索 q |
+| 401 | unauthorized / プレーン | 未認証、期限切れチケット、内部トークン欠如、添付トークン不一致 |
 | 403 | forbidden | ロール不足・空タイトル・チケットと部屋の不一致 |
 | 404 | not_found | 対象なし。guest の draft チケットも含む |
 | 409 | conflict | version 不一致、メンバー重複 |
+| 413 | too_large | 添付が 20MB 超 |

@@ -3,8 +3,8 @@
 | 項目 | 値 |
 | --- | --- |
 | プロジェクト | P04 workspace |
-| 対象スライス | 1–5 |
-| 最終更新 | 2026-08-18 |
+| 対象スライス | 1–6 |
+| 最終更新 | 2026-08-19 |
 | 矛盾時の正 | 自動テストと製品コード、次に `DESIGN.md` |
 
 「やりたいこと」は [01-requirements.md](01-requirements.md)。ここでは守り方。
@@ -15,7 +15,7 @@
 
 | プロセス | 実装 | 持つ正本 |
 | --- | --- | --- |
-| `apps/api` | Go, `net/http` + gorilla websocket `/chat/ws` | workspace / member / board / card / page メタ / document メタ / チケット / channel / message。本文のスナップショット |
+| `apps/api` | Go, `net/http` + gorilla websocket `/chat/ws` | workspace / member / board / card / page メタ / document メタ / チケット / channel / message / 検索インデックス相当（メモリ） / ローカル添付。本文のスナップショット |
 | `apps/collab` | Node, Hocuspocus + Yjs | 接続中の Y.Doc と中継。会員リストは持たない |
 | `apps/web` | Next.js 15 App Router | 画面。認可の正ではない。Server Action 経由で API を叩く |
 
@@ -41,6 +41,8 @@ Web は開発モードなら cookie なしで `X-Dev-User-Sub` を付ける。OI
 - ページ書き込み: member 以上。guest の draft GET は `ErrNotFound`（403 にしない）
 - 独立ドキュメント作成: member 以上。参照は guest 以上
 - collab チケット: 対象の GET と同じ可視性。guest は `readOnly`
+- 検索: guest 以上。page は `FilterGuestPages`
+- 添付追加: member 以上。参照は親（ページ GET / チャンネル履歴）と同じ
 
 ## 4. データ（メモリ）
 
@@ -54,11 +56,16 @@ Web は開発モードなら cookie なしで `X-Dev-User-Sub` を付ける。OI
 - Page（`parentId`, `body` Markdown スナップショット, `status`, `version`, `collabDocumentId`）
 - Document（独立文書。`collabDocumentId`）
 - CollabTicket / ChatTicket（sub, 対象, readOnly, expiresAt）
-- Channel / ChatMessage（`seq` はチャンネル内 1,2,3…。削除しない）
+- Channel / ChatMessage（`seq` はチャンネル内 1,2,3…。削除しない。`mentions` は投稿時に解決）
+- StoredFile（ローカル一時ファイルまたは P03 fileId。`viewToken` 付き）
 
 `collabIndex` は `collabDocumentId` → page または document。部屋名の解決に使う。
 
-ツリーは `domain.BuildPageTree`（隣接リスト → ネスト）。guest 向けは `FilterGuestPages` で draft と draft 祖先付き published を落とす。
+横断検索は `Search` が pages / documents / cards / messages を走査する。Postgres FTS のふりをしない。本文は API の `body` スナップショット。
+
+添付の実体は Y.Doc に入れない。Wiki は Markdown の画像 URL、チャットは `attachmentFileId`。`MEDIA_API_URL` が空なら `SaveLocalFile`。
+
+ツリーは `domain.BuildPageTree`（隣接リスト → ネスト）。guest 向けは `FilterGuestPages` で draft と draft 祖先付き published を落とす。検索の page ヒットも同じ関数。
 
 本文の正は collab の Y.Doc。API の `body` は起動時シードと debounce スナップショット。タイトル・status・親子は API が正のまま。スナップショットは page の `version` を増やさない（タイトル競合と混ぜない）。
 
@@ -105,3 +112,5 @@ IME: `yCollabIME` は `view.composing` 中に CM→Yjs も remote→CM もしな
 - 日本語 IME は composition 確定まで Yjs に送らない。変換中の同時編集は稀に食い違う
 - チケット 15 分。長期編集は再読込が必要
 - チャット未読バッジ・既読ウォーターマークは未実装（last_read_seq は後続）
+- 検索はメモリ部分一致。プロセス再起動でインデックスも消える
+- P03 結合は `MEDIA_API_URL` 任意。単体 Compose はローカル添付

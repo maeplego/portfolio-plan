@@ -3,8 +3,8 @@
 | 項目 | 値 |
 | --- | --- |
 | プロジェクト | P04 workspace |
-| 対象スライス | 1–5 |
-| 最終更新 | 2026-08-18 |
+| 対象スライス | 1–6 |
+| 最終更新 | 2026-08-19 |
 | 矛盾時の正 | `apps/api` の `go test` と `apps/collab` の `npm test`。未自動化は本表の「手動」 |
 
 実行: `pf-workspace/apps/api` で `go test ./...`。collab 部屋名は `apps/collab` で `npm test`。IME diff は `apps/web` で `npm test`。
@@ -40,6 +40,11 @@
 | TS-M02 | seq | 2 通投稿 | seq 1 と 2 |
 | TS-M03 | afterSeq | `?afterSeq=1` | 2 通目だけ |
 | TS-M04 | guest | guest POST / GET / ticket | 投稿 403、履歴 200、ticket readOnly |
+| TS-S01 | 検索 ACL | draft に pineapple、guest が q=pineapple | owner は draft ヒット。guest は draft / draft 配下なし。カード・メッセージはヒット |
+| TS-S02 | 空 q / 非所属 | q 空、未知 sub | 400 と 403 |
+| TS-N01 | メンション | `@demo-user-b` と `@not-a-member` | mentions はメンバー 1 件 |
+| TS-F01 | 添付 | member が wiki/chat 画像。guest upload / page attach | 201 と 403。content?t= は 200、偽トークン 401 |
+| TS-F02 | サイズ | SaveLocalFile が MaxUploadBytes+1 | ErrTooLarge |
 
 ## 未自動化（受け入れの手動）
 
@@ -54,3 +59,5 @@
 | TS-U07 | フォールバック | collab を止めて Wiki を開く | 数秒後に textarea 保存ができる |
 | TS-U08 | チャット | A/B で `#general` を開き投稿 | 相手に本文が出る。入力中表示 |
 | TS-U09 | IME | Wiki collab で「日本語」を変換確定 | 変換中にキャレットが飛ばない |
+| TS-U10 | 検索 | ホームから q を送り guest 切替 | draft が guest 結果に出ない |
+| TS-U11 | 添付 | Wiki / Chat に画像 1 枚 | プレビューに出る。guest フォームなし |

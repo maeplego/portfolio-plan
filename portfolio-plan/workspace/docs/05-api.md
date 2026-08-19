@@ -3,8 +3,8 @@
 | 項目 | 値 |
 | --- | --- |
 | プロジェクト | P04 workspace |
-| 対象スライス | 1–5 |
-| 最終更新 | 2026-08-18 |
+| 対象スライス | 1–6 |
+| 最終更新 | 2026-08-19 |
 | 矛盾時の正 | `apps/api` のハンドラとテスト |
 
 OpenAPI ファイルは未作成。本ファイルが HTTP 契約の正本。
@@ -15,7 +15,7 @@ OpenAPI ファイルは未作成。本ファイルが HTTP 契約の正本。
 - Collab WS: `ws://localhost:8097`（HTTP `/health` 同じポート）
 - Chat WS: `ws://localhost:8096/chat/ws?ticket=&channelId=`（Yjs ではない）
 - 認証: `Authorization: Bearer` または開発時 `X-Dev-User-Sub`
-- エラー形は [02-specification.md](02-specification.md) §10
+- エラー形は [02-specification.md](02-specification.md) §12
 
 ## ヘルス
 
@@ -54,6 +54,12 @@ OpenAPI ファイルは未作成。本ファイルが HTTP 契約の正本。
 ### `GET /v1/workspaces/:id/boards`
 
 成功: 200 `{ "boards": [ { "id", "workspaceId", "name", "createdAt" } ] }`
+
+### `GET /v1/workspaces/:id/search`
+
+クエリ: `q` 必須。`types` 省略時 `page,document,card,message`。  
+成功 200 `{ "hits": [ { "type", "id", "title", "snippet", "hrefHints" } ] }`  
+空 q 400。非所属 403。guest の page は FilterGuestPages。
 
 ## ボード / カード
 
@@ -182,8 +188,8 @@ OpenAPI ファイルは未作成。本ファイルが HTTP 契約の正本。
 
 ### `POST /v1/channels/:id/messages`
 
-入力: `{ "body": "hello" }`  
-成功 201 ChatMessage（`seq` はチャンネル内で 1 から）。guest 403。空・4000 超は 400。
+入力: `{ "body": "hello @demo-user-b", "attachmentFileId": "01..." }`  
+`attachmentFileId` は任意。成功 201 ChatMessage（`seq`、`mentions`）。guest 403。空かつ添付なし、または 4000 超は 400。
 
 ### `GET /v1/channels/:id/messages`
 
@@ -198,4 +204,35 @@ OpenAPI ファイルは未作成。本ファイルが HTTP 契約の正本。
 ### `GET /chat/ws`
 
 クエリ: `ticket` 必須。`channelId` があればチケットと一致必須。  
-アップグレード後、サーバーは `{ "type": "message", "message" }` と `{ "type": "typing", "sub" }` を送る。クライアントの `{ "type": "typing" }` は永続化しない。メッセージ投稿は REST のみ。
+アップグレード後、サーバーは `{ "type": "message", "message" }`（`mentions` を含む）と `{ "type": "typing", "sub" }` を送る。クライアントの `{ "type": "typing" }` は永続化しない。メッセージ投稿は REST のみ。
+
+## 添付
+
+### `GET /v1/uploads/config`
+
+成功 200 `{ "provider": "local"|"p03", "maxBytes": 20971520, "mediaApiUrl"? }`
+
+### `POST /v1/uploads`
+
+multipart: `workspaceId`, `purpose`（`wiki`|`chat`）, `file`。成功 201 FileView（`id`, `url`, `name`）。guest 403。20MB 超 413。P03 未設定時のローカル保存。
+
+### `POST /v1/uploads/link`
+
+入力: `{ "workspaceId", "purpose", "fileId", "name", "contentType", "size" }`  
+`MEDIA_API_URL` があるときだけ。未設定は 400。成功 201。fileId のみ保存。
+
+### `POST /v1/pages/:id/attachments`
+
+入力: `{ "fileId" }`。purpose=wiki かつ同一ワークスペース。成功 201 FileView。guest 403。guest の draft ページは 404。
+
+### `GET /v1/pages/:id/attachments`
+
+成功 200 `{ "files": [ FileView ] }`。ページ GET と同じ ACL。
+
+### `GET /v1/files/:id`
+
+成功 200 FileView。所属していなければ 403。
+
+### `GET /v1/files/:id/content`
+
+クエリ: `t`（viewToken）。認証ヘッダ不要。成功 200 バイト。トークン不一致 401。ローカル保存のみ。

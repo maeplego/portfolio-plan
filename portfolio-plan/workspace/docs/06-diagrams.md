@@ -3,8 +3,8 @@
 | 項目 | 値 |
 | --- | --- |
 | プロジェクト | P04 workspace |
-| 対象スライス | 1–5 実装。6 以降は「計画」 |
-| 最終更新 | 2026-08-18 |
+| 対象スライス | 1–6 実装。7 以降は「計画」 |
+| 最終更新 | 2026-08-19 |
 | 矛盾時の正 | コードと [05-api.md](05-api.md) |
 
 ## ユースケース（現状）
@@ -33,9 +33,14 @@ flowchart LR
   owner --> chat[チャット投稿]
   member --> chat
   guest --> readChat[チャット閲覧]
+  owner --> search[横断検索]
+  member --> search
+  guest --> searchGuest[検索 published のみ]
+  owner --> attach[添付追加]
+  member --> attach
 ```
 
-未読バッジは計画（スライス 6 以降でも可）。
+未読バッジは計画（スライス 7 以降でも可）。
 
 ## 画面遷移（実装済み）
 
@@ -57,6 +62,7 @@ flowchart TD
   home -->|Chat| chat["/chat/:wsId"]
   chat --> room["/chat/:wsId/:channelId"]
   room --> chat
+  home -->|検索| search["/search/:wsId"]
   home -->|OIDC 有効かつ未ログイン| login
   login --> cb
   cb --> home
@@ -130,7 +136,41 @@ sequenceDiagram
   A-->>W: 201 ChatMessage
 ```
 
-再接続は WS open のあと `GET .../messages?afterSeq=`.
+再接続は WS open のあと `GET .../messages?afterSeq=`。
+
+## シーケンス: 横断検索（guest）
+
+```mermaid
+sequenceDiagram
+  actor G as guest
+  participant A as workspace-api
+  G->>A: GET /v1/workspaces/:id/search?q=pineapple
+  A->>A: requireRole guest+
+  A->>A: FilterGuestPages のあと部分一致
+  A-->>G: hits（draft なし）
+```
+
+空 q は 400。非所属は 403。
+
+## シーケンス: ローカル添付
+
+```mermaid
+sequenceDiagram
+  actor U as member
+  participant W as Next.js
+  participant A as workspace-api
+  U->>W: 画像選択
+  W->>A: POST /v1/uploads multipart
+  A-->>W: fileId, url
+  alt Wiki
+    W->>A: POST /v1/pages/:id/attachments
+    Note over W: Markdown に url を貼る。Yjs にはバイトを入れない
+  else Chat
+    W->>A: POST /v1/channels/:id/messages attachmentFileId
+  end
+```
+
+guest の upload は 403。
 
 ## 論理 ER（メモリ上。テーブルではない）
 
@@ -153,6 +193,8 @@ erDiagram
   WORKSPACE ||--o{ DOCUMENT : has
   WORKSPACE ||--o{ CHANNEL : has
   CHANNEL ||--o{ CHAT_MESSAGE : has
+  WORKSPACE ||--o{ STORED_FILE : has
+  PAGE ||--o{ STORED_FILE : wiki_attach
   PAGE {
     string parentId
     string status
@@ -168,6 +210,12 @@ erDiagram
   CHAT_MESSAGE {
     int seq
     string body
+    string mentions
+    string attachmentFileId
+  }
+  STORED_FILE {
+    string purpose
+    string provider
   }
 ```
 
