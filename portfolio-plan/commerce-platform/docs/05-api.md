@@ -5,7 +5,7 @@
 | プロジェクト | P06 commerce-platform |
 | 対象スライス | スライス 1 の HTTP。OpenAPI は未作成 |
 | 最終更新 | 2026-08-19 |
-| 基準 | `http://localhost:8098`（Compose） |
+| 基準 | `http://localhost:8099`（Compose） |
 
 エラー本文:
 
