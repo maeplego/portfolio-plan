@@ -35,6 +35,10 @@
                     {
                         "name":  "pf-workspace",
                         "path":  "../pf-workspace"
+                    },
+                    {
+                        "name":  "pf-developer-scanner",
+                        "path":  "../pf-developer-scanner"
                     }
                 ],
     "settings":  {

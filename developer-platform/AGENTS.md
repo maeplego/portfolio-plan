@@ -1,0 +1,24 @@
+# P11 developer-platform
+
+「P11 を実装して」と言われたら、回答や実装の前にこの順で読む。
+
+1. `portfolio-plan/instructions.md`
+2. 本ファイル（なければ `developer-platform/instructions.md`）
+3. `portfolio-plan/00-overview.md`
+4. `portfolio-plan/developer-platform/DESIGN.md`
+5. `portfolio-idea/21-repo-security-scanner.md`（scanner）
+6. `portfolio-idea/29-openapi-developer-portal.md`（portal）
+7. `portfolio-idea/23-cli-project-scaffolding.md`（CLI。完成扱いは P04/P06 の実テンプレ後）
+8. `portfolio-idea/15-ci-pipeline-dashboard.md`
+9. `portfolio-idea/08-code-review-assistant.md`
+10. `developer-platform/chat-context/` の `P11_*.md` をファイル名昇順で全て
+
+製品コードはワークスペースの兄弟:
+
+- `../pf-developer-scanner` — 脆弱性・シークレット・Dockerfile ルールの CLI（アイデア 21）
+
+`pf-developer-cli` / `templates` / `portal` / `ci-dash` / `review` は未作成。CLI を空テンプレのまま完成扱いしない。exploit / PoC は書かない。
+
+このフォルダは設計・指示・チャット記録用。入れ子 Git は作らない。
+
+チャット記録の次ファイルは `chat-context/P11_XXXXX_要約.md`（既存最大連番 + 1）。秘密は書かない。

@@ -25,7 +25,7 @@ Cursor ルール（`.cursor/rules/`）はこのファイルの要約である。
 | P08 | `content-platform/` | `content-platform/instructions.md` |
 | P09 | `attendance/` | `attendance/instructions.md` |
 | P10 | `talent-platform/` | `talent-platform/AGENTS.md` |
-| P11 | `developer-platform/` | `developer-platform/instructions.md` |
+| P11 | `developer-platform/` | `developer-platform/AGENTS.md` |
 | P12 | `reliability-platform/` | `reliability-platform/instructions.md` |
 | P13 | `data-platform/` | `data-platform/instructions.md` |
 | P14 | `personal-finance/` | `personal-finance/instructions.md` |

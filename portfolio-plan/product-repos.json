@@ -8,6 +8,7 @@
     { "name": "pf-calendar", "path": "../pf-calendar", "project": "P05" },
     { "name": "pf-talent-api", "path": "../pf-talent-api", "project": "P10" },
     { "name": "pf-talent-web", "path": "../pf-talent-web", "project": "P10" },
-    { "name": "pf-workspace", "path": "../pf-workspace", "project": "P04" }
+    { "name": "pf-workspace", "path": "../pf-workspace", "project": "P04" },
+    { "name": "pf-developer-scanner", "path": "../pf-developer-scanner", "project": "P11" }
   ]
 }

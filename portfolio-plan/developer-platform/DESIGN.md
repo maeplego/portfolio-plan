@@ -64,9 +64,9 @@
 
 ## 実装順序（プロジェクト内）
 
-1. **scanner MVP**（1 生態系の lock + Markdown レポート + 終了コード）。対象がすぐある
-2. **portal MVP**（手置き OpenAPI を綺麗に出す + モック）
-3. **CLI** が P06 または小さな Go API の実構成をコピーしてテンプレート化。生成物を CI でビルド
+1. ✅ **scanner MVP**（`../pf-developer-scanner`）。Go.mod / npm lock + OSV、Dockerfile ルール、シークレット検出（マスク）、Markdown、重大度ゲート。exploit / PoC なし。2026-08-19
+2. **portal MVP**（手置き OpenAPI を綺麗に出す + モック）— 未着手
+3. **CLI** が P06 または小さな Go API の実構成をコピーしてテンプレート化。生成物を CI でビルド — **未着手。完成扱いしない**（空テンプレ禁止）
 4. **openapi-diff Action**
 5. **CI dashboard**（公開リポジトリの webhook）
 6. **code review UI**
