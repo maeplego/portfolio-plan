@@ -82,7 +82,7 @@ K8s 化では `cloud-platform/DESIGN.md`。商品画像は `media-platform/DESIG
 
 ## GraphQL（24）
 
-下位 REST: catalog, inventory, reviews（reviews は catalog 内でも可。サービスを増やしすぎない）。`Product.inventory` と `reviews` は DataLoader。クエリコスト上限を付ける。
+下位 REST: catalog, inventory, reviews（reviews は catalog 内でも可。サービスを増やしすぎない）。`Product.inventory` と `reviews` は DataLoader。クエリコスト上限を付ける。CORS はストアフロントオリジン。`*` にしない。
 
 ## 実装順序
 

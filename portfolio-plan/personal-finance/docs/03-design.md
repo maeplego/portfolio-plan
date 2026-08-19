@@ -3,7 +3,7 @@
 | 項目 | 値 |
 | --- | --- |
 | プロダクト | personal-finance（GitHub: [pf-finance](https://github.com/maeplego/pf-finance)） |
-| 最終更新 | 2026-08-19 |
+| 最終更新 | 2026-08-20 |
 | 実装との関係 | この文書と実装が違うときは、製品リポジトリのコードとテストを優先する |
 
 ## 1. 構成
@@ -24,6 +24,8 @@ deploy     Compose が主。deploy/k8s は ops overlay 用
 `X-Dev-User-Sub` で `users.sub` を確保する。すべてのクエリは `user_id` 付き。他人の行は NotFound（存在を漏らす 403 にしない）。CSV も同じ隔離。
 
 [pf-identity](https://github.com/maeplego/pf-identity) は未配線。`FINANCE_DEV_AUTH=false` ではヘッダを無視して 401。
+
+CORS 既定は `http://localhost:3014`（PWA）。`*` は明示設定だけ。Cookie 認証に進む前にオリジンを固定する。
 
 ## 3. 金額と CSV
 

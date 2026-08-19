@@ -3,7 +3,7 @@
 | 項目 | 値 |
 | --- | --- |
 | プロダクト | EC コマース（GitHub: `pf-commerce`） |
-| 最終更新 | 2026-08-19 |
+| 最終更新 | 2026-08-20 |
 | 実装との関係 | 製品リポジトリの Go テストと `apps/bff` の `npm test` を優先する。本表と違うときはテストか本表のどちらかを直す |
 
 自動化は `go test ./...` と BFF の `npm test`。
@@ -76,6 +76,7 @@ exploit / PoC は書かない。カード番号を fixture に置かない。
 | TS-G02 | DataLoader なし | 3 商品で inventory REST 3 回 |
 | TS-G03 | 推薦 API 空または未マップ SKU | `recommended` / `similar` は `source: popularity` |
 | TS-G04 | 推薦 API が既知 SKU を返す | `source: recommend`。カタログ行に写像 |
+| TS-G05 | BFF CORS | ストアフロント Origin は ACAO。他 Origin は拒否 |
 
 ## 6. 未自動化
 

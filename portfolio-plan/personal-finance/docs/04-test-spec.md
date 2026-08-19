@@ -3,7 +3,7 @@
 | 項目 | 値 |
 | --- | --- |
 | プロダクト | personal-finance（GitHub: [pf-finance](https://github.com/maeplego/pf-finance)） |
-| 最終更新 | 2026-08-19 |
+| 最終更新 | 2026-08-20 |
 | 実装との関係 | 自動化は `npm test`（`packages/money` と `apps/api`）。この表と食い違ったらテストかこの文書を直す |
 
 ## 1. 方針
@@ -40,6 +40,7 @@
 | TS-H09 | 予算更新 | 残りが変わる |
 | TS-H10 | export 後に他ユーザーへ import | 件数は増える。元 id は混ざらない |
 | TS-H11 | import の小数円 | 400 |
+| TS-H12 | CORS | PWA オリジンは ACAO。他 Origin は `*` を付けない |
 
 ## 4. 未自動化
 

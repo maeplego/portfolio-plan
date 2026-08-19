@@ -3,7 +3,7 @@
 | 項目 | 値 |
 | --- | --- |
 | プロダクト | EC コマース（GitHub: `pf-commerce`） |
-| 最終更新 | 2026-08-19 |
+| 最終更新 | 2026-08-20 |
 | 実装との関係 | この文書と実装が違うときは、製品リポジトリのコードとテストを優先する |
 
 公開 REST の基準 URL は Compose の gateway `http://localhost:8099`。catalog / inventory / order は内部。GraphQL は BFF `http://localhost:8110`。OpenAPI ファイルは未作成。
@@ -143,3 +143,5 @@ ops。notify のログ。
 - `RecommendSlot { source, fallback, products }`
 
 `source` は `"recommend"` または `"popularity"`。推薦失敗時もフィールドは返り、`fallback` は true。
+
+CORS: `COMMERCE_BFF_CORS_ORIGIN`（既定 `http://localhost:3009`）。許可外 Origin は 403 `{ errors: [{ message: "origin not allowed" }] }`。Origin なしは許可。

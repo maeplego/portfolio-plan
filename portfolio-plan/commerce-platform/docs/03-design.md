@@ -3,7 +3,7 @@
 | 項目 | 値 |
 | --- | --- |
 | プロダクト | EC コマース（GitHub: `pf-commerce`） |
-| 最終更新 | 2026-08-19 |
+| 最終更新 | 2026-08-20 |
 | 実装との関係 | この文書と実装が違うときは、製品リポジトリのコードとテストを優先する |
 
 要件の「何を守るか」に対し、プロセスと永続化で「どう守るか」。スタックの短い方針は親の `DESIGN.md`。
@@ -63,6 +63,8 @@ notify 対象イベントは `PaymentRecorded` → `OrderPaid`、`OrderCancelled
 ## 6. 認可
 
 公開 GET 以外は gateway の開発ヘッダ。ops は gateway で役割を見る。注文 GET は order が `buyer_sub` 一致を見る。catalog / inventory のポートは Compose 内のみ公開しない。
+
+BFF の CORS 既定はストアフロント `http://localhost:3009`。ブラウザの `Origin` が許可リスト外なら `/graphql` は 403。Origin なし（curl、Next のサーバー fetch）は通す。購入操作は BFF に置かない。
 
 ## 7. 推薦アダプタ（BFF）
 

@@ -3,7 +3,7 @@
 | 項目 | 値 |
 | --- | --- |
 | プロダクト | habit-tracker（GitHub: [pf-habit-mobile](https://github.com/maeplego/pf-habit-mobile)、[pf-habit-api](https://github.com/maeplego/pf-habit-api)） |
-| 最終更新 | 2026-08-19 |
+| 最終更新 | 2026-08-20 |
 | 実装との関係 | モバイルは `src/domain` の `npm test`。API は `npm test`。この表と食い違ったらテストかこの文書を直す |
 
 | ID | 観点 | 操作 | 期待 | 自動化 |
@@ -21,5 +21,6 @@
 | TS-A01 | API 隔離 | alice の習慣を bob が GET/PUT | 404、一覧 0 件 | api `app.test.ts` |
 | TS-A02 | 日付形式 | ログ日付に `...T00:00:00Z` | 400 | 同上 |
 | TS-A03 | シード | demo vs other | demo 5 件、other 0 | 同上 |
+| TS-A04 | CORS | 未設定で ACAO `*` を付けない。明示オリジンはエコー | api `app.test.ts` |
 | TS-M01 | 手動 | Expo でチェック → 再起動 | SQLite に残る。API は呼ばない | なし |
 | TS-M02 | 手動 | Compose `/ready` | 200 | なし |

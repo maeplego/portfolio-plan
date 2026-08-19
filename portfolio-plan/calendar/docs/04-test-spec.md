@@ -3,7 +3,7 @@
 | 項目 | 値 |
 | --- | --- |
 | プロダクト | 予約カレンダー [pf-calendar](https://github.com/maeplego/pf-calendar) |
-| 最終更新 | 2026-08-19 |
+| 最終更新 | 2026-08-20 |
 | 実装との関係 | 製品リポジトリの vitest を優先する。本表と食い違ったらテストを直すか本表を追随する |
 
 自動化はリポジトリルートの `npm test`（slot-engine、api、worker）。Postgres 統合 1 件は DB あり時のみ。
@@ -67,6 +67,7 @@ Clock はテストで東京 2026-03-01 00:00 などに固定する。
 | TS-B06 | キャンセル | 201 の `cancelToken` で cancel → 200 `cancelled`。再 GET slots に Instant が戻る | |
 | TS-B07 | 不正 cancel トークン | 404。JSON に `@` なし | |
 | TS-B08 | ICS | cancelToken クエリで 200 `text/calendar`、`BEGIN:VCALENDAR` | |
+| TS-B09 | CORS | 許可オリジンは ACAO にエコー。他 Origin は `*` を付けない | |
 
 ## 4.1 内部 API
 

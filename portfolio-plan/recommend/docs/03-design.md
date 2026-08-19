@@ -3,7 +3,7 @@
 | 項目 | 値 |
 | --- | --- |
 | プロダクト | 推薦エンジン（GitHub: `pf-recommend`） |
-| 最終更新 | 2026-08-19 |
+| 最終更新 | 2026-08-20 |
 | 実装との関係 | この文書と実装が違うときは、製品リポジトリのコードとテストを優先する |
 
 ## 1. 目的
@@ -37,6 +37,7 @@ registry は `manifest.json` を最後に書く。MovieLens 本体は git に置
 - 未知ユーザーは popularity へフォールバックし、失敗とは区別する。
 - `commerce` の `item_id` は EC カタログの SKU。ULID ではない。
 - `POST /v1/events` は `{namespace}.jsonl` 追記のみ。再学習は人が CLI を回す。
+- demo-web はモデル名・タイトルを `textContent` で出す。`innerHTML` に成果物を埋め込まない。
 
 ## 5. 他製品との境界
 

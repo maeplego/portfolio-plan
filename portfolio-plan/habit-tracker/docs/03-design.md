@@ -3,7 +3,7 @@
 | 項目 | 値 |
 | --- | --- |
 | プロダクト | habit-tracker（GitHub: [pf-habit-mobile](https://github.com/maeplego/pf-habit-mobile)、[pf-habit-api](https://github.com/maeplego/pf-habit-api)） |
-| 最終更新 | 2026-08-19 |
+| 最終更新 | 2026-08-20 |
 | 実装との関係 | この文書と実装が違うときは、製品リポジトリのコードとテストを優先する |
 
 ## 1. リポジトリ
@@ -26,6 +26,8 @@
 ## 4. API 認可
 
 `X-Dev-User-Sub` → `users.sub`。habit 参照は常に `user_id` 付き。メモリ実装で隔離テスト。Compose がデモ起動の正。
+
+CORS 既定は空（ブラウザ向け `*` を付けない）。モバイルネイティブは CORS を使わない。明示したときだけ ACAO を出す。
 
 ## 5. TZ 変更と同期
 

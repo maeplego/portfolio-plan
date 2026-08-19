@@ -3,7 +3,7 @@
 | 項目 | 値 |
 | --- | --- |
 | プロダクト | コンテンツ基盤（GitHub: `pf-content-blog`、`pf-content-shortener`、Compose 束ね役 `pf-content-infra`） |
-| 最終更新 | 2026-08-19 |
+| 最終更新 | 2026-08-20 |
 | 実装との関係 | この文書と実装が違うときは、製品リポジトリのコードとテストを優先する。HTTP の細部は [05-api.md](05-api.md) |
 
 読者と編集者、公開 URL と短縮 302 から見た振る舞い。ホットパスの内部は [03-design.md](03-design.md)。
@@ -14,7 +14,7 @@
 
 ## 2. 含む / 含まない
 
-含む: Markdown CMS、下書き / 公開、公開 URL の 404、編集者プレビュー、Draft Mode、OG 画像（公開題名）、RSS / sitemap、短縮作成と 302、非同期クリック、日次グラフ、宛先ホスト許可リスト。
+含む: Markdown CMS、下書き / 公開、公開 URL の 404、編集者プレビュー、Draft Mode、OG 画像（公開題名）、RSS / sitemap、短縮作成と 302、非同期クリック、日次グラフ、宛先ホスト許可リスト、記事 HTML の `javascript:` 無効化。
 
 含まない: Tailwind + MDX、本番 OIDC（`pf-identity`）、メディア基盤（`pf-media`）の実パイプライン、コメント、全文検索、k6 の数値公表、マルチテナント独自ドメイン。
 
@@ -56,6 +56,8 @@ API の時刻は UTC RFC3339。DB は `timestamptz`。表示は ISO 日付で足
 | Draft Mode `POST /api/draft` | 編集者のみ enable。cookie だけでは下書きを公開しない |
 | 短縮作成 | 公開済み記事のみ。宛先は `CONTENT_PUBLIC_URL/posts/{slug}` |
 | 日次グラフ | 管理画面。`GET /v1/links/{id}/stats` の `daily` をバー表示 |
+
+記事本文の Markdown は `<` をエスケープしたうえで、リンクと画像の URL を http(s) / mailto / `#` / 相対パスだけにする。`javascript:` はテキストとして残し、`href` にしない。
 
 ## 7. 短縮の拒否
 

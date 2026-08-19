@@ -3,7 +3,7 @@
 | 項目 | 値 |
 | --- | --- |
 | プロダクト | コンテンツ基盤（GitHub: `pf-content-blog`、`pf-content-shortener`、`pf-content-infra`） |
-| 最終更新 | 2026-08-19 |
+| 最終更新 | 2026-08-20 |
 | 実装との関係 | この文書と実装が違うときは、製品リポジトリのコードとテストを優先する |
 
 ## 1. 全体構成
@@ -54,3 +54,7 @@ Redis は code→url のヒント。クリックを同期 INSERT すると Redis
 ## 6. 画像
 
 `coverUrl` は文字列。シードは `/harbor.svg`。メディア基盤のオブジェクトキーはこの契約に入れない。
+
+## 7. 公開 HTML
+
+`renderMarkdown` が正。raw HTML は `<` エスケープ。リンクは http(s) / mailto / `#`、画像は http(s) と相対パス。`javascript:` は Wiki と同じく `<a>` にしない。ワークスペース側のプレビューと許可リストを揃える。

@@ -3,7 +3,7 @@
 | 項目 | 値 |
 | --- | --- |
 | プロダクト | コンテンツ基盤（GitHub: `pf-content-blog`、`pf-content-shortener`） |
-| 最終更新 | 2026-08-19 |
+| 最終更新 | 2026-08-20 |
 | 実装との関係 | 製品リポジトリのテストを優先する。本表と違うときはテストか本表のどちらかを直す |
 
 自動化は shortener の `go test ./...` と blog の `npm test`。
@@ -43,6 +43,7 @@ exploit / PoC は書かない。実在 PII を fixture に置かない。
 | TS-B04 | slug `admin` | 拒否 |
 | TS-B05 | 下書き公開 URL | 画面 404（Compose で確認） |
 | TS-B06 | Draft Mode と編集者 | 両方そろったときだけ下書き可。cookie または Draft Mode 片方では不可 |
+| TS-B07 | `[x](javascript:alert(1))` | `href` にしない。`https://` リンクは残る |
 
 ## 4. 未自動化
 

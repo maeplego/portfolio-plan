@@ -3,7 +3,7 @@
 | 項目 | 値 |
 | --- | --- |
 | プロダクト | コンテンツ基盤（ブログ [pf-content-blog](https://github.com/maeplego/pf-content-blog)、短縮 [pf-content-shortener](https://github.com/maeplego/pf-content-shortener)、Compose 束ね役 [pf-content-infra](https://github.com/maeplego/pf-content-infra)） |
-| 最終更新 | 2026-08-19 |
+| 最終更新 | 2026-08-20 |
 | 実装との関係 | この文書と実装が違うときは、製品リポジトリのコードとテストを優先する |
 
 ## 1. 背景と目的
@@ -68,6 +68,7 @@
 | FR-10 | Draft Mode は編集者のみ enable。cookie だけでは下書きを公開しない | プレビューと公開の境界 |
 | FR-11 | 公開記事の OG 画像は題名を出す。下書きの題は出さない | SNS カードからの漏洩 |
 | FR-12 | 短縮の日次クリックを管理画面のグラフで見られる | シェア効果の確認 |
+| FR-13 | 公開 Markdown は raw HTML を出さず、`javascript:` / `data:` をリンクにしない | XSS |
 
 ## 7. 非機能
 

@@ -3,7 +3,7 @@
 | 項目 | 値 |
 | --- | --- |
 | プロダクト | EC コマース（GitHub: `pf-commerce`） |
-| 最終更新 | 2026-08-19 |
+| 最終更新 | 2026-08-20 |
 | 実装との関係 | この文書と実装が違うときは、製品リポジトリのコードとテストを優先する。HTTP の細部は [05-api.md](05-api.md) |
 
 購入者と運用画面、公開 REST、購入者向け GraphQL から見た振る舞い。プロセス内のトランザクションは [03-design.md](03-design.md)。
@@ -82,6 +82,8 @@ ID 基盤のログイン画面は未実装。ユーザー切替は開発ヘッ�
 `POST /graphql`。クエリ `products` / `product(id)` / `recommended(userId, k)`。ネスト `inventory { availableQty }`、`reviews`、`similar(k)`。REST gateway は公開契約として残す。クエリ文字列が長すぎると `query too expensive`。
 
 `recommended` と `Product.similar` は推薦 API の `namespace=commerce` を呼ぶ。item は SKU（`MUG-1` など）。失敗・空・カタログに無い SKU は `source: "popularity"` と `fallback: true` でカタログ順。
+
+CORS 既定は `http://localhost:3009`。許可外のブラウザ Origin は 403。Origin ヘッダが無い呼び出しは通す。GraphQL に購入コマンドは無い。
 
 ## 11. Kubernetes 連携デモ
 
