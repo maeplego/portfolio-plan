@@ -3,7 +3,7 @@
 | 項目 | 値 |
 | --- | --- |
 | プロジェクト | P04 workspace |
-| 対象スライス | 1–6 実装。7 以降は「計画」 |
+| 対象スライス | 1–7 実装 |
 | 最終更新 | 2026-08-19 |
 | 矛盾時の正 | コードと [05-api.md](05-api.md) |
 
@@ -38,9 +38,15 @@ flowchart LR
   guest --> searchGuest[検索 published のみ]
   owner --> attach[添付追加]
   member --> attach
+  owner --> sprint[スプリント作成]
+  member --> sprint
+  guest --> readSprint[バーンダウン閲覧]
+  owner --> wikiHist[Wiki 履歴 / 復元]
+  member --> wikiHist
+  guest --> wikiDiff[Wiki diff published]
 ```
 
-未読バッジは計画（スライス 7 以降でも可）。
+未読バッジは未実装。
 
 ## 画面遷移（実装済み）
 
@@ -52,6 +58,8 @@ flowchart TD
   cb["/callback"]
 
   home -->|ボード| board
+  board -->|スプリント| sprints["/boards/:id/sprints"]
+  sprints --> board
   board -->|パンくず| home
   home -->|Wiki| wiki["/wiki/:wsId"]
   wiki --> page["/wiki/:wsId/pages/:id"]
@@ -172,6 +180,39 @@ sequenceDiagram
 
 guest の upload は 403。
 
+## シーケンス: バーンダウン
+
+```mermaid
+sequenceDiagram
+  actor U as member
+  participant A as workspace-api
+  U->>A: POST /v1/boards/:id/sprints
+  A-->>U: 201 Sprint
+  U->>A: PATCH /v1/cards/:id sprintId
+  U->>A: PATCH /v1/cards/:id/move Done
+  Note over A: completedAt をセット
+  U->>A: GET /v1/sprints/:id/burndown
+  A-->>U: points[] remaining cards
+```
+
+guest の作成は 403。GET は 200。
+
+## シーケンス: Wiki 履歴 diff
+
+```mermaid
+sequenceDiagram
+  actor U as member
+  participant A as workspace-api
+  U->>A: PATCH /v1/pages/:id body
+  Note over A: AppendPageVersionIfChanged
+  U->>A: GET /v1/pages/:id/diff?from=1&to=2
+  A-->>U: lines op equal/delete/insert
+  U->>A: POST /v1/pages/:id/restore number=1 version
+  A-->>U: 200 Page（新しい版）
+```
+
+guest の draft 履歴は 404。restore は 403。
+
 ## 論理 ER（メモリ上。テーブルではない）
 
 ```mermaid
@@ -195,6 +236,9 @@ erDiagram
   CHANNEL ||--o{ CHAT_MESSAGE : has
   WORKSPACE ||--o{ STORED_FILE : has
   PAGE ||--o{ STORED_FILE : wiki_attach
+  BOARD ||--o{ SPRINT : has
+  SPRINT ||--o{ CARD : assigned
+  PAGE ||--o{ PAGE_VERSION : history
   PAGE {
     string parentId
     string status
@@ -216,6 +260,15 @@ erDiagram
   STORED_FILE {
     string purpose
     string provider
+  }
+  SPRINT {
+    string name
+    datetime startAt
+    datetime endAt
+  }
+  PAGE_VERSION {
+    int number
+    string title
   }
 ```
 

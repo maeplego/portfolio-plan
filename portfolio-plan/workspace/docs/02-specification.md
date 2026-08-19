@@ -3,7 +3,7 @@
 | 項目 | 値 |
 | --- | --- |
 | プロジェクト | P04 workspace |
-| 対象スライス | 1–6 の現行 API・Web |
+| 対象スライス | 1–7 の現行 API・Web |
 | 最終更新 | 2026-08-19 |
 | 矛盾時の正 | 自動テストと製品コード、次に `DESIGN.md`。HTTP の細部は [05-api.md](05-api.md) |
 
@@ -50,6 +50,10 @@
 | 横断検索 | 可 | 可 | 可（draft 除外） | 否 |
 | 添付追加 | 可 | 可 | 否 | 否 |
 | 添付参照 | 可（親と同じ） | 可 | 可（親と同じ） | 否 |
+| スプリント参照 / バーンダウン | 可 | 可 | 可 | 否 |
+| スプリント作成・カード割り当て | 可 | 可 | 否 | 否 |
+| Wiki 履歴 / diff | 可 | 可 | 可（published のみ） | 否 |
+| Wiki 復元 | 可 | 可 | 否 | 否 |
 
 guest のボード画面は「閲覧のみ」と表示する。UI を隠しても API は 403 を返す。
 
@@ -70,22 +74,30 @@ guest のボード画面は「閲覧のみ」と表示する。UI を隠して�
 ### 5.2 カード
 
 - 作成: 列に末尾追加。`version` は 1。空タイトルは 403。
-- 更新: `title` / `description` と **現在の** `version` を送る。不一致は 409。成功すると `version` が 1 増える。
-- 移動: `columnId`（同一ボード内）、`position`（0 始まり）、`version`。列をまたいでも同一ボードでなければ 403。
+- 更新: `title` / `description` / 任意の `sprintId` と **現在の** `version` を送る。不一致は 409。成功すると `version` が 1 増える。`sprintId` 省略は変更なし、空文字は解除。他ボードのスプリントは 400。
+- 移動: `columnId`（同一ボード内）、`position`（0 始まり）、`version`。列をまたいでも同一ボードでなければ 403。Done 列に入ると `completedAt` を付ける。
 - 他ボードの列へ移すことはできない。
 
 ### 5.3 競合（外部から見える結果）
 
 2 クライアントが同じカードを、同じ `version` でほぼ同時に PATCH した場合、**200 が 1 件と 409 が 1 件**。どちらが 200 かは規定しない。409 の本文に `current` カードを含めてよい。クライアントは再取得してからやり直す。
 
+### 5.4 スプリント
+
+- 作成: `POST /v1/boards/:boardId/sprints` `{ name, startAt, endAt }`（RFC3339 UTC）。終了は開始より後。カレンダー日数は 90 日まで。guest 403。
+- 一覧・詳細・バーンダウンは guest 以上。
+- バーンダウン: `GET /v1/sprints/:id/burndown`。単位は `cards`。Done 列（名前 `Done`）へ入った時刻を完了とみなす。現在の割り当てと `createdAt` / `completedAt` から日次 remaining を出す（移動イベントの完全ログではない）。
+- 削除するとカードの `sprintId` を外す（カード version は増やさない）。
+
 ## 6. Web（スライス 2）
 
 | 画面 | 仕様 |
 | --- | --- |
 | `/` | ワークスペース一覧。作成フォーム。ボード追加。メンバー追加（owner）。Wiki / Docs / Chat / 検索へのリンク。OIDC 有効かつ未ログインなら `/login` |
-| `/boards/:boardId` | 3 列カンバン。カード追加、DnD 移動、カード詳細モーダル。guest は DnD 無効 |
+| `/boards/:boardId` | 3 列カンバン。カード追加、DnD 移動、カード詳細モーダル（スプリント割り当て）。guest は DnD 無効 |
+| `/boards/:boardId/sprints` | スプリント作成とバーンダウン（未完了カード数） |
 | `/wiki/:workspaceId` | Wiki ツリー |
-| `/wiki/:workspaceId/pages/:pageId` | Wiki エディタ（collab または textarea） |
+| `/wiki/:workspaceId/pages/:pageId` | Wiki エディタ（collab または textarea）と履歴 diff |
 | `/docs/:workspaceId` | 独立ドキュメント一覧 |
 | `/docs/:workspaceId/:documentId` | 共同編集エディタ |
 | `/chat/:workspaceId` | チャンネル一覧 |
@@ -103,6 +115,7 @@ guest のボード画面は「閲覧のみ」と表示する。UI を隠して�
 - 更新: `version` 必須。不一致 409。`parentId` を自分または子孫にすると 400。collab 稼働時のタイトル・状態保存は `body` を省略してよい。
 - 表示: collab 接続時は CodeMirror + Yjs。未接続は textarea + プレビュー。`react-markdown` は raw HTML を出さず、`javascript:` はリンクにしない。
 - 画面: `/wiki/:workspaceId` と `/wiki/:workspaceId/pages/:pageId`
+- 履歴: 作成時と title/body 変更時（collab スナップショットで本文が変わったときも含む）に API スナップショットを足す。Y.Doc バイトは保存しない。`GET .../versions` は本文なし。`GET .../versions/:n` は本文あり。`GET .../diff?from=&to=` は行単位 LCS。`POST .../restore` `{ number, version }` でその版の title+body を戻し、新しい版を足す。guest は GET page と同じ可視性（draft は 404）。restore は member 以上。
 
 ## 8. 共同編集（collab）
 
@@ -150,7 +163,7 @@ guest のボード画面は「閲覧のみ」と表示する。UI を隠して�
 
 | HTTP | code | とき |
 | --- | --- | --- |
-| 400 | invalid_request | JSON 不正、ページの循環親、本文超過、部屋名が ULID でない、空の検索 q |
+| 400 | invalid_request | JSON 不正、ページの循環親、本文超過、部屋名が ULID でない、空の検索 q、スプリント期間不正、同一版 diff |
 | 401 | unauthorized / プレーン | 未認証、期限切れチケット、内部トークン欠如、添付トークン不一致 |
 | 403 | forbidden | ロール不足・空タイトル・チケットと部屋の不一致 |
 | 404 | not_found | 対象なし。guest の draft チケットも含む |

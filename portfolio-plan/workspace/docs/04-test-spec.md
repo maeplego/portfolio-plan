@@ -3,7 +3,7 @@
 | 項目 | 値 |
 | --- | --- |
 | プロジェクト | P04 workspace |
-| 対象スライス | 1–6 |
+| 対象スライス | 1–7 |
 | 最終更新 | 2026-08-19 |
 | 矛盾時の正 | `apps/api` の `go test` と `apps/collab` の `npm test`。未自動化は本表の「手動」 |
 
@@ -45,6 +45,12 @@
 | TS-N01 | メンション | `@demo-user-b` と `@not-a-member` | mentions はメンバー 1 件 |
 | TS-F01 | 添付 | member が wiki/chat 画像。guest upload / page attach | 201 と 403。content?t= は 200、偽トークン 401 |
 | TS-F02 | サイズ | SaveLocalFile が MaxUploadBytes+1 | ErrTooLarge |
+| TS-SP01 | スプリント ACL | guest が POST sprint。guest が burndown GET | 403 と 200 |
+| TS-SP02 | バーンダウン | 2 カードを割り当て、1 枚を Done | 当日 remaining が 1。単位 cards |
+| TS-V01 | 版 | 公開ページ作成後に body PATCH | 版 2 件。list に body なし |
+| TS-V02 | diff / restore | from=1 to=2、guest restore、owner restore | insert 行あり。guest 403。owner 本文が v1 |
+| TS-V03 | guest draft | draft の versions GET | 404 |
+| TS-D01 | 行 diff | `a\nb\nc` vs `a\nx\nc` | equal/delete/insert/equal |
 
 ## 未自動化（受け入れの手動）
 
@@ -61,3 +67,5 @@
 | TS-U09 | IME | Wiki collab で「日本語」を変換確定 | 変換中にキャレットが飛ばない |
 | TS-U10 | 検索 | ホームから q を送り guest 切替 | draft が guest 結果に出ない |
 | TS-U11 | 添付 | Wiki / Chat に画像 1 枚 | プレビューに出る。guest フォームなし |
+| TS-U12 | バーンダウン | ボードからスプリント画面。カードを Done | チャートと表の残りが減る |
+| TS-U13 | Wiki diff | 本文を保存して比較、復元 | 行 diff が出る。復元後に v1 本文 |

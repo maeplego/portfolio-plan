@@ -3,7 +3,7 @@
 | 項目 | 値 |
 | --- | --- |
 | プロジェクト | P04 workspace |
-| 対象スライス | 1–6 |
+| 対象スライス | 1–7 |
 | 最終更新 | 2026-08-19 |
 | 矛盾時の正 | 自動テストと製品コード、次に `DESIGN.md` |
 
@@ -15,7 +15,7 @@
 
 | プロセス | 実装 | 持つ正本 |
 | --- | --- | --- |
-| `apps/api` | Go, `net/http` + gorilla websocket `/chat/ws` | workspace / member / board / card / page メタ / document メタ / チケット / channel / message / 検索インデックス相当（メモリ） / ローカル添付。本文のスナップショット |
+| `apps/api` | Go, `net/http` + gorilla websocket `/chat/ws` | workspace / member / board / card / page メタ / document メタ / チケット / channel / message / 検索インデックス相当（メモリ） / ローカル添付 / sprint / page_version。本文のスナップショット |
 | `apps/collab` | Node, Hocuspocus + Yjs | 接続中の Y.Doc と中継。会員リストは持たない |
 | `apps/web` | Next.js 15 App Router | 画面。認可の正ではない。Server Action 経由で API を叩く |
 
@@ -43,6 +43,8 @@ Web は開発モードなら cookie なしで `X-Dev-User-Sub` を付ける。OI
 - collab チケット: 対象の GET と同じ可視性。guest は `readOnly`
 - 検索: guest 以上。page は `FilterGuestPages`
 - 添付追加: member 以上。参照は親（ページ GET / チャンネル履歴）と同じ
+- スプリント書き込み: member 以上。参照とバーンダウンは guest 以上
+- Wiki 履歴: GET page と同じ可視性。restore は member 以上
 
 ## 4. データ（メモリ）
 
@@ -58,6 +60,8 @@ Web は開発モードなら cookie なしで `X-Dev-User-Sub` を付ける。OI
 - CollabTicket / ChatTicket（sub, 対象, readOnly, expiresAt）
 - Channel / ChatMessage（`seq` はチャンネル内 1,2,3…。削除しない。`mentions` は投稿時に解決）
 - StoredFile（ローカル一時ファイルまたは P03 fileId。`viewToken` 付き）
+- Sprint（`boardId`, `startAt`, `endAt` UTC）
+- PageVersion（page ごとの title+body スナップショット。番号は単調増加）
 
 `collabIndex` は `collabDocumentId` → page または document。部屋名の解決に使う。
 
@@ -69,7 +73,11 @@ Web は開発モードなら cookie なしで `X-Dev-User-Sub` を付ける。OI
 
 本文の正は collab の Y.Doc。API の `body` は起動時シードと debounce スナップショット。タイトル・status・親子は API が正のまま。スナップショットは page の `version` を増やさない（タイトル競合と混ぜない）。
 
-Card の `version` は更新・移動の成功時だけインクリメント。列内 `position` は移動後にその列を 0..n-1 で振り直す。
+Card の `version` は更新・移動の成功時だけインクリメント。列内 `position` は移動後にその列を 0..n-1 で振り直す。Done 列（名前が `Done`）へ入ると `completedAt` をセットし、外すとクリアする。
+
+バーンダウンは `domain.BurndownFor`。その日終了時点で残っているのは、スプリントに今割り当てられていて、`createdAt` がその日以前、かつ `completedAt` がその日より後または未設定のカード。割り当て履歴の完全ログは持たない。
+
+Wiki 履歴は `AppendPageVersionIfChanged`。title+body が直前と同じなら足さない。collab の debounce スナップショットでも本文が変われば版が増える（page.version は増やさない）。復元は PATCH 相当で lock version を消費し、新しい版を足す。開いている Y.Doc は自動では巻き戻さない。
 
 Postgres に移すときは同じフィールドをテーブルにし、移動はトランザクション + `WHERE version = $expected` にする。今はメモリでその意味をテストする。
 
@@ -108,7 +116,8 @@ IME: `yCollabIME` は `view.composing` 中に CM→Yjs も remote→CM もしな
 
 - メモリ store。複数 API / collab レプリカではデータが分裂する。sticky は単一 collab 前提
 - カード移動のリアルタイム他ブラウザ同期なし
-- 列カスタム・スプリント未実装
+- 列カスタム・ストーリーポイント未実装
+- バーンダウンは現在の割り当てと Done 時刻。過去の割り当て変更は遡及しない
 - 日本語 IME は composition 確定まで Yjs に送らない。変換中の同時編集は稀に食い違う
 - チケット 15 分。長期編集は再読込が必要
 - チャット未読バッジ・既読ウォーターマークは未実装（last_read_seq は後続）

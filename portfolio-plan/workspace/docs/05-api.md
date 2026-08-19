@@ -3,7 +3,7 @@
 | 項目 | 値 |
 | --- | --- |
 | プロジェクト | P04 workspace |
-| 対象スライス | 1–6 |
+| 対象スライス | 1–7 |
 | 最終更新 | 2026-08-19 |
 | 矛盾時の正 | `apps/api` のハンドラとテスト |
 
@@ -97,8 +97,8 @@ OpenAPI ファイルは未作成。本ファイルが HTTP 契約の正本。
 
 ### `PATCH /v1/cards/:cardId`
 
-入力: `{ "title": "...", "description": "...", "version": 1 }`  
-成功: 200。不一致 409（`current` を含めてよい）。
+入力: `{ "title": "...", "description": "...", "version": 1, "sprintId": "01..." }`  
+`sprintId` 省略は変更なし、`""` は解除。成功: 200。不一致 409（`current` を含めてよい）。
 
 ### `PATCH /v1/cards/:cardId/move`
 
@@ -236,3 +236,49 @@ multipart: `workspaceId`, `purpose`（`wiki`|`chat`）, `file`。成功 201 File
 ### `GET /v1/files/:id/content`
 
 クエリ: `t`（viewToken）。認証ヘッダ不要。成功 200 バイト。トークン不一致 401。ローカル保存のみ。
+
+## スプリント
+
+### `POST /v1/boards/:boardId/sprints`
+
+入力: `{ "name": "Sprint 7", "startAt": "2026-08-01T00:00:00Z", "endAt": "2026-08-14T00:00:00Z" }`  
+成功 201 Sprint。guest 403。期間不正・90 日超は 400。
+
+### `GET /v1/boards/:boardId/sprints`
+
+成功 200 `{ "sprints": [ { "id", "boardId", "workspaceId", "name", "startAt", "endAt", "createdAt" } ] }`
+
+### `GET /v1/sprints/:id`
+
+成功 200 Sprint。
+
+### `PATCH /v1/sprints/:id`
+
+入力: `{ "name"?, "startAt"?, "endAt"? }`。成功 200。guest 403。
+
+### `DELETE /v1/sprints/:id`
+
+成功 204。カードの `sprintId` を外す。guest 403。
+
+### `GET /v1/sprints/:id/burndown`
+
+成功 200 `{ "sprintId", "unit": "cards", "points": [ { "date": "2026-08-01", "remaining": 3 } ] }`  
+`date` は UTC の暦日。
+
+## Wiki 履歴
+
+### `GET /v1/pages/:id/versions`
+
+成功 200 `{ "versions": [ { "pageId", "number", "title", "sub", "createdAt" } ] }`（body なし）。guest の draft は 404。
+
+### `GET /v1/pages/:id/versions/:n`
+
+成功 200 PageVersion（`body` 含む）。
+
+### `GET /v1/pages/:id/diff?from=&to=`
+
+`from` と `to` 必須で異なる。成功 200 `{ "pageId", "from", "to", "titleChanged", "fromTitle", "toTitle", "lines": [ { "op": "equal"|"delete"|"insert", "text" } ] }`
+
+### `POST /v1/pages/:id/restore`
+
+入力: `{ "number": 1, "version": 3 }`（`version` はページの楽観ロック）。成功 200 Page。guest 403。draft は guest 404。

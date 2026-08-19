@@ -3,7 +3,7 @@
 | 項目 | 値 |
 | --- | --- |
 | プロジェクト | P04 workspace |
-| 対象スライス | 1–6 実装済み（workspace + カンバン + Wiki + collab + chat + 横断検索 / メンション / 添付）。7 は計画 |
+| 対象スライス | 1–7 実装済み（workspace + カンバン + Wiki + collab + chat + 横断検索 / メンション / 添付 + スプリント / Wiki 履歴）。DESIGN 実装順は完了 |
 | 最終更新 | 2026-08-19 |
 | 矛盾時の正 | `../pf-workspace` のテストとコード、次に `../DESIGN.md` |
 
@@ -28,4 +28,4 @@
 | 4 collab（CRDT） | 実装済み | 要件 FR-13–16、仕様の collab / Docs、API チケットと internal |
 | 5 チャット | 実装済み | 要件 FR-17–19、仕様のチャンネル、API `/v1/channels`、`/chat/ws` |
 | 6 横断検索・メンション・P03 添付 | 実装済み | 要件 FR-20–22、仕様の検索 / メンション / 添付、API `/search` と uploads |
-| 7 スプリントバーンダウン・Wiki diff | 計画 | 同上 |
+| 7 スプリントバーンダウン・Wiki diff | 実装済み | 要件 FR-23–26、仕様のスプリント / 履歴、API sprints と versions |
