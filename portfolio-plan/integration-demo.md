@@ -20,7 +20,7 @@
 | Overlay | 含める | 主目的 |
 | --- | --- | --- |
 | `portfolio-integration-a-foundation` | P01, P02, P03 | OIDC + media + o11y の最小 smoke |
-| `portfolio-integration-b-collab` | P01, P02, P03, P04, P11 | workspace / portal の連携 |
+| `portfolio-integration-b-collab` | P01, P02, P03, P04（P11 は後続） | workspace の連携（P04 サブセット） |
 | `portfolio-integration-c-scheduling-talent` | P01, P02, P05, P07, P10 | 採用ドメイン |
 | `portfolio-integration-d-commerce` | P01, P02, P03, P06, P07, P11, P12, P13 | commerce 本線 |
 | `portfolio-integration-e-content` | P01, P02, P03, P08, P11 | content / media / portal |
@@ -31,6 +31,7 @@
 - `portfolio-integration-a-foundation` + `docker-desktop-a-foundation`（`portfolio-integration` の別名）
 - `portfolio-integration` + `docker-desktop`（上記と同じ。後方互換）
 - `portfolio-integration-c-scheduling-talent` + `docker-desktop-c-scheduling-talent`
+- `portfolio-integration-b-collab` + `docker-desktop-b-collab`（P04 サブセット。P11 portal は未搭載）
 
 ## overlay の切り替え（12 GB 制約）
 
@@ -40,6 +41,7 @@
 | --- | --- |
 | foundation → scheduling-talent | `.\scripts\down.ps1`（または `down-a-foundation.ps1`）→ `.\scripts\cluster-smoke-c-scheduling-talent.ps1` |
 | scheduling-talent → foundation | `.\scripts\down-c-scheduling-talent.ps1` → `.\scripts\cluster-smoke.ps1` |
+| いずれか → collab（P04） | `.\scripts\down-c-scheduling-talent.ps1` と `.\scripts\down-a-foundation.ps1` → `.\scripts\cluster-smoke-b-collab.ps1`（`up-b-collab.ps1` が A/C を down する） |
 
 platform（Postgres / Redis / Garage / o11y）は両 overlay で共有する。`ensure-platform-databases.ps1` は apply 時に DB/user を足す。
 
@@ -89,7 +91,7 @@ docker compose -f compose.yaml --env-file .env up --build
 
 ## 連携デモ（Kubernetes）
 
-> **ステータス**: foundation overlay は IdP ログイン → media ホームまで `oidc-smoke.ps1` / `demo-smoke.ps1` が通る。scheduling-talent overlay は `cluster-smoke-c-scheduling-talent.ps1` で予約確定 → `interview` 更新まで確認する。standalone kind では検証しない。
+> **ステータス**: foundation overlay は IdP ログイン → media ホームまで `oidc-smoke.ps1` / `demo-smoke.ps1` が通る。scheduling-talent overlay は Docker Desktop Kubernetes（context `docker-desktop`）上で `cluster-smoke-c-scheduling-talent.ps1` が予約確定 → `interview` まで通り、`http://talent.localhost` と `http://talent-api.localhost/health` を Ingress 確認済み（2026-08-19）。b-collab overlay は P04 サブセット（P01+P02+P03+P04。P11 なし）。standalone kind では検証しない。
 
 ### 0. kubectl context（必須）
 
@@ -113,7 +115,7 @@ kubectl get nodes
 
 ### 2. イメージをビルドしてノードへ載せる
 
-Docker Desktop Kubernetes（kind モード）は **ホストの Docker イメージを自動では見ない**。`desktop-control-plane` の containerd へ import する。`build-images.ps1` は foundation に加え P05 / P10 イメージも build する。
+Docker Desktop Kubernetes（kind モード）は **ホストの Docker イメージを自動では見ない**。`desktop-control-plane` の containerd へ import する。`build-images.ps1` は foundation に加え P04 / P05 / P10 イメージも build する。
 
 ```powershell
 cd pf-cloud-k8s
@@ -141,6 +143,14 @@ cd pf-cloud-k8s
 .\scripts\expose-ingress.ps1
 ```
 
+#### collab（P04 サブセット。P11 portal なし）
+
+```powershell
+cd pf-cloud-k8s
+.\scripts\cluster-smoke-b-collab.ps1
+.\scripts\expose-ingress.ps1
+```
+
 ### 4. 起動待ち
 
 ```powershell
@@ -157,10 +167,13 @@ kubectl wait --for=condition=ready pod -l app=platform-postgres -n platform --ti
 | P01 IdP | http://idp.localhost | issuer |
 | P01 admin | http://admin.localhost | |
 | P03 media web | http://media.localhost | OIDC 必須。未ログインは `/login` |
+| P04 workspace web | http://workspace.localhost | OIDC 必須。未ログインは `/login` |
+| P04 workspace API | http://workspace-api.localhost | REST + チャット WS。overlay smoke は `X-Dev-User-Sub` |
+| P04 workspace collab | http://workspace-collab.localhost | Yjs / Hocuspocus。チャット WS とは別ホスト |
 | P05 calendar web | http://calendar.localhost | 公開予約 UI |
 | P05 calendar API | http://calendar-api.localhost | public / internal API |
-| P10 talent web | http://talent.localhost | 検索 UI。`?user=candidate-1` |
-| P10 talent API | http://talent-api.localhost | talent API |
+| P10 talent web | http://talent.localhost | OIDC 必須。ログイン後の acting user は `?user=candidate-1` |
+| P10 talent API | http://talent-api.localhost | talent API。overlay では Bearer または `X-Dev-User-Sub`（`TALENT_DEV_AUTH=true`、cluster-smoke 用） |
 | Grafana | http://grafana.localhost | 学習用 admin/admin。Tempo を既定 datasource |
 | Garage S3 | http://garage.localhost | 署名付き GET/PUT（ブラウザと media-web） |
 
@@ -193,12 +206,26 @@ kubectl wait --for=condition=ready pod -l app=platform-postgres -n platform --ti
 - [http://talent.localhost/?user=candidate-1](http://talent.localhost/?user=candidate-1)（web）
 - [http://talent-api.localhost/health](http://talent-api.localhost/health)
 
+#### collab（P04）
+
+`cluster-smoke-b-collab.ps1` は api / collab / web の `/health`、API でのワークスペース作成、Ingress の `workspace.localhost` → OIDC を確認する。学習用デモユーザーは foundation と同じ（メール `demo@example.test`）。
+
+目視確認するときの URL:
+
+- [http://workspace.localhost](http://workspace.localhost)（OIDC）
+- [http://workspace-api.localhost/health](http://workspace-api.localhost/health)
+- [http://workspace-collab.localhost/health](http://workspace-collab.localhost/health)
+- [http://media.localhost](http://media.localhost)
+
+永続化はメモリ。platform DB `workspace` は未接続。
+
 ### 7. 片付け
 
 ```powershell
 cd pf-cloud-k8s
 .\scripts\down.ps1
 .\scripts\down-c-scheduling-talent.ps1
+.\scripts\down-b-collab.ps1
 ```
 
 Docker Desktop Kubernetes を無効化してもよい。単体 Compose デモには影響しない。
@@ -208,16 +235,18 @@ Docker Desktop Kubernetes を無効化してもよい。単体 Compose デモに
 ```
 Docker Desktop Kubernetes
 ┌──────────────────────────────────────────────────────────┐
-│ Ingress (nginx)  idp / media / calendar / talent / grafana / garage.localhost
+│ Ingress (nginx)  idp / media / workspace / calendar / talent / grafana / garage.localhost
 ├──────────────────────────────────────────────────────────┤
 │ namespace: platform                                       │
-│   postgres (DB: identity, media, calendar, talent, ...)   │
+│   postgres (DB: identity, media, calendar, talent, workspace, ...)   │
 │   redis, garage (S3 互換), otel-collector                 │
 ├──────────────────────────────────────────────────────────┤
 │ namespace: p01        │ namespace: p03                     │
 │   idp, admin          │   api, web, processor              │
-│ namespace: p05        │ namespace: p10                     │
-│   api, web, worker    │   api                              │
+│ namespace: p04        │ namespace: p05                     │
+│   api, collab, web    │   api, web, worker                 │
+│ namespace: p10                                             │
+│   api, web                                                 │
 └──────────────────────────────────────────────────────────┘
 ```
 
@@ -246,10 +275,11 @@ Docker Desktop Kubernetes
 | Pod Pending | `kubectl describe pod`。Docker Desktop の CPU/RAM 上限 |
 | ImagePullBackOff（pf-* ローカルイメージ） | `.\scripts\load-images.ps1` を実行。`imagePullPolicy: IfNotPresent` でもノードに無いと Hub へ取りに行く |
 | Ingress 404 | Ingress クラス・path 規則。`kubectl describe ingress` |
-| OIDC redirect 不一致 | client redirect URI が overlay の media URL と一致 |
+| OIDC redirect 不一致 | client redirect URI が overlay の media / workspace / talent URL と一致 |
 | Grafana に trace が無い | `OTEL_EXPORTER_OTLP_ENDPOINT` が platform collector を指すか |
 | `password authentication failed for user "calendar"` | 既存 platform Postgres には `.\scripts\ensure-platform-databases.ps1` を実行して DB/user を追加 |
 | calendar-web が `Cannot find module '/app/server.js'` | `pf-calendar` web イメージを再 build（monorepo standalone 用 CMD） |
+| PowerShell で `*.localhost` が解決できない | `curl.exe` を使う。Windows の .NET DNS は `workspace.localhost` を解決しないことがある |
 
 ## 実装ロードマップ（P02）
 
@@ -261,6 +291,7 @@ Docker Desktop Kubernetes
 6. P02 o11y 最小を platform に載せる（**完了**）。media-api は OTLP、Grafana に Tempo
 7. foundation smoke (`cluster-smoke.ps1` + `oidc-smoke.ps1` + `demo-smoke.ps1`）
 8. scheduling-talent smoke (`cluster-smoke-c-scheduling-talent.ps1`）
+9. b-collab smoke（P04 サブセット。`cluster-smoke-b-collab.ps1`）。P11 portal は後続
 
 ## 単体 Compose 連携デモ: P05 ↔ P10（予約確定 → 面接ステータス）
 

@@ -114,7 +114,7 @@ IME: `yCollabIME` は `view.composing` 中に CM→Yjs も remote→CM もしな
 
 ## 9. 既知の制限
 
-- メモリ store。複数 API / collab レプリカではデータが分裂する。sticky は単一 collab 前提
+- メモリ store。overlay `b-collab` でも同じ。複数 API / collab レプリカではデータが分裂する。sticky は単一 collab 前提。platform Postgres の `workspace` DB は未接続
 - カード移動のリアルタイム他ブラウザ同期なし
 - 列カスタム・ストーリーポイント未実装
 - バーンダウンは現在の割り当てと Done 時刻。過去の割り当て変更は遡及しない

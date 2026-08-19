@@ -3,7 +3,7 @@
 | 項目 | 値 |
 | --- | --- |
 | プロジェクト | P04 workspace |
-| 対象スライス | 1–7 実装済み（workspace + カンバン + Wiki + collab + chat + 横断検索 / メンション / 添付 + スプリント / Wiki 履歴）。DESIGN 実装順は完了 |
+| 対象スライス | 1–7 実装済み + `deploy/k8s/`（overlay B の P04 サブセット）。DESIGN 機能順は完了。Postgres 永続化は未接続 |
 | 最終更新 | 2026-08-19 |
 | 矛盾時の正 | `../pf-workspace` のテストとコード、次に `../DESIGN.md` |
 

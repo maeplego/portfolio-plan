@@ -58,6 +58,8 @@ Terraform と K8s と観測スタックはライフサイクルが違う。state
 | `pf-cloud-k8s/deploy/base/` | Ingress クラス、platform Namespace 雛形、共通ラベル |
 | `pf-cloud-k8s/deploy/overlays/docker-desktop/` | foundation overlay 用のローカル patch（`imagePullPolicy: IfNotPresent`） |
 | `pf-cloud-k8s/deploy/overlays/portfolio-integration/` | P01 + P03 + o11y 最小の foundation ルート |
+| `pf-cloud-k8s/deploy/overlays/portfolio-integration-a-foundation/` | 上記の別名（overlay 群 A の正本 ID） |
+| `pf-cloud-k8s/deploy/overlays/docker-desktop-a-foundation/` | foundation overlay 用ローカル patch |
 | `pf-cloud-k8s/deploy/overlays/portfolio-integration-c-scheduling-talent/` | P01 + P05 + P10 + platform の採用ドメイン連携 |
 | `pf-cloud-k8s/deploy/overlays/docker-desktop-c-scheduling-talent/` | scheduling-talent overlay 用ローカル patch |
 | `pf-identity/deploy/k8s/` | idp, admin の Deployment / Service / ConfigMap |
@@ -104,12 +106,12 @@ Compose 単体デモは Docker Desktop の **Compose のみ** でも動く。K8s
 
 ## 実装順序
 
-1. `pf-cloud-o11y` の Compose。サンプルアプリで RED ダッシュボードとトレース
-2. 計装ガイドライン（ログ JSON キー名、`http.route` の正規化、禁止ラベル）
-3. **連携デモ設計の文書化**（`portfolio-plan/integration-demo.md`、本ファイル overlay 章）
-4. `pf-cloud-k8s` 骨組み + foundation overlay（P01 + P03 + o11y 最小）
-5. overlay 群を A-F に分割し、まず `portfolio-integration-c-scheduling-talent` を完成
-6. P04 / P11、P08、P06、P12 / P13、P09 / P14 / P15 API の順で overlay を拡張
+1. `pf-cloud-o11y` の Compose。サンプルアプリで RED ダッシュボードとトレース — **完了**
+2. 計装ガイドライン（ログ JSON キー名、`http.route` の正規化、禁止ラベル）— 正本: `pf-cloud-o11y/docs/instrumentation.md` — **完了**
+3. **連携デモ設計の文書化**（`portfolio-plan/integration-demo.md`、本ファイル overlay 章）— **完了**
+4. `pf-cloud-k8s` 骨組み + foundation overlay（P01 + P03 + o11y 最小）— **完了**
+5. overlay 群を A-F に分割し、まず `portfolio-integration-c-scheduling-talent` を完成 — **完了**（A は `portfolio-integration-a-foundation` 別名併存）
+6. P04 の `deploy/k8s/` と overlay `b-collab`（P01+P02+P03+P04。P11 portal は後続）— **P04 サブセット完了**
 7. GitHub OIDC と `pf-cloud-aws` モジュール
 8. 安価な環境に 3-tier を 1 アプリ載せる。請求アラーム必須
 9. 障害注入手順（高レイテンシ、5xx、pod kill）を文書化。P12 のシナリオの素材になる

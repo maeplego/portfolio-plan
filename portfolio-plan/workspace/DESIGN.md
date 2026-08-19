@@ -30,7 +30,7 @@
 
 スケールと障害影響でプロセスを分ける。ドメインモデル（ワークスペース、メンバー）は 1 つの API が正。
 
-開始は **1 製品リポジトリ** `../pf-workspace`（`apps/api` + `apps/collab` + `apps/web` + `deploy`）。collab / chat を独立デプロイしたくなったら下表どおり分割する。空の collab リポジトリを先に作らない（P10 の search と同じ段階化）。
+開始は **1 製品リポジトリ** `../pf-workspace`（`apps/api` + `apps/collab` + `apps/web` + `deploy`）。連携デモは `deploy/k8s/`（api / collab / web を別 Service。Yjs とチャット WS を混ぜない）。collab / chat を独立デプロイしたくなったら下表どおり分割する。空の collab リポジトリを先に作らない（P10 の search と同じ段階化）。
 
 | 将来の分割先 | 役割 | 元アイデア |
 | --- | --- | --- |
@@ -99,15 +99,16 @@ Wiki ページ作成: API が `page` 行と collab document id を作る。編�
 
 ## 他プロジェクトとの契約
 
-- P01: OIDC。`sub` を workspace member に紐づける
-- P03: 添付 `purpose=wiki|chat`
-- P11: 完成後、この構成を CLI テンプレートの「modular workspace」の参考にする。テンプレート化は P11 の仕事
+- P01: OIDC。`sub` を workspace member に紐づける。Compose は `WORKSPACE_DEV_AUTH`。overlay `b-collab` の web は `pf-workspace-web` 必須
+- P03: 添付 `purpose=wiki|chat`。overlay では `MEDIA_API_URL` を cluster 内 media-api に向ける
+- P11: 完成後、この構成を CLI テンプレートの「modular workspace」の参考にする。テンプレート化は P11 の仕事。overlay B の P11 portal は後続
 - P05: 将来ワークスペースから面談枠を取るが、P04 MVP の範囲外
 
 ## デモ
 
 - 2 ブラウザでカード移動と同時編集とチャットが同時に見える（落ちても他が生きることも見せる）
 - guest リンクで Wiki は読めてボードは触れない
+- overlay B: `http://workspace.localhost` で IdP ログイン。永続化はメモリ（platform DB `workspace` は未接続）
 
 ## 非目標
 

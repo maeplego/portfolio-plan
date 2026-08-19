@@ -39,8 +39,8 @@ Wiki・チャット・共同編集のうち、スライス 3 はツリーと単�
 | 項目 | 理由 |
 | --- | --- |
 | Postgres FTS / tsvector | スライス 6 はメモリ部分一致。ふりをしない |
-| Postgres 永続化 | 後続。MVP はプロセス内メモリ |
-| 本番 OIDC 必須 | 単体デモは `WORKSPACE_DEV_AUTH`。Web に OIDC ルートは用意済み |
+| Postgres 永続化 | 後続。Compose も overlay もプロセス内メモリ。platform DB `workspace` は予約のみ |
+| 本番 OIDC 必須 | 単体デモは `WORKSPACE_DEV_AUTH`。overlay `b-collab` の web は OIDC 必須 |
 | ストーリーポイント必須化 | スライス 7 のバーンダウンはカード数。ポイントは発明しない |
 | リアルタイムのカード同期（他ブラウザ即反映） | スライス 2 は DnD + 再取得。WS はチャットと混ぜない |
 | GitHub 双方向同期 | 非目標。P11 と混ぜない |
