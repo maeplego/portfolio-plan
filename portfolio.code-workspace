@@ -73,6 +73,10 @@
                         "path":  "../pf-reliability"
                     },
                     {
+                        "name":  "pf-finance",
+                        "path":  "../pf-finance"
+                    },
+                    {
                         "name":  "pf-data",
                         "path":  "../pf-data"
                     },
@@ -83,6 +87,10 @@
                     {
                         "name":  "pf-habit-api",
                         "path":  "../pf-habit-api"
+                    },
+                    {
+                        "name":  "pf-attendance",
+                        "path":  "../pf-attendance"
                     }
                 ],
     "settings":  {
