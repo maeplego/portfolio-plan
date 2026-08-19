@@ -11,6 +11,8 @@
     { "name": "pf-workspace", "path": "../pf-workspace", "project": "P04" },
     { "name": "pf-developer-scanner", "path": "../pf-developer-scanner", "project": "P11" },
     { "name": "pf-commerce", "path": "../pf-commerce", "project": "P06" },
-    { "name": "pf-recommend", "path": "../pf-recommend", "project": "P07" }
+    { "name": "pf-recommend", "path": "../pf-recommend", "project": "P07" },
+    { "name": "pf-developer-cli", "path": "../pf-developer-cli", "project": "P11" },
+    { "name": "pf-developer-templates", "path": "../pf-developer-templates", "project": "P11" }
   ]
 }

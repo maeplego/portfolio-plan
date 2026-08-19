@@ -47,6 +47,14 @@
                     {
                         "name":  "pf-recommend",
                         "path":  "../pf-recommend"
+                    },
+                    {
+                        "name":  "pf-developer-cli",
+                        "path":  "../pf-developer-cli"
+                    },
+                    {
+                        "name":  "pf-developer-templates",
+                        "path":  "../pf-developer-templates"
                     }
                 ],
     "settings":  {

@@ -26,7 +26,7 @@
 
 内部開発者プラットフォーム（Internal Developer Platform）のミニ版。新しいサービスの **作り方・正しさの見方・壊し方の防ぎ方** を一箇所に揃える。5 アイデアは別製品に見えるが、価値は「標準で作 → 仕様がポータルに出る → CI が見える → PR をレビュー → 依存をスキャン」という一本の流れ。
 
-**P04 / P06 より先に完成扱いしない。** 空のテンプレートを標準にしない。
+**scanner は MVP。** CLI は空テンプレ禁止だったが、P04 / P06 の実ファイルをテンプレート化したので CLI スライスは完成扱いしてよい。portal / CI dashboard / review は未着手。
 
 ## リポジトリ構成（ポリレポ）
 
@@ -57,7 +57,7 @@
 
 ## 設計思想
 
-- **生成物の品質が CLI の本体。** ツールのプロンプトより、strict TS、`/health`、graceful shutdown、OTel
+- **生成物の品質が CLI の本体。** ツールのプロンプトより、strict TS、`/health`、graceful shutdown、OTel。CLI は P04/P06 実体ベース。scanner は MVP のまま。portal / CI dashboard / review は未着手。
 - **攻撃ではなく修正。** スキャナーに exploit / PoC を置かない
 - **仕様を CI ゲートにする。** ポータルの見た目より breaking change で fail する Action
 - **GitHub を再実装しすぎない。** Review は GitHub API を BFF。自前 git 実行はパストラバーサルが怖いので避ける
@@ -66,11 +66,11 @@
 
 1. ✅ **scanner MVP**（`../pf-developer-scanner`）。Go.mod / npm lock + OSV、Dockerfile ルール、シークレット検出（マスク）、Markdown、重大度ゲート。exploit / PoC なし。2026-08-19
 2. **portal MVP**（手置き OpenAPI を綺麗に出す + モック）— 未着手
-3. **CLI** が P06 または小さな Go API の実構成をコピーしてテンプレート化。生成物を CI でビルド — **未着手。完成扱いしない**（空テンプレ禁止）
-4. **openapi-diff Action**
-5. **CI dashboard**（公開リポジトリの webhook）
-6. **code review UI**
-7. **web シェル** でつなぐ
+3. ✅ **CLI + templates**（`../pf-developer-cli`, `../pf-developer-templates`）。`pf-dev new` が P04 workspace / P06 commerce の実ファイル（health/ready、OTel env、OIDC stub、catalog、httptest）をコピーする。生成物は `go test` / `npm test`。scanner は subprocess。2026-08-19
+4. **openapi-diff Action** — 未着手
+5. **CI dashboard**（公開リポジトリの webhook）— 未着手
+6. **code review UI** — 未着手
+7. **web シェル** でつなぐ — 未着手
 
 ## 実装上の注意点
 
@@ -94,7 +94,7 @@ P08 / P06 の spec をポータルに登録する。
 
 ## デモ
 
-- `pf-dev create api demo && cd demo && compose up` で health が 200
+- `pf-dev new --yes demo && cd demo && go test ./...`（または `compose up`）で health が 200
 - 古い lock のフィクスチャで scanner が fail
 - フィールド削除の PR で oasdiff が fail
 - Actions の赤がダッシュボードに出る
