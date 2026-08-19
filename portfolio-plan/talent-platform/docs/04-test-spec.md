@@ -97,6 +97,9 @@
 ### TS-L04 他候補者の応募一覧は 403
 - `GET /v1/candidates/:sub/applications` に別ヘッダ → `403`
 
-### TS-L05 シードは架空企業のみ
-- `POST /v1/dev/seed` → 8〜12 件。実在企業名を含まない
+### TS-UI01 API 未接続でもエラーを表示できる
+- `talentFetch` が接続失敗時に `503` と固定メッセージを返す（web は落ちない）
+
+### TS-UI02 開発セッションは user 必須
+- `?user=` なしは null（ゲスト相当を出さない）
 

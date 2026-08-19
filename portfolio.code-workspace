@@ -29,6 +29,10 @@
                         "path":  "../pf-talent-api"
                     },
                     {
+                        "name":  "pf-talent-web",
+                        "path":  "../pf-talent-web"
+                    },
+                    {
                         "name":  "pf-workspace",
                         "path":  "../pf-workspace"
                     }

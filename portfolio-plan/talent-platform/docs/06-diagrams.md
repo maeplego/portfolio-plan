@@ -3,8 +3,19 @@
 | 項目 | 値 |
 | --- | --- |
 | プロジェクト | P10 talent-platform |
-| 対象スライス | webhook 連携契約 |
-| 最終更新 | 2026-08-18 |
+| 対象スライス | webhook 連携契約 + 検索画面 |
+| 最終更新 | 2026-08-19 |
+
+## 画面遷移（実装済み: 検索 / 詳細）
+
+```mermaid
+flowchart LR
+  login[DevUserGate] --> search[JobSearch]
+  search --> detail[JobDetail]
+  detail --> similar[SimilarJobs]
+```
+
+ゲスト画面は無い。`?user=` 必須。
 
 ## シーケンス（予約確定 → interview 更新）
 

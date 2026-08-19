@@ -10,7 +10,8 @@
 ## 構成
 
 - `pf-talent-api`：Hono で API と webhook を同一サービス内に持つ。
-- 永続化は MVP では `MemoryStore`。
+- `pf-talent-web`：Next.js（ポート 3010）。`TALENT_API_URL` と `X-Dev-User-Sub`。
+- 永続化は MVP では `MemoryStore`。検索は API 内部分一致。
 
 ## データモデル（MVP）
 

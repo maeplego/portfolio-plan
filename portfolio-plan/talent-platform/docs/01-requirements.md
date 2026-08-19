@@ -11,7 +11,7 @@
 
 - 求人（jobs）と応募（applications）を最小モデルで保持する。
 - P05 予約確定（`calendar.booking.confirmed`）を webhook 受信し、応募ステータスを `interview` に更新する。
-- 検索と保存検索は最小形。画面は次スライス（`pf-talent-web`）で扱う。
+- 検索と保存検索は最小形。候補者検索画面は `pf-talent-web`（`?user=` 必須、ゲストなし）。
 
 ## アクター
 
@@ -57,6 +57,11 @@
    - `GET /v1/jobs/:id/applications` / `GET /v1/candidates/:sub/applications`
    - 応募一覧は `X-Dev-User-Sub` が当事者と一致しないと 403
 14. ✅ 架空求人シード（8〜12 件、実在企業名禁止）
+15. ✅ 候補者検索 UI
+   - `/` で q / employmentType / remote / skills / salaryMin/Max とファセット件数
+   - `/jobs/:id` 詳細と類似求人（`source` バッジ）
+   - API 未起動でも web は起動し、接続エラーを表示
+   - 手動: フィルタ後の一覧件数とファセット `total` が一致すること
 
 ## 非機能要件
 

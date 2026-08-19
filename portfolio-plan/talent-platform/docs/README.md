@@ -3,9 +3,9 @@
 | 項目 | 値 |
 | --- | --- |
 | プロジェクト | P10 talent-platform |
-| 対象スライス | 現在：P10 最小フロー + プロフィール + 状態機械 + 検索フィルタ + 保存検索 + P05 slot提示 + 類似求人 + ファセット + 通報 + 求人GET/応募一覧ACL |
+| 対象スライス | 現在：API + 検索 UI（pf-talent-web） |
 | 最終更新 | 2026-08-19 |
-| 矛盾時の正 | `../DESIGN.md` と `../pf-talent-api` のテスト・コード、次に本索引 |
+| 矛盾時の正 | `../DESIGN.md` と `../pf-talent-api` / `../pf-talent-web` のテスト・コード、次に本索引 |
 
 実装チャット用の短い設計は `portfolio-plan/talent-platform/DESIGN.md`。本ディレクトリは面接・レビュー用。書き方の正本は `portfolio-plan/documentation.md`。
 

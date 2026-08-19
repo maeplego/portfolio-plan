@@ -7,6 +7,7 @@
     { "name": "pf-media", "path": "../pf-media", "project": "P03" },
     { "name": "pf-calendar", "path": "../pf-calendar", "project": "P05" },
     { "name": "pf-talent-api", "path": "../pf-talent-api", "project": "P10" },
+    { "name": "pf-talent-web", "path": "../pf-talent-web", "project": "P10" },
     { "name": "pf-workspace", "path": "../pf-workspace", "project": "P04" }
   ]
 }
