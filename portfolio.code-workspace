@@ -39,6 +39,10 @@
                     {
                         "name":  "pf-developer-scanner",
                         "path":  "../pf-developer-scanner"
+                    },
+                    {
+                        "name":  "pf-recommend",
+                        "path":  "../pf-recommend"
                     }
                 ],
     "settings":  {

@@ -9,6 +9,7 @@
     { "name": "pf-talent-api", "path": "../pf-talent-api", "project": "P10" },
     { "name": "pf-talent-web", "path": "../pf-talent-web", "project": "P10" },
     { "name": "pf-workspace", "path": "../pf-workspace", "project": "P04" },
-    { "name": "pf-developer-scanner", "path": "../pf-developer-scanner", "project": "P11" }
+    { "name": "pf-developer-scanner", "path": "../pf-developer-scanner", "project": "P11" },
+    { "name": "pf-recommend", "path": "../pf-recommend", "project": "P07" }
   ]
 }
