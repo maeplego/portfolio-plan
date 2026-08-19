@@ -3,8 +3,8 @@
 | 項目 | 値 |
 | --- | --- |
 | プロジェクト | P10 talent-platform |
-| 対象スライス | P10 最小 + 検索フィルタ + 保存検索（in-memory） |
-| 最終更新 | 2026-08-18 |
+| 対象スライス | P10 最小 + 検索フィルタ + 保存検索 + 一覧 ACL（in-memory） |
+| 最終更新 | 2026-08-19 |
 | 矛盾時の正 | `../pf-talent-api` |
 
 ## 構成
@@ -64,6 +64,8 @@ P10 は slot 計算を再実装しない。P05 を shared capability として�
 
 - webhook 認証は MVP ではヘッダ整合のみ。
 - P10 → P05 の internal API 呼び出しは `CALENDAR_INTERNAL_TOKEN` の Bearer を使用。
+- 応募一覧・企業求人一覧は `X-Dev-User-Sub` がパスの当事者と一致することをサーバーで検証する。UI の非表示は認可ではない。
+- `TALENT_DEV_AUTH` 未設定でも当面このヘッダを信じる。OIDC 必須は後続。
 
 ## 競合・冪等
 

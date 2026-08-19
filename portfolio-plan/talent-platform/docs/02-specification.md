@@ -3,8 +3,8 @@
 | 項目 | 値 |
 | --- | --- |
 | プロジェクト | P10 talent-platform |
-| 対象スライス | P10 最小 + 検索フィルタ + 保存検索 |
-| 最終更新 | 2026-08-18 |
+| 対象スライス | P10 最小 + 検索フィルタ + 保存検索 + 一覧 ACL |
+| 最終更新 | 2026-08-19 |
 | 矛盾時の正 | `../DESIGN.md` と `../pf-talent-api` |
 
 ## 時刻
@@ -130,4 +130,24 @@ P05 calendar の `GET /public/:slug/slots` を利用して候補スロットを�
 ### `GET /v1/reports`
 
 通報一覧を返す（MVP では `open` のみ表示）。
+
+### `GET /v1/jobs/:id`
+
+存在する求人を返す。無い id は `404`。
+
+### `GET /v1/employers/:sub/jobs`
+
+企業の求人一覧（draft 含む）。`X-Dev-User-Sub` ≠ `:sub` なら `403`。
+
+### `GET /v1/jobs/:id/applications`
+
+求人の応募一覧。他社ヘッダは `403`。求人が無ければ `404`。
+
+### `GET /v1/candidates/:sub/applications`
+
+候補者の応募一覧。ヘッダ ≠ `:sub` なら `403`。
+
+### `POST /v1/dev/seed`
+
+架空デモ求人を投入。起動時にも空ストアへ投入する。
 

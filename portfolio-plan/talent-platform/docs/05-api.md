@@ -3,8 +3,8 @@
 | 項目 | 値 |
 | --- | --- |
 | プロジェクト | P10 talent-platform |
-| 対象スライス | 最小フロー + 検索フィルタ + 保存検索 |
-| 最終更新 | 2026-08-18 |
+| 対象スライス | 最小フロー + 検索フィルタ + 保存検索 + 求人GET / 応募一覧 ACL |
+| 最終更新 | 2026-08-19 |
 
 ## 共通エラー形
 
@@ -31,7 +31,29 @@
 | `salaryMin` | int | `5000000` | 求人の salaryMax がこの値以上 |
 | `salaryMax` | int | `8000000` | 求人の salaryMin がこの値以下 |
 
-フィルタなしの場合は全件返す。検索は published のみ対象。
+フィルタなしの場合は published のみ返す。draft は `GET /v1/employers/:sub/jobs` 側。
+
+開発時の認可ヘッダ: `X-Dev-User-Sub`。`TALENT_DEV_AUTH` 未設定でもこのヘッダを信じる（OIDC 必須は後続）。
+
+### GET `/v1/jobs/:id`
+
+求人詳細。無い id は `404 not_found`。`/v1/jobs/facets` より後に登録する。
+
+### GET `/v1/employers/:sub/jobs`
+
+その企業の求人（draft 含む）。`X-Dev-User-Sub` が `:sub` と一致しないと `403 forbidden`。
+
+### GET `/v1/jobs/:id/applications`
+
+その求人の応募一覧。求人が無ければ `404`。`X-Dev-User-Sub` が当該 `employerSub` と一致しないと `403`。
+
+### GET `/v1/candidates/:sub/applications`
+
+候補者の応募一覧。ヘッダが `:sub` と一致しないと `403`。
+
+### POST `/v1/dev/seed`
+
+架空企業のデモ求人 8〜12 件を投入する。実在企業名は使わない。起動時にも空ストアへ投入する。
 
 ## 保存検索
 

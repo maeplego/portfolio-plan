@@ -3,15 +3,15 @@
 | 項目 | 値 |
 | --- | --- |
 | プロジェクト | P10 talent-platform |
-| 対象スライス | P10 最小 + プロフィール + 検索フィルタ + 保存検索 |
-| 最終更新 | 2026-08-18 |
+| 対象スライス | P10 最小 + プロフィール + 検索フィルタ + 保存検索 + 一覧 ACL |
+| 最終更新 | 2026-08-19 |
 | 矛盾時の正 | `../DESIGN.md` と `../pf-talent-api` のテスト・コード、次に本書類 |
 
 ## 目的
 
 - 求人（jobs）と応募（applications）を最小モデルで保持する。
 - P05 予約確定（`calendar.booking.confirmed`）を webhook 受信し、応募ステータスを `interview` に更新する。
-- 推薦・画面はまだ扱わない。検索と保存検索は最小形のみ扱う。
+- 検索と保存検索は最小形。画面は次スライス（`pf-talent-web`）で扱う。
 
 ## アクター
 
@@ -51,10 +51,16 @@
 12. ✅ ファセット件数と管理通報の最小形
    - `GET /v1/jobs/facets`（同じフィルタ条件を入力に応じて集計）
    - `POST /v1/reports` / `GET /v1/reports`（管理レビュー用の通報保存）
+13. ✅ 画面が呼ぶ一覧と詳細
+   - `GET /v1/jobs/:id`
+   - `GET /v1/employers/:sub/jobs`
+   - `GET /v1/jobs/:id/applications` / `GET /v1/candidates/:sub/applications`
+   - 応募一覧は `X-Dev-User-Sub` が当事者と一致しないと 403
+14. ✅ 架空求人シード（8〜12 件、実在企業名禁止）
 
 ## 非機能要件
 
-- 学習用 MVP。プロダクション品質（永続化DB、認可、冪等制御）は省略する。
+- 学習用 MVP。永続化 DB と OIDC 必須は省略する。応募一覧は開発ヘッダでサーバー側検証する。
 - webhook 入力はスキーマで検証し、不正は `400 invalid_request`。
 - 失敗時に「秘密をログに出さない」。
 

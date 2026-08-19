@@ -3,8 +3,8 @@
 | 項目 | 値 |
 | --- | --- |
 | プロジェクト | P10 talent-platform |
-| 対象スライス | P10 最小 + 検索 + 保存検索 |
-| 最終更新 | 2026-08-18 |
+| 対象スライス | P10 最小 + 検索 + 保存検索 + 一覧 ACL |
+| 最終更新 | 2026-08-19 |
 | 矛盾時の正 | `../pf-talent-api` の vitest |
 
 ## 方針
@@ -83,4 +83,20 @@
 
 ### TS-R02 類似求人の recommend 優先
 - `RECOMMEND_API_URL` 設定時、P07 `similar-items` の結果を優先する
+
+### TS-L01 公開求人 GET
+- `GET /v1/jobs/:id` → `200`
+
+### TS-L02 無い id は 404
+- `GET /v1/jobs/missing-id` → `404`
+
+### TS-L03 他社の応募一覧は 403
+- `GET /v1/jobs/:id/applications` に別 `X-Dev-User-Sub` → `403`
+- 当該 employer なら `200`
+
+### TS-L04 他候補者の応募一覧は 403
+- `GET /v1/candidates/:sub/applications` に別ヘッダ → `403`
+
+### TS-L05 シードは架空企業のみ
+- `POST /v1/dev/seed` → 8〜12 件。実在企業名を含まない
 
