@@ -71,6 +71,18 @@
                     {
                         "name":  "pf-reliability",
                         "path":  "../pf-reliability"
+                    },
+                    {
+                        "name":  "pf-data",
+                        "path":  "../pf-data"
+                    },
+                    {
+                        "name":  "pf-habit-mobile",
+                        "path":  "../pf-habit-mobile"
+                    },
+                    {
+                        "name":  "pf-habit-api",
+                        "path":  "../pf-habit-api"
                     }
                 ],
     "settings":  {
