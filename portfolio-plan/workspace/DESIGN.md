@@ -79,7 +79,7 @@ Wiki ページ作成: API が `page` 行と collab document id を作る。編�
 一気に 4 機能を始めない。
 
 1. ✅ ワークスペース CRUD、メンバー、OIDC ログイン準備（web + api）。単体デモは `WORKSPACE_DEV_AUTH`
-2. ✅ カンバン MVP（DnD、カード詳細、楽観ロック）。永続化はメモリ
+2. ✅ カンバン MVP（DnD、カード詳細、楽観ロック）。Compose / overlay は Postgres。単体テストはメモリ
 3. ✅ Wiki ツリー + 単一ユーザー Markdown（まだ CRDT なし）。本文は API が正。guest は published のみ
 4. ✅ collab を Wiki 本文と独立ドキュメントに接続。2 ブラウザデモ
 5. ✅ チャット（履歴 REST + WS + seq）
@@ -108,7 +108,7 @@ Wiki ページ作成: API が `page` 行と collab document id を作る。編�
 
 - 2 ブラウザでカード移動と同時編集とチャットが同時に見える（落ちても他が生きることも見せる）
 - guest リンクで Wiki は読めてボードは触れない
-- overlay B: `http://workspace.localhost` で IdP ログイン。永続化はメモリ（platform DB `workspace` は未接続）
+- overlay B: `http://workspace.localhost` で IdP ログイン。永続化は platform Postgres の `workspace` DB（`WORKSPACE_DATABASE_URL`）
 
 ## 非目標
 

@@ -213,7 +213,9 @@ sequenceDiagram
 
 guest の draft 履歴は 404。restore は 403。
 
-## 論理 ER（メモリ上。テーブルではない）
+## 論理 ER
+
+DDL は `pf-workspace/apps/api/internal/store/postgres/schema.sql`。id は ULID（TEXT）、時刻は timestamptz。
 
 ```mermaid
 erDiagram
@@ -272,4 +274,4 @@ erDiagram
   }
 ```
 
-Postgres 導入後に `schema.sql` と揃える。現状 DDL は無い。
+id は ULID（TEXT）、時刻は timestamptz。

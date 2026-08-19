@@ -51,6 +51,7 @@
 | TS-V02 | diff / restore | from=1 to=2、guest restore、owner restore | insert 行あり。guest 403。owner 本文が v1 |
 | TS-V03 | guest draft | draft の versions GET | 404 |
 | TS-D01 | 行 diff | `a\nb\nc` vs `a\nx\nc` | equal/delete/insert/equal |
+| TS-PG01 | Postgres | `WORKSPACE_DATABASE_URL` があるとき store 結合 | ULID、カード移動の 409、chat seq |
 
 ## 未自動化（受け入れの手動）
 

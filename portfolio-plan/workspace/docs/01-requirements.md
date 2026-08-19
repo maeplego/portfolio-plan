@@ -39,7 +39,7 @@ Wiki・チャット・共同編集のうち、スライス 3 はツリーと単�
 | 項目 | 理由 |
 | --- | --- |
 | Postgres FTS / tsvector | スライス 6 はメモリ部分一致。ふりをしない |
-| Postgres 永続化 | 後続。Compose も overlay もプロセス内メモリ。platform DB `workspace` は予約のみ |
+| Postgres 永続化 | Compose 専用 DB。overlay B は platform `workspace`。単体テストはメモリ |
 | 本番 OIDC 必須 | 単体デモは `WORKSPACE_DEV_AUTH`。overlay `b-collab` の web は OIDC 必須 |
 | ストーリーポイント必須化 | スライス 7 のバーンダウンはカード数。ポイントは発明しない |
 | リアルタイムのカード同期（他ブラウザ即反映） | スライス 2 は DnD + 再取得。WS はチャットと混ぜない |
@@ -62,7 +62,7 @@ Wiki・チャット・共同編集のうち、スライス 3 はツリーと単�
 - ID は ULID。外部に連番を出さない
 - 時刻は UTC（JSON は RFC3339）
 - 単体デモは Compose。他 Pxx 無しで動く
-- メモリ store のためプロセス再起動でデータは消える（既知の制限）
+- API 再起動後も Compose / overlay の Postgres にカンバン・Wiki・チャット履歴は残る。Y.Doc は collab 再起動で消える
 
 ## 5. 機能要件
 

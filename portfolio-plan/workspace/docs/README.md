@@ -3,7 +3,8 @@
 | 項目 | 値 |
 | --- | --- |
 | プロジェクト | P04 workspace |
-| 対象スライス | 1–7 実装済み + `deploy/k8s/`（overlay B の P04 サブセット）。DESIGN 機能順は完了。Postgres 永続化は未接続 |
+| 対象スライス | 1–7 実装済み + `deploy/k8s/` + Postgres（Compose / overlay B） |
+
 | 最終更新 | 2026-08-19 |
 | 矛盾時の正 | `../pf-workspace` のテストとコード、次に `../DESIGN.md` |
 
@@ -13,7 +14,7 @@
 | --- | --- |
 | [01-requirements.md](01-requirements.md) | 要件定義書。誰の課題か、含む/含まない、受け入れ |
 | [02-specification.md](02-specification.md) | 外部仕様書。メンバーと API / 画面から見た振る舞い |
-| [03-design.md](03-design.md) | 内部設計書。権限、楽観ロック、CRDT 境界、メモリ store |
+| [03-design.md](03-design.md) | 内部設計書。権限、楽観ロック、CRDT 境界、Postgres / メモリ store |
 | [04-test-spec.md](04-test-spec.md) | テスト仕様書。自動化済みと未自動化 |
 | [05-api.md](05-api.md) | API 仕様書。現状の HTTP 契約 |
 | [06-diagrams.md](06-diagrams.md) | ユースケース、画面遷移、シーケンス、ER 相当 |

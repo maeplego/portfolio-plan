@@ -218,7 +218,7 @@ kubectl wait --for=condition=ready pod -l app=platform-postgres -n platform --ti
 - [http://workspace-collab.localhost/health](http://workspace-collab.localhost/health)
 - [http://media.localhost](http://media.localhost)
 
-永続化はメモリ。platform DB `workspace` は未接続。
+永続化は platform Postgres の `workspace` DB。Y.Doc は collab メモリ。
 
 ### 7. 片付け
 

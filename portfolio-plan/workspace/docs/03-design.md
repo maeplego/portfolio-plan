@@ -15,7 +15,7 @@
 
 | プロセス | 実装 | 持つ正本 |
 | --- | --- | --- |
-| `apps/api` | Go, `net/http` + gorilla websocket `/chat/ws` | workspace / member / board / card / page メタ / document メタ / チケット / channel / message / 検索インデックス相当（メモリ） / ローカル添付 / sprint / page_version。本文のスナップショット |
+| `apps/api` | Go, `net/http` + gorilla websocket `/chat/ws` | workspace / member / board / card / page メタ / document メタ / チケット / channel / message / 検索の走査対象 / ローカル添付 / sprint / page_version。本文のスナップショット。Compose と overlay は Postgres。単体テストはメモリ |
 | `apps/collab` | Node, Hocuspocus + Yjs | 接続中の Y.Doc と中継。会員リストは持たない |
 | `apps/web` | Next.js 15 App Router | 画面。認可の正ではない。Server Action 経由で API を叩く |
 
@@ -46,9 +46,9 @@ Web は開発モードなら cookie なしで `X-Dev-User-Sub` を付ける。OI
 - スプリント書き込み: member 以上。参照とバーンダウンは guest 以上
 - Wiki 履歴: GET page と同じ可視性。restore は member 以上
 
-## 4. データ（メモリ）
+## 4. データ（Postgres / メモリ）
 
-永続化は `internal/store/memory`。mutex 1 本。再起動で消える。
+`WORKSPACE_DATABASE_URL` があるときは `internal/store/postgres`。空なら `internal/store/memory`（`go test` とフォールバック）。フィールドは同じ。カード移動は Postgres ではトランザクション + `WHERE version = $expected`。
 
 論理エンティティ:
 
@@ -63,7 +63,7 @@ Web は開発モードなら cookie なしで `X-Dev-User-Sub` を付ける。OI
 - Sprint（`boardId`, `startAt`, `endAt` UTC）
 - PageVersion（page ごとの title+body スナップショット。番号は単調増加）
 
-`collabIndex` は `collabDocumentId` → page または document。部屋名の解決に使う。
+`collabDocumentId` は pages / documents の UNIQUE。LookupCollab が部屋名を解決する。
 
 横断検索は `Search` が pages / documents / cards / messages を走査する。Postgres FTS のふりをしない。本文は API の `body` スナップショット。
 
@@ -78,8 +78,6 @@ Card の `version` は更新・移動の成功時だけインクリメント。�
 バーンダウンは `domain.BurndownFor`。その日終了時点で残っているのは、スプリントに今割り当てられていて、`createdAt` がその日以前、かつ `completedAt` がその日より後または未設定のカード。割り当て履歴の完全ログは持たない。
 
 Wiki 履歴は `AppendPageVersionIfChanged`。title+body が直前と同じなら足さない。collab の debounce スナップショットでも本文が変われば版が増える（page.version は増やさない）。復元は PATCH 相当で lock version を消費し、新しい版を足す。開いている Y.Doc は自動では巻き戻さない。
-
-Postgres に移すときは同じフィールドをテーブルにし、移動はトランザクション + `WHERE version = $expected` にする。今はメモリでその意味をテストする。
 
 ## 5. 楽観ロック
 
@@ -114,12 +112,12 @@ IME: `yCollabIME` は `view.composing` 中に CM→Yjs も remote→CM もしな
 
 ## 9. 既知の制限
 
-- メモリ store。overlay `b-collab` でも同じ。複数 API / collab レプリカではデータが分裂する。sticky は単一 collab 前提。platform Postgres の `workspace` DB は未接続
+- API の正本は Postgres（Compose 専用 DB / overlay の platform `workspace`）。Y.Doc とチャット Hub はプロセスメモリ。複数 collab レプリカは sticky 前提
 - カード移動のリアルタイム他ブラウザ同期なし
 - 列カスタム・ストーリーポイント未実装
 - バーンダウンは現在の割り当てと Done 時刻。過去の割り当て変更は遡及しない
 - 日本語 IME は composition 確定まで Yjs に送らない。変換中の同時編集は稀に食い違う
 - チケット 15 分。長期編集は再読込が必要
 - チャット未読バッジ・既読ウォーターマークは未実装（last_read_seq は後続）
-- 検索はメモリ部分一致。プロセス再起動でインデックスも消える
+- 検索はストア走査の部分一致。Postgres FTS ではない
 - P03 結合は `MEDIA_API_URL` 任意。単体 Compose はローカル添付
