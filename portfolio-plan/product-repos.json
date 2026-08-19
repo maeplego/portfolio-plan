@@ -13,6 +13,7 @@
     { "name": "pf-commerce", "path": "../pf-commerce", "project": "P06" },
     { "name": "pf-recommend", "path": "../pf-recommend", "project": "P07" },
     { "name": "pf-developer-cli", "path": "../pf-developer-cli", "project": "P11" },
-    { "name": "pf-developer-templates", "path": "../pf-developer-templates", "project": "P11" }
+    { "name": "pf-developer-templates", "path": "../pf-developer-templates", "project": "P11" },
+    { "name": "pf-reliability", "path": "../pf-reliability", "project": "P12" }
   ]
 }

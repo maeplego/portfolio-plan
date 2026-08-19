@@ -55,6 +55,10 @@
                     {
                         "name":  "pf-developer-templates",
                         "path":  "../pf-developer-templates"
+                    },
+                    {
+                        "name":  "pf-reliability",
+                        "path":  "../pf-reliability"
                     }
                 ],
     "settings":  {
