@@ -3,7 +3,7 @@
 | 項目 | 値 |
 | --- | --- |
 | プロジェクト | P06 commerce-platform |
-| 対象スライス | 2 実装済み（プロセス分割 + Compose）。overlay D は P06 サブセット実装済み |
+| 対象スライス | 2 実装済み + スライス 3 注文イベントストア。overlay D は P06 サブセット |
 | 最終更新 | 2026-08-19 |
 | 矛盾時の正 | `../pf-commerce` のテストとコード、次に `../DESIGN.md` |
 
@@ -25,7 +25,7 @@
 | 1 購入〜在庫不足 | 実装済み | 要件 FR、仕様のチェックアウト、設計の引当、TS-C* |
 | 2 catalog/inventory/order 抽出 | 実装済み | 同一 `pf-commerce` の `apps/`。Compose 必須 |
 | 2b overlay D | 実装済み（サブセット） | P01+P02+P03+P06。P07/P11/P12/P13 は計画 |
-| 3 注文イベントストア | 計画 | idea 25。Given/When/Then |
+| 3 注文イベントストア | 実装済み | idea 25。Given/When/Then。投影 `commerce_orders`。`GET /v1/orders/{id}/events` |
 | 4 payment/notify + outbox | 計画 | |
 | 5 ops-web グリッド | 計画 | idea 06 |
 | 6 GraphQL BFF + DataLoader | 計画 | idea 24 |

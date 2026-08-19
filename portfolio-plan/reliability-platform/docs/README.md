@@ -3,7 +3,7 @@
 | 項目 | 値 |
 | --- | --- |
 | プロジェクト | P12 reliability-platform |
-| 対象スライス | インシデント CRUD + HMAC webhook。オンコール・ランブック訓練セッションは計画 |
+| 対象スライス | インシデント CRUD + HMAC webhook + Postgres。オンコール・ランブック訓練セッションは計画 |
 | 最終更新 | 2026-08-19 |
 | 矛盾時の正 | `../pf-reliability` のテストとコード、次に `../DESIGN.md` |
 
@@ -26,4 +26,4 @@
 | Webhook HMAC + dedup | 実装済み | 仕様、TS |
 | 仮想メトリクス表示 | 実装済み（プレビュー） | 画面 |
 | オンコール / ランブック CRUD / 訓練採点 | 計画 | 受け入れに含めない |
-| overlay F | 実装済み（メモリストア） | `pf-reliability/deploy/k8s/` |
+| overlay F | 実装済み（Postgres `reliability`） | `RELIABILITY_DATABASE_URL`。Compose も Postgres |

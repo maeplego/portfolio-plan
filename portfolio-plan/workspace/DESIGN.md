@@ -101,7 +101,7 @@ Wiki ページ作成: API が `page` 行と collab document id を作る。編�
 
 - P01: OIDC。`sub` を workspace member に紐づける。Compose は `WORKSPACE_DEV_AUTH`。overlay `b-collab` の web は `pf-workspace-web` 必須
 - P03: 添付 `purpose=wiki|chat`。overlay では `MEDIA_API_URL` を cluster 内 media-api に向ける
-- P11: 完成後、この構成を CLI テンプレートの「modular workspace」の参考にする。テンプレート化は P11 の仕事。overlay B の P11 portal は後続
+- P11: overlay B に portal MVP（`portal.localhost`）。scanner / CI dash は非搭載。CLI テンプレは別リポジトリ
 - P05: 将来ワークスペースから面談枠を取るが、P04 MVP の範囲外
 
 ## デモ

@@ -14,6 +14,7 @@
 | money | DB なし | 負数・通貨・overflow |
 | inventory / order | メモリ Store + 固定 Clock | 不足、補償、TTL、同時引当 |
 | HTTP | httptest。gateway は catalog/inventory/order を別サーバとして接続 | 公開契約、401/403、冪等 200、float 価格、同時 409 |
+| 注文 ES | Given events / When command / Then events | 不正遷移、リプレイ |
 
 exploit / PoC は書かない。カード番号を fixture に置かない。
 

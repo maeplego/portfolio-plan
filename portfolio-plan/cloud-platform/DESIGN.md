@@ -115,7 +115,7 @@ Compose 単体デモは Docker Desktop の **Compose のみ** でも動く。K8s
 3. **連携デモ設計の文書化**（`portfolio-plan/integration-demo.md`、本ファイル overlay 章）— **完了**
 4. `pf-cloud-k8s` 骨組み + foundation overlay（P01 + P03 + o11y 最小）— **完了**
 5. overlay 群を A-F に分割し、まず `portfolio-integration-c-scheduling-talent` を完成 — **完了**（A は `portfolio-integration-a-foundation` 別名併存）
-6. P04 の `deploy/k8s/` と overlay `b-collab`（P01+P02+P03+P04。P11 portal は後続）— **P04 サブセット完了**
+6. P04 の `deploy/k8s/` と overlay `b-collab`（P01+P02+P03+P04+P11 portal）— **完了**
 7. GitHub OIDC と `pf-cloud-aws` モジュール — **完了**（P09 env 配線まで）。`terraform fmt` + `validate`。資格情報があるときだけ `plan` してよい。**`apply` は非目標（本番デプロイしない）**
 8. 学習アカウントへ 3-tier を載せる — **非目標。** 残作業にしない。コスト・destroy は README に残す（誤操作時）
 9. 障害注入手順（高レイテンシ、5xx、pod kill）を文書化。P12 のシナリオの素材になる — **一部完了**（o11y debug）。pod kill は連携デモの手動

@@ -19,7 +19,7 @@
 
 - Compose で Collector / Prometheus / Loki / Tempo / Grafana を起動し、サンプルアプリの RED とトレースを相関できる
 - アプリは OTLP を Collector に送り、ベンダー SDK を Grafana / Tempo に直接繋がない
-- Docker Desktop Kubernetes 上の用途別 overlay（A foundation、B collab サブセット、C scheduling-talent、D commerce サブセット、E content、F ops）
+- Docker Desktop Kubernetes 上の用途別 overlay（A foundation、B collab + P11 portal、C scheduling-talent、D commerce サブセット、E content、F ops）
 - `GET /health` と `GET /ready`、JSON ログの最低キー
 - P09 向け 3-tier モジュール（VPC / ALB / ECS / RDS / GitHub OIDC / 請求アラーム）と `terraform fmt` / `validate`
 
@@ -29,7 +29,7 @@
 | --- | --- |
 | AWS への `terraform apply` / 本番相当の常時稼働 | 非目標。課金と秘密の正本を個人アカウントに置かない |
 | overlay D への P07 / P11 / P12 / P13 | 計画。いまの D は P06 サブセット |
-| overlay B / E への P11 portal | 計画 |
+| overlay E への P11 portal | 計画。B には portal を載せた |
 | サービスメッシュ、マルチリージョン、長期保持の課金最適化 | 非目標 |
 | 15 Pxx を 1 クラスタで同時フル起動 | 非目標 |
 

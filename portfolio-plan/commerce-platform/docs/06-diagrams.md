@@ -97,13 +97,14 @@ sequenceDiagram
 ```mermaid
 stateDiagram-v2
   [*] --> pending: Create
-  pending --> paid: payment ok + consume
-  pending --> cancelled: shortage or payment fail
-  paid --> [*]
+  pending --> paid: PaymentRecorded
+  pending --> cancelled: OrderCancelled
+  paid --> shipped: OrderShipped
+  shipped --> [*]
   cancelled --> [*]
 ```
 
-`shipped` は未実装。不正遷移のイベントストア拒否はスライス 3。
+`Ship` は paid 以外を拒否。決済モックはカードを持たない。
 
 ## 6. ER（論理）
 
@@ -114,6 +115,7 @@ erDiagram
   inventory_stock_balances ||--o{ inventory_stock_movements : history
   inventory_reservations }o--|| commerce_orders : order_id 論理
   commerce_orders ||--|{ commerce_order_lines : lines
+  commerce_order_events }o--|| commerce_orders : stream_id
   cart_items }o--|| catalog_products : product_id 論理
 ```
 

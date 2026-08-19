@@ -102,6 +102,18 @@ Product:
 
 自分または ops。他人の buyer は 403。
 
+### GET `/v1/orders/{id}/events`
+
+イベント列（`OrderCreated`, `InventoryReserved` または `InventoryShortage`, `PaymentRecorded` または `PaymentFailed`, `OrderCancelled`, `OrderShipped`）。認可は GET 注文と同じ。
+
+### POST `/v1/orders/{id}/ship`
+
+`paid` → `shipped`。`pending` / `cancelled` は 409 `invalid_transition`。
+
+### POST `/v1/admin/projections/rebuild`
+
+ops のみ。イベントから `commerce_orders` 投影を作り直す。200 `{ "ok": true }`。
+
 ## ops
 
 ### POST `/v1/ops/products`

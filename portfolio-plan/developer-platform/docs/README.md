@@ -24,5 +24,5 @@
 | --- | --- | --- |
 | scanner MVP | 実装済み | 要件、05-api、TS |
 | CLI + templates（P04/P06 実ファイル） | 実装済み | 仕様、設計 |
-| portal MVP（手置き OpenAPI + モック） | 実装済み | 仕様、05-api、図表 |
+| portal MVP（overlay B） | 実装済み | `portal.localhost`。oasdiff / 管理アップロードは計画 |
 | oasdiff Action / CI dash / review | 計画 | 受け入れに含めない |

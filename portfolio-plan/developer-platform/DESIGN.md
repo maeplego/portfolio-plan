@@ -26,7 +26,7 @@
 
 内部開発者プラットフォーム（Internal Developer Platform）のミニ版。新しいサービスの **作り方・正しさの見方・壊し方の防ぎ方** を一箇所に揃える。5 アイデアは別製品に見えるが、価値は「標準で作 → 仕様がポータルに出る → CI が見える → PR をレビュー → 依存をスキャン」という一本の流れ。
 
-**scanner は MVP。** CLI は空テンプレ禁止だったが、P04 / P06 の実ファイルをテンプレート化したので CLI スライスは完成扱いしてよい。portal MVP（手置き OpenAPI + モック）は `../pf-developer-portal`。CI dashboard / review は未着手。
+**scanner は MVP。** CLI は空テンプレ禁止だったが、P04 / P06 の実ファイルをテンプレート化したので CLI スライスは完成扱いしてよい。portal MVP は overlay B（`portal.localhost`）。CI dashboard / review は未着手。
 
 ## リポジトリ構成（ポリレポ）
 

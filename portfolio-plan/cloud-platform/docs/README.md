@@ -31,7 +31,7 @@ kustomize の URL 一覧と overlay 切替は運用ランブックとして `../
 | 3 連携デモ文書 | 実装済み | `integration-demo.md`。本索引は追随 |
 | 4 foundation overlay | 実装済み | 仕様の連携モード、図表 |
 | 5 overlay C scheduling-talent | 実装済み | k8s ランブック、integration-demo |
-| 6 overlay B collab サブセット | 実装済み | 同上。P11 portal は計画 |
+| 6 overlay B collab + P11 portal | 実装済み | `portal.localhost`。scanner は非搭載 |
 | 7 overlay E content | 実装済み | P08。P11 は計画 |
 | 8 overlay F ops | 実装済み | P09 / P12 / P14 / P15 API。Expo は非搭載 |
 | 8b overlay D commerce | 実装済み（サブセット） | P06。P07/P11/P12/P13 は計画 |
