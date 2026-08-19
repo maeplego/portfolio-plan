@@ -6,7 +6,10 @@
 | Default path | Browser + optional Docker Compose. **Kubernetes is optional** |
 | Last updated | 2026-08-19 |
 
-Last verified on this machine (2026-08-19): `.\scripts\review-up.ps1 -Pack p04 -UseLocalImages` then `http://localhost:3006/health`, `8096/health`, and `8097/health` returned 200 / `{"ok":true}`. Followed by `.\scripts\review-down.ps1 -Pack p04`.
+Last verified on this machine (2026-08-19):
+
+- `.\scripts\review-up.ps1 -Pack p04 -UseLocalImages` — `3006` / `8096` / `8097` health 200. Then `review-down.ps1 -Pack p04`.
+- `.\scripts\review-up.ps1 -Pack p06 -UseLocalImages` — storefront `/` and `/demo` 200, `8099/health` and `8110/health` `{"ok":true}`, seed SKU `MUG-1`. Then `review-down.ps1 -Pack p06`. An old `commerce-pg` volume that only had the `commerce` database is healed by `commerce-db-init` (creates `catalog` / `inventory` / `orders` / `gateway` if missing).
 
 ## 0. Browser only (about 5 minutes)
 
@@ -38,15 +41,16 @@ On a developer machine, **`-UseLocalImages` builds** from each product `deploy/c
 | --- | --- | --- |
 | `p01-p03` | IdP + admin + sample RP + media (dev user) | http://localhost:8080 · http://localhost:3002 · http://localhost:3001 · http://localhost:3004 |
 | `p04` | Workspace kanban/wiki/chat shell | http://localhost:3006 |
-| `p06` | Storefront + inventory demo | http://localhost:3009 · http://localhost:3009/demo |
+| `p06` | Storefront, last-unit demo, ops grid | http://localhost:3009 · `/demo` · http://localhost:3010 · http://localhost:8099/health · http://localhost:8110/health |
 
 Developer machine without GHCR:
 
 ```powershell
 .\scripts\review-up.ps1 -Pack p04 -UseLocalImages
+.\scripts\review-up.ps1 -Pack p06 -UseLocalImages
 ```
 
-First run compiles the workspace images. Later runs reuse the Docker cache.
+First run compiles images. Later runs reuse the Docker cache. `p06` also starts payment, notify, BFF, and ops-web.
 
 ## 3-point live demo (when Compose is up)
 
@@ -74,4 +78,4 @@ First run compiles the workspace images. Later runs reuse the Docker cache.
 
 ## Cleanup
 
-When you are done: `.\scripts\cleanup.ps1` (from `pf-cloud-k8s`; default stops K8s overlays only). Compose volumes: `.\scripts\review-down.ps1 -Pack p04` or `.\scripts\cleanup.ps1 -Level full` (confirms unless `-Yes`).
+When you are done: `.\scripts\cleanup.ps1` (from `pf-cloud-k8s`; default stops K8s overlays only). Compose volumes: `.\scripts\review-down.ps1 -Pack p04` or `-Pack p06`, or `.\scripts\cleanup.ps1 -Level full` (confirms unless `-Yes`).
