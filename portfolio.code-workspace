@@ -61,6 +61,10 @@
                         "path":  "../pf-developer-templates"
                     },
                     {
+                        "name":  "pf-developer-portal",
+                        "path":  "../pf-developer-portal"
+                    },
+                    {
                         "name":  "pf-content-blog",
                         "path":  "../pf-content-blog"
                     },

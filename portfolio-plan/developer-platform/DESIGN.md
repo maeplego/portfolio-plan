@@ -26,7 +26,7 @@
 
 内部開発者プラットフォーム（Internal Developer Platform）のミニ版。新しいサービスの **作り方・正しさの見方・壊し方の防ぎ方** を一箇所に揃える。5 アイデアは別製品に見えるが、価値は「標準で作 → 仕様がポータルに出る → CI が見える → PR をレビュー → 依存をスキャン」という一本の流れ。
 
-**scanner は MVP。** CLI は空テンプレ禁止だったが、P04 / P06 の実ファイルをテンプレート化したので CLI スライスは完成扱いしてよい。portal / CI dashboard / review は未着手。
+**scanner は MVP。** CLI は空テンプレ禁止だったが、P04 / P06 の実ファイルをテンプレート化したので CLI スライスは完成扱いしてよい。portal MVP（手置き OpenAPI + モック）は `../pf-developer-portal`。CI dashboard / review は未着手。
 
 ## リポジトリ構成（ポリレポ）
 
@@ -57,7 +57,7 @@
 
 ## 設計思想
 
-- **生成物の品質が CLI の本体。** ツールのプロンプトより、strict TS、`/health`、graceful shutdown、OTel。CLI は P04/P06 実体ベース。scanner は MVP のまま。portal / CI dashboard / review は未着手。
+- **生成物の品質が CLI の本体。** ツールのプロンプトより、strict TS、`/health`、graceful shutdown、OTel。CLI は P04/P06 実体ベース。scanner は MVP のまま。portal MVP は手置き YAML の HTML リファレンスと example モック。CI dashboard / review は未着手。
 - **攻撃ではなく修正。** スキャナーに exploit / PoC を置かない
 - **仕様を CI ゲートにする。** ポータルの見た目より breaking change で fail する Action
 - **GitHub を再実装しすぎない。** Review は GitHub API を BFF。自前 git 実行はパストラバーサルが怖いので避ける
@@ -65,7 +65,7 @@
 ## 実装順序（プロジェクト内）
 
 1. ✅ **scanner MVP**（`../pf-developer-scanner`）。Go.mod / npm lock + OSV、Dockerfile ルール、シークレット検出（マスク）、Markdown、重大度ゲート。exploit / PoC なし。2026-08-19
-2. **portal MVP**（手置き OpenAPI を綺麗に出す + モック）— 未着手
+2. ✅ **portal MVP**（`../pf-developer-portal`）。手置き OpenAPI（payments / P06 catalog 子集 / P08 posts 子集）をカタログとリファレンスで表示。`/mock/{slug}` は example 優先、スキーマ検証で 400。oasdiff / 管理アップロードは未着手。2026-08-19
 3. ✅ **CLI + templates**（`../pf-developer-cli`, `../pf-developer-templates`）。`pf-dev new` が P04 workspace / P06 commerce の実ファイル（health/ready、OTel env、OIDC stub、catalog、httptest）をコピーする。生成物は `go test` / `npm test`。scanner は subprocess。2026-08-19
 4. **openapi-diff Action** — 未着手
 5. **CI dashboard**（公開リポジトリの webhook）— 未着手

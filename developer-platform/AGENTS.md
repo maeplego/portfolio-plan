@@ -18,8 +18,9 @@
 - `../pf-developer-scanner` — 脆弱性・シークレット・Dockerfile ルールの CLI（アイデア 21）。MVP。exploit / PoC なし
 - `../pf-developer-cli` — `pf-dev new` / `pf-dev scan`（アイデア 23）。テンプレは P04/P06 実体
 - `../pf-developer-templates` — `go-api` と `go-next`（template.json + 実ファイル）
+- `../pf-developer-portal` — 手置き OpenAPI カタログ、リファレンス、example モック（アイデア 29）。MVP
 
-`pf-developer-portal` / `ci-dash` / `review` は未作成。exploit / PoC は書かない。
+`pf-developer-ci-dash` / `pf-developer-review` は未作成。exploit / PoC は書かない。
 
 このフォルダは設計・指示・チャット記録用。入れ子 Git は作らない。
 
