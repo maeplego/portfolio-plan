@@ -13,9 +13,13 @@ flowchart LR
   login[DevUserGate] --> search[JobSearch]
   search --> detail[JobDetail]
   detail --> similar[SimilarJobs]
+  detail --> apply[Apply]
+  apply --> myApps[MyApplications]
+  emp[employer] --> jobs[MyJobs]
+  jobs --> apps[ApplicantList]
 ```
 
-ゲスト画面は無い。`?user=` 必須。
+ゲスト画面は無い。`?user=` 必須。同じ応募でも候補者はタイトルと自分のステータス、企業は履歴書全文と遷移操作。他社は 403。
 
 ## シーケンス（予約確定 → interview 更新）
 
