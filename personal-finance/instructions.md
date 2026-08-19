@@ -8,3 +8,5 @@
 6. `personal-finance/chat-context/` をファイル名昇順で全て
 
 認証は P01。P15 とは統合しない。チャット記録は `P14_XXXXX_要約.md`。リポジトリはモノレポ `pf-finance`。
+
+製品コードは兄弟 `../pf-finance`。詳細な読み順は `personal-finance/AGENTS.md`。
