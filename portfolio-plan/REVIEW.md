@@ -1,81 +1,100 @@
-# Portfolio review (recruiters)
+# ポートフォリオの確認手順（採用担当者向け）
 
-| Item | Value |
+| 項目 | 値 |
 | --- | --- |
-| Audience | Hiring managers and engineers reviewing this portfolio |
-| Default path | Browser + optional Docker Compose. **Kubernetes is optional** |
-| Last updated | 2026-08-19 |
+| 対象 | 採用担当者・レビュア |
+| 既定の経路 | ブラウザ、必要なら Docker Compose。**Kubernetes は任意** |
+| 最終更新 | 2026-08-19 |
 
-Last verified on this machine (2026-08-19):
+このマシンでの確認記録（2026-08-19）:
 
-- `.\scripts\review-up.ps1 -Pack p04 -UseLocalImages` — `3006` / `8096` / `8097` health 200. Then `review-down.ps1 -Pack p04`.
-- `.\scripts\review-up.ps1 -Pack p06 -UseLocalImages` — storefront `/` and `/demo` 200, `8099/health` and `8110/health` `{"ok":true}`, seed SKU `MUG-1`. Then `review-down.ps1 -Pack p06`. An old `commerce-pg` volume that only had the `commerce` database is healed by `commerce-db-init` (creates `catalog` / `inventory` / `orders` / `gateway` if missing).
+- `.\scripts\review-up.ps1 -Pack p04 -UseLocalImages` — `3006` / `8096` / `8097` の health が 200。その後 `review-down.ps1 -Pack p04`
+- `.\scripts\review-up.ps1 -Pack p06 -UseLocalImages` — ストアフロント `/` と `/demo` が 200、`8099/health` と `8110/health` が `{"ok":true}`、シード SKU `MUG-1`。その後 `review-down.ps1 -Pack p06`。古い `commerce-pg` に `commerce` データベースしか無い場合は、`commerce-db-init` が `catalog` / `inventory` / `orders` / `gateway` を足す
 
-## 0. Browser only (about 5 minutes)
+## 0. ブラウザだけ（約 5 分）
 
-GitHub repos in the `pf-*` family plus this meta repo. Look at:
+GitHub の `pf-*` と、このメタリポジトリを見る。
 
-1. **P01 identity** — authorize, consent, PKCE, token, JWKS (`pf-identity`)
-2. **P04 workspace or P06 commerce** — one product with a UI (`pf-workspace` or `pf-commerce`)
-3. **One depth pick** — P02 observability, P11 developer portal, or P12 incidents
+1. **P01 identity** — authorize、consent、PKCE、token、JWKS（`pf-identity`）
+2. **P04 workspace または P06 commerce** — 画面のある本線（`pf-workspace` または `pf-commerce`）
+3. **深さ 1 本** — P02 観測、P11 開発者ポータル、P12 インシデントのいずれか
 
-Architecture and “what we skipped” live in `portfolio-plan/00-overview.md` and each `portfolio-plan/<project>/DESIGN.md`.
+構成と「やらなかったこと」は `portfolio-plan/00-overview.md` と各 `portfolio-plan/<project>/DESIGN.md`。
 
-There is no hosted always-on IdP. AWS `terraform apply` is **out of scope**.
+常時公開の IdP は無い。AWS への `terraform apply` は **対象外**。
 
-## 1. One Compose pack (Docker Desktop, Kubernetes off)
+## 1. Compose パック 1 つ（Docker Desktop。Kubernetes はオフでよい）
 
-From `pf-cloud-k8s` (sibling clones of the product repos are required):
+作業ディレクトリは `pf-cloud-k8s`。兄弟の製品リポジトリが clone 済みであること。
 
 ```powershell
 cd pf-cloud-k8s
-$env:GHCR_OWNER = "github-username"   # after those repos publish public GHCR images
-.\scripts\review-up.ps1 -Pack p01-p03   # or p04 / p06
+$env:GHCR_OWNER = "maeplego"   # 各 pf-* が公開 GHCR イメージを出したあと
+.\scripts\review-up.ps1 -Pack p01-p03   # または p04 / p06
 ```
 
-`review-up.ps1` with GHCR (`GHCR_OWNER` set) runs `docker compose pull` then `up -d --no-build`.
+GHCR を使うとき（`GHCR_OWNER` あり）は `docker compose pull` のあと `up -d --no-build`。
 
-On a developer machine, **`-UseLocalImages` builds** from each product `deploy/compose.yaml` (first run is slow; later runs use cache). You do not need to pre-tag `pf-*:latest` by hand.
+開発マシンでは **`-UseLocalImages` が各製品の `deploy/compose.yaml` からビルドする**（初回は遅い。2 回目以降はキャッシュ）。手元で `pf-*:latest` を先に tag する必要は無い。
 
-| Pack | What you see | URLs |
+| パック | 見えるもの | URL |
 | --- | --- | --- |
-| `p01-p03` | IdP + admin + sample RP + media (dev user) | http://localhost:8080 · http://localhost:3002 · http://localhost:3001 · http://localhost:3004 |
-| `p04` | Workspace kanban/wiki/chat shell | http://localhost:3006 |
-| `p06` | Storefront, last-unit demo, ops grid | http://localhost:3009 · `/demo` · http://localhost:3010 · http://localhost:8099/health · http://localhost:8110/health |
+| `p01-p03` | IdP、admin、sample RP、media（開発ユーザー） | http://localhost:8080 · http://localhost:3002 · http://localhost:3001 · http://localhost:3004 |
+| `p04` | ワークスペース（カンバン / Wiki / チャット） | http://localhost:3006 |
+| `p06` | ストアフロント、在庫 1 デモ、ops グリッド | http://localhost:3009 · `/demo` · http://localhost:3010 · http://localhost:8099/health · http://localhost:8110/health |
 
-Developer machine without GHCR:
+GHCR が無いとき:
 
 ```powershell
 .\scripts\review-up.ps1 -Pack p04 -UseLocalImages
 .\scripts\review-up.ps1 -Pack p06 -UseLocalImages
 ```
 
-First run compiles images. Later runs reuse the Docker cache. `p06` also starts payment, notify, BFF, and ops-web.
+初回はイメージをビルドする。以降はキャッシュ。`p06` は payment、notify、BFF、ops-web も起動する。
 
-## 3-point live demo (when Compose is up)
+## 3 点デモ（Compose 起動後）
 
-**A. Auth (pack `p01-p03`)**
+**A. 認証（パック `p01-p03`）**
 
-1. Open http://localhost:3001 (sample RP) and complete login
-2. Demo user is seeded by the IdP compose stack (see `pf-identity` README). Not a production account
-3. Admin UI http://localhost:3002
+1. http://localhost:3001（sample RP）を開き、ログインする
+2. デモユーザーは IdP の Compose がシードする（`pf-identity` の README）。本番アカウントではない
+3. 管理 UI は http://localhost:3002
 
-**B. Main product (pick one)**
+**B. 本線（どちらか一方）**
 
-- P04: http://localhost:3006 — create a workspace (dev header auth in Compose)
-- P06: http://localhost:3009/demo — last-unit stock (one checkout wins)
+- P04: http://localhost:3006 — ワークスペースを作る（Compose は開発ヘッダ認証）
+- P06: http://localhost:3009/demo — 在庫 1 の同時購入（片方だけ成功）
 
-**C. Depth (optional, still not K8s)**
+**C. 深さ（任意。まだ K8s ではない）**
 
-- P02: `pf-cloud-o11y/deploy` Compose and Grafana (see that README)
+- P02: `pf-cloud-o11y/deploy` の Compose と Grafana（そちらの README）
 
-## Known limits
+## 既知の制限
 
-- Compose packs use **dev auth** for media / workspace / commerce. Full OIDC across apps is the **optional** K8s foundation overlay
-- GHCR tags exist only after each `pf-*` repo runs the example workflow in `pf-cloud-k8s/docs/example-github-push-ghcr.yml`. Until then use `-UseLocalImages` (builds locally)
-- 12 GB Docker Desktop Kubernetes, ~28 image import, overlay switching: **not** the recruiter path
-- No real card numbers, no real household data, no production AWS
+- Compose パックの media / workspace / commerce は **開発認証**。アプリ横断の本格 OIDC は **任意** の K8s foundation overlay
+- GHCR の tag は、各 `pf-*` が `pf-cloud-k8s/docs/example-github-push-ghcr.yml` の例ワークフローを動かしたあとに存在する。それまでは `-UseLocalImages`（ローカルビルド）
+- Docker Desktop Kubernetes 12 GB、約 28 イメージの import、overlay 切替は **採用担当者の既定経路ではない**
+- 実カード番号、実家計、本番 AWS は使わない
 
-## Cleanup
+## 片付け
 
-When you are done: `.\scripts\cleanup.ps1` (from `pf-cloud-k8s`; default stops K8s overlays only). Compose volumes: `.\scripts\review-down.ps1 -Pack p04` or `-Pack p06`, or `.\scripts\cleanup.ps1 -Level full` (confirms unless `-Yes`).
+終わったら `pf-cloud-k8s` で `.\scripts\cleanup.ps1`（既定は K8s overlay だけ止める）。Compose のボリュームは `.\scripts\review-down.ps1 -Pack p04` または `-Pack p06`。まとめて消すときは `.\scripts\cleanup.ps1 -Level full`（`-Yes` が無いと確認する）。
+
+## GitHub ピン（3 点）
+
+プロフィールに載せるのは次だけ。15 個全部はピンしない。
+
+1. このメタリポジトリ（本ファイルと `00-overview.md`）
+2. **P01** `pf-identity`、または本線の **P04** `pf-workspace` / **P06** `pf-commerce` のどちらか
+3. 深さ 1 本: `pf-cloud-o11y`（観測）、`pf-developer-portal`（oasdiff）、`pf-reliability`（訓練採点）、`pf-recommend`（fail-closed）のいずれか
+
+## 面接 5 分（口頭）
+
+15 個全部は説明しない。
+
+- **P01**: PKCE、redirect URI の完全一致、refresh の回転（再利用で family 無効化）
+- **本線どちらか**: P04 ならワークスペース作成。P06 なら `/demo` で在庫 1 の同時購入（片方 201、片方 409）
+- **深さ 1 つ**: トレースが Grafana に出ること、OpenAPI breaking で CI が落ちること、訓練で scale が減点になること、推薦失敗時に人気へ戻ること、のいずれか
+
+やらなかったこと（Terraform apply、習慣アプリの K8s、全 Pxx 同時起動）はブログ記事 `why-fifteen-products` と `00-overview.md` に書いてある。
+
