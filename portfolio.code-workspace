@@ -57,6 +57,18 @@
                         "path":  "../pf-developer-templates"
                     },
                     {
+                        "name":  "pf-content-blog",
+                        "path":  "../pf-content-blog"
+                    },
+                    {
+                        "name":  "pf-content-shortener",
+                        "path":  "../pf-content-shortener"
+                    },
+                    {
+                        "name":  "pf-content-infra",
+                        "path":  "../pf-content-infra"
+                    },
+                    {
                         "name":  "pf-reliability",
                         "path":  "../pf-reliability"
                     }
