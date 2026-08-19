@@ -4,7 +4,7 @@
 | --- | --- |
 | プロダクト | personal-finance（GitHub: [pf-finance](https://github.com/maeplego/pf-finance)） |
 | 最終更新 | 2026-08-20 |
-| 実装との関係 | 自動化は `npm test`（`packages/money` と `apps/api`）。この表と食い違ったらテストかこの文書を直す |
+| 実装との関係 | 自動化は `npm test`（`packages/money`、`apps/api`、`apps/web` のキュー純関数）。この表と食い違ったらテストかこの文書を直す |
 
 ## 1. 方針
 
@@ -14,6 +14,7 @@
 | report | 純関数 | 予算残りと日次 |
 | HTTP | Hono `app.request` + メモリ Store | CRUD、401、隔離、float 400、シード、CSV |
 | Playwright | `apps/web` の `test:e2e`。メモリ API。既定 CI では動かない | 2026-08 サマリーと other 隔離 |
+| offline queue | `apps/web/lib/offline-queue.test.ts` | オフライン表示、ネットワーク失敗で残す、400 は捨てる |
 
 実家計を fixture に置かない。
 
@@ -45,6 +46,6 @@
 
 ## 4. 未自動化
 
-- Compose 実機の画面操作と Chrome インストール（Playwright の今月サマリーはメモリ API で自動化。Offline 模擬は未実施）
+- Compose 実機の画面操作と Chrome インストール（Playwright の今月サマリーはメモリ API で自動化。DevTools Offline のブラウザ確認は未実施）
 - Postgres integration タグ
 - Kubernetes overlay の apply（マニフェストは存在する）

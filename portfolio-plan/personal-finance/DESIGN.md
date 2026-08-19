@@ -56,8 +56,8 @@ pf-finance/
 
 1. オンライン CRUD と月次グラフ、予算
 2. PWA インストール
-3. IndexedDB とオフラインキュー
-4. 同期 API
+3. ✅ IndexedDB とオフラインキュー（create/delete。オンライン復帰で POST/DELETE）
+4. 同期 API（LWW / tombstone は未）
 5. ✅ CSV 入出力（整数円。カテゴリは名前突合）
 6. P01、ダークモード、削除
 

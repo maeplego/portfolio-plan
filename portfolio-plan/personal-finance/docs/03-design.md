@@ -15,7 +15,7 @@ packages/money  整数円パーサ
 deploy     Compose が主。deploy/k8s は ops overlay 用
 ```
 
-ローカル DB（Dexie）を正にしない。サーバーが正。Service Worker は installability 用の GET シェルだけ。差分同期プロトコルは未作成。
+サーバーが正。オフライン中の create/delete だけ IndexedDB キューに残し、オンラインで HTTP を再送する。Service Worker は installability 用の GET シェルだけ。LWW / tombstone の差分同期は未作成。
 
 起動の正は **Compose**（Postgres）。Kubernetes は [pf-cloud-k8s](https://github.com/maeplego/pf-cloud-k8s) の ops overlay から参照するマニフェストがある（`finance.localhost` / `finance-api.localhost`、DB 名 `finance`）。このフォルダだけを apply しない。
 
