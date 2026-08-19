@@ -80,7 +80,7 @@ exploit / PoC は書かない。カード番号を fixture に置かない。
 
 ## 6. 未自動化
 
-- Compose 実機の `/demo` 同時クリック（契約は TS-H06）
+- Compose 実機の `/demo` 同時クリック（見出しの Playwright はローカル。契約の 201/409 は TS-H06）
 - ops-web ブラウザの SSE（契約は hub 単体と入庫 HTTP）
 - Kubernetes 実機は `cluster-smoke-d-commerce.ps1`（手動・Docker Desktop）。BFF `recommended` と ops Ingress を含む
 - Postgres 並列 UPDATE の integration タグ

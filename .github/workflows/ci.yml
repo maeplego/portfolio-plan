@@ -1,0 +1,21 @@
+# Always-on unit + vuln CI.
+# Compose up, Playwright browsers, and Docker Desktop Kubernetes are not in this
+# workflow: hosted runners have no Desktop cluster, and image builds are too slow
+# for every push. See portfolio-plan/ci.md in the meta repo.
+name: ci
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: product-repos.json is valid
+        run: python -c "import json; json.load(open('portfolio-plan/product-repos.json', encoding='utf-8'))"
+

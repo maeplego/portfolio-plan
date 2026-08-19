@@ -3,7 +3,7 @@
 | 項目 | 値 |
 | --- | --- |
 | プロダクト | クラウド基盤（観測 [pf-cloud-o11y](https://github.com/maeplego/pf-cloud-o11y) / Kubernetes [pf-cloud-k8s](https://github.com/maeplego/pf-cloud-k8s) / Terraform [pf-cloud-aws](https://github.com/maeplego/pf-cloud-aws)） |
-| 最終更新 | 2026-08-19 |
+| 最終更新 | 2026-08-20 |
 | 実装との関係 | 製品リポジトリのテストとスクリプトを優先する。本表と食い違ったらテストを直すか本表を追随する |
 
 ## 1. 方針
@@ -12,7 +12,8 @@
 | --- | --- | --- |
 | demo-api | Go test | health、work、debug ゲート |
 | Terraform | `fmt` / `validate`（backend=false） | モジュールが構文として閉じている |
-| overlay | `kubectl kustomize` / dry-run スクリプト | 参照切れ |
+| overlay | `kubectl kustomize` / dry-run スクリプト。GHA は `deploy/base` 等と `-ParseOnly` | 参照切れ |
+| Playwright / Compose up | 製品リポジトリ。既定 CI ではない（`ci.md`） | 画面とヘルス |
 | 実機 smoke | Docker Desktop 必須。CI 既定では動かさない | 横断 |
 
 攻撃手順は書かない。障害注入はローカル debug フラグだけ。

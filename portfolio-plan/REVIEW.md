@@ -4,7 +4,7 @@
 | --- | --- |
 | 対象 | 採用担当者・レビュア |
 | 既定の経路 | ブラウザ、必要なら Docker Compose。**Kubernetes は任意** |
-| 最終更新 | 2026-08-19 |
+| 最終更新 | 2026-08-20 |
 
 GitHub でコードを見て、必要なら Docker Compose を 1 パック起動してください。Kubernetes は必須ではありません。
 
@@ -72,6 +72,8 @@ GHCR が無いとき:
 - GHCR の tag は、各 `pf-*` が `pf-cloud-k8s/docs/example-github-push-ghcr.yml` の例ワークフローを動かしたあとに存在する。それまでは `-UseLocalImages`（ローカルビルド）
 - Docker Desktop Kubernetes 12 GB、約 28 イメージの import、overlay 切替は **採用担当者の既定経路ではない**
 - 実カード番号、実家計、本番 AWS は使わない
+
+テストと GitHub Actions の層（何が CI で、何が手元か）は [`portfolio-plan/ci.md`](ci.md) です。
 
 ## 片付け
 

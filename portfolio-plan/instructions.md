@@ -108,6 +108,7 @@ feat(password): Argon2id のハッシュと検証を追加
 - Postgres 等が必要なテストは `integration` タグか Testcontainers。失敗時にスキップして緑を偽装しない
 - コミット直前に対象パッケージのテストを再実行する
 - 脆弱性の exploit / PoC は書かない（診断ツールでも同様）
+- GitHub Actions の既定は単体テストと依存スキャンである。Compose 起動・Playwright・クラスタ smoke の範囲は `portfolio-plan/ci.md`
 
 ## コード品質
 

@@ -16,6 +16,7 @@
 | link service | メモリ Store | 作成、期限、他人 403、非同期クリック |
 | HTTP | httptest | 401、302、400 |
 | visibility / slug | node:test | 下書き非公開、予約 slug |
+| Playwright | `pf-content-blog` の `test:e2e`。メモリ store。既定 CI では動かない | 公開記事と下書き 404 |
 
 exploit / PoC は書かない。実在 PII を fixture に置かない。
 

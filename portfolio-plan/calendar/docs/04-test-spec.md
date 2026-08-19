@@ -14,6 +14,7 @@
 | --- | --- | --- |
 | slot-engine | DB なし単体。`now` と range を固定 | TZ / DST / バッファ / min notice |
 | HTTP | Hono `app.request` + `MemoryStore` + 固定 Clock | 認可、公開契約、再検証、同時 book |
+| Playwright | `apps/e2e`。メモリ API + Next。既定 CI では動かない（dispatch） | 公開予約 1 件 |
 | Postgres exclusion | Compose 手動または未自動化 | gist が 23P01 を返すことの確認 |
 
 メモリの同時 book は「Store 第 2 段 + イベントループ」を検証する。Postgres の真の並列 INSERT とは同じ期待結果（201 と 409）だが、ロック実装は別物。CI がメモリだけでも要件 FR-09 の回帰は拾える。本番同等の排他は手動デモか将来の integration テスト。
@@ -68,6 +69,7 @@ Clock はテストで東京 2026-03-01 00:00 などに固定する。
 | TS-B07 | 不正 cancel トークン | 404。JSON に `@` なし | |
 | TS-B08 | ICS | cancelToken クエリで 200 `text/calendar`、`BEGIN:VCALENDAR` | |
 | TS-B09 | CORS | 許可オリジンは ACAO にエコー。他 Origin は `*` を付けない | |
+| TS-B10 | Playwright 公開予約 | `apps/e2e`。メモリ API。確定画面と cancelToken。既定 CI では動かない | |
 
 ## 4.1 内部 API
 

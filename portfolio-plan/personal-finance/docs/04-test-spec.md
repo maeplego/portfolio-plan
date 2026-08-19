@@ -13,6 +13,7 @@
 | money | DB なし | 整数円だけ通す |
 | report | 純関数 | 予算残りと日次 |
 | HTTP | Hono `app.request` + メモリ Store | CRUD、401、隔離、float 400、シード、CSV |
+| Playwright | `apps/web` の `test:e2e`。メモリ API。既定 CI では動かない | 2026-08 サマリーと other 隔離 |
 
 実家計を fixture に置かない。
 
@@ -44,7 +45,6 @@
 
 ## 4. 未自動化
 
-- Compose 実機の画面操作と Chrome インストール
-- Playwright の Offline 模擬
+- Compose 実機の画面操作と Chrome インストール（Playwright の今月サマリーはメモリ API で自動化。Offline 模擬は未実施）
 - Postgres integration タグ
 - Kubernetes overlay の apply（マニフェストは存在する）
