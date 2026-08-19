@@ -20,7 +20,7 @@
 
 ## 目的
 
-「アプリの箱」と「見る手段」を標準化する。各製品リポジトリに VPC や Grafana をコピーしない。P06 のような複数プロセス製品は K8s、P08 / P09 のような 1 API + Web は AWS 3-tier（または同等の安いランタイム）に載せる。
+「アプリの箱」と「見る手段」を標準化する。各製品リポジトリに VPC や Grafana をコピーしない。P06 のような複数プロセス製品は **ローカルでは K8s overlay**、P08 / P09 のような 1 API + Web は Compose が正。AWS 3-tier モジュールは面接用であり、このポートフォリオは **AWS へ本番 apply しない。**
 
 観測は **どの実行基盤でも同じ計装** にする。アプリは OTLP を Collector に送るだけ。
 
@@ -33,7 +33,7 @@ Terraform と K8s と観測スタックはライフサイクルが違う。state
 | `pf-cloud-aws` | アイデア 16。VPC、ALB、ECS または ASG、RDS、GitHub OIDC、モジュール化 |
 | `pf-cloud-k8s` | アイデア 17。kustomize overlays（foundation + `portfolio-integration-a` 〜 `f`）。**連携デモの束ね役**。各 `pf-*/deploy/k8s/` を参照 |
 | `pf-cloud-o11y` | アイデア 18。Collector、Prometheus、Loki、Tempo、Grafana の Compose と K8s マニフェスト |
-| `pf-cloud-docs` | 構成図、コスト、destroy 手順、SLO の書き方。コードを持たないでも可 |
+| （メタ）`portfolio-plan/cloud-platform/docs/` | 要件・仕様・設計。コストと destroy は `pf-cloud-aws` README |
 
 `pf-cloud-k8s` に P06 の Deployment 本文を全部は書かない。P06 側に `deploy/k8s/` を置き、こちらは **ベース（Ingress, platform 共有リソース, 観測 sidecar 規約）** と **overlay での参照** を提供する。
 
@@ -90,8 +90,8 @@ Compose 単体デモは Docker Desktop の **Compose のみ** でも動く。K8s
 
 ## 設計思想
 
-- **アプリ先、基盤後。** 空の Terraform を完成扱いしない。載せる対象（最初は P08 かサンプル）が決まってから apply する
-- **ローカルが正。** kind / Compose で再現できない「本番だけ魔法」を作らない
+- **アプリ先、基盤後。** 空の Terraform を完成扱いしない。モジュールは面接で 3-tier を話すため。`apply` は目標にしない
+- **ローカルが正。** Compose と Docker Desktop Kubernetes で再現できない「本番だけ魔法」を作らない
 - **コストを設計に含める。** NAT 二重、多 AZ RDS を個人課金で再現しない。選択理由を README に書く
 - **症状ベースのアラート。** CPU 80% ではなく 5xx 比率とレイテンシ
 - **K8s は必要になったから使う。** 単一プロセスの家計簿をクラスタに載せない
@@ -107,14 +107,14 @@ Compose 単体デモは Docker Desktop の **Compose のみ** でも動く。K8s
 ## 実装順序
 
 1. `pf-cloud-o11y` の Compose。サンプルアプリで RED ダッシュボードとトレース — **完了**
-2. 計装ガイドライン（ログ JSON キー名、`http.route` の正規化、禁止ラベル）— 正本: `pf-cloud-o11y/docs/instrumentation.md` — **完了**
+2. 計装ガイドライン（ログ JSON キー名、`http.route` の正規化、禁止ラベル）— 正本: `portfolio-plan/cloud-platform/docs/` — **完了**
 3. **連携デモ設計の文書化**（`portfolio-plan/integration-demo.md`、本ファイル overlay 章）— **完了**
 4. `pf-cloud-k8s` 骨組み + foundation overlay（P01 + P03 + o11y 最小）— **完了**
 5. overlay 群を A-F に分割し、まず `portfolio-integration-c-scheduling-talent` を完成 — **完了**（A は `portfolio-integration-a-foundation` 別名併存）
 6. P04 の `deploy/k8s/` と overlay `b-collab`（P01+P02+P03+P04。P11 portal は後続）— **P04 サブセット完了**
-7. GitHub OIDC と `pf-cloud-aws` モジュール — **モジュールは存在。学習アカウントでの apply は任意**（fmt + validate。plan は資格情報があるときだけ）
-8. 安価な環境に 3-tier を 1 アプリ載せる。請求アラーム必須 — **P09 attendance 向け env 配線まで。apply は任意**
-9. 障害注入手順（高レイテンシ、5xx、pod kill）を文書化。P12 のシナリオの素材になる
+7. GitHub OIDC と `pf-cloud-aws` モジュール — **完了**（P09 env 配線まで）。`terraform fmt` + `validate`。資格情報があるときだけ `plan` してよい。**`apply` は非目標（本番デプロイしない）**
+8. 学習アカウントへ 3-tier を載せる — **非目標。** 残作業にしない。コスト・destroy は README に残す（誤操作時）
+9. 障害注入手順（高レイテンシ、5xx、pod kill）を文書化。P12 のシナリオの素材になる — **一部完了**（o11y debug）。pod kill は連携デモの手動
 
 ## 実装上の注意点
 
@@ -143,7 +143,7 @@ P12 への契約: アラート webhook の JSON 形を 1 つ決め、署名検�
 - **連携デモ foundation**: IdP ログイン → media アップロード → Grafana に trace（`integration-demo.md`）
 - **連携デモ scheduling-talent**: P10 で job 作成 → P05 予約確定 → webhook で `interview` 更新
 - kind / Docker Desktop K8s で pod を消しても Deployment が戻ること
-- Terraform plan のスクリーンショット（秘密マスク）
+- Terraform **validate**（任意で資格情報付き **plan**、秘密マスク）。apply 済み環境はデモに使わない
 
 ## 非目標
 

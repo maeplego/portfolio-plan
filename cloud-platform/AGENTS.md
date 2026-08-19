@@ -16,6 +16,6 @@
 
 - `../pf-cloud-o11y` — フェーズ 0 優先（Compose 観測）
 - `../pf-cloud-k8s` — 連携デモの kustomize 束ね役（`portfolio-integration` overlay）。P06 overlay は後追い
-- `../pf-cloud-aws` — アイデア 16 Terraform 3-tier。最初のスタックは P09 attendance。モジュールと env 配線が成果物。学習アカウントの `apply` は任意（fmt + validate で足りる）
+- `../pf-cloud-aws` — アイデア 16 Terraform 3-tier。最初のスタック配線は P09 attendance。モジュールが成果物。**`apply` は非目標**（fmt + validate）
 
 チャット記録の次ファイルは `chat-context/P02_XXXXX_要約.md`（既存最大連番 + 1）。

@@ -3,9 +3,9 @@
 | 項目 | 値 |
 | --- | --- |
 | プロジェクト | P10 talent-platform |
-| 対象スライス | 現在：Compose 検索 UI + overlay C の web |
+| 対象スライス | 現在：Compose 検索 UI + overlay C + Postgres |
 | 最終更新 | 2026-08-19 |
-| 矛盾時の正 | `../DESIGN.md` と `../pf-talent-api` / `../pf-talent-web` のテスト・コード、次に本索引 |
+| 矛盾時の正 | `../pf-talent-api` / `../pf-talent-web` のテストとコード、次に `../DESIGN.md` |
 
 実装チャット用の短い設計は `portfolio-plan/talent-platform/DESIGN.md`。本ディレクトリは面接・レビュー用。書き方の正本は `portfolio-plan/documentation.md`。
 

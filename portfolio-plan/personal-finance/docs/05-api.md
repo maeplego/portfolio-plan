@@ -5,6 +5,7 @@
 | プロジェクト | P14 personal-finance |
 | 対象スライス | スライス 1 の HTTP。OpenAPI は未作成 |
 | 最終更新 | 2026-08-19 |
+| 矛盾時の正 | 自動テストと製品コード、次に `DESIGN.md` |
 | 基準 | `http://localhost:8014`（Compose） |
 
 エラー本文:

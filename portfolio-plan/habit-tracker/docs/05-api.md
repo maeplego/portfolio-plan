@@ -5,6 +5,7 @@
 | プロジェクト | P15 habit-tracker |
 | 対象スライス | 1（`pf-habit-api`） |
 | 最終更新 | 2026-08-19 |
+| 矛盾時の正 | 自動テストと製品コード、次に `DESIGN.md` |
 
 ベース URL: `http://localhost:8015`。認可: `X-Dev-User-Sub`（`/v1/*`）。OpenAPI ファイルは未着手。
 

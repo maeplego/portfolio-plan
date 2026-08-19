@@ -5,6 +5,7 @@
 | プロジェクト | P05 calendar |
 | 対象スライス | 1–11 実装済みの HTTP。OpenAPI は `packages/openapi/openapi.yaml` と `GET /openapi.yaml` |
 | 最終更新 | 2026-08-18 |
+| 矛盾時の正 | 自動テストと製品コード、次に `DESIGN.md` |
 | 基準 | `http://localhost:8095`（Compose）。時刻は Instant の ISO-8601 |
 
 機械可読 OpenAPI は `packages/openapi/openapi.yaml`。API は `GET /openapi.yaml` で同内容を返す。本ファイルは人間向け要約。

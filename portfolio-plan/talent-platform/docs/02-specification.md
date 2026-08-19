@@ -1,11 +1,11 @@
-# P10 talent-platform — 外部仕様
+# P10 外部仕様書
 
 | 項目 | 値 |
 | --- | --- |
 | プロジェクト | P10 talent-platform |
 | 対象スライス | P10 最小 + 検索フィルタ + 保存検索 + 一覧 ACL |
 | 最終更新 | 2026-08-19 |
-| 矛盾時の正 | `../DESIGN.md` と `../pf-talent-api` |
+| 矛盾時の正 | 自動テストと製品コード、次に `DESIGN.md`。HTTP の細部は [05-api.md](05-api.md) |
 
 ## 時刻
 

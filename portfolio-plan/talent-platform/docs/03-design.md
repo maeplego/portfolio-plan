@@ -1,18 +1,18 @@
-# P10 talent-platform — 内部設計
+# P10 内部設計書
 
 | 項目 | 値 |
 | --- | --- |
 | プロジェクト | P10 talent-platform |
-| 対象スライス | P10 最小 + 検索フィルタ + 保存検索 + 一覧 ACL（in-memory） |
+| 対象スライス | P10 最小 + 検索フィルタ + 保存検索 + 一覧 ACL + Postgres |
 | 最終更新 | 2026-08-19 |
-| 矛盾時の正 | `../pf-talent-api` |
+| 矛盾時の正 | 自動テストと製品コード、次に `DESIGN.md` |
 
 ## 構成
 
 - `pf-talent-api`：Hono で API と webhook を同一サービス内に持つ。
 - `pf-talent-web`：Next.js（ポート 3010）。`TALENT_API_URL` と `X-Dev-User-Sub`。
 - overlay C では Ingress で `talent.localhost` を web、`talent-api.localhost` を API に分ける。
-- 永続化は MVP では `MemoryStore`。検索は API 内部分一致。platform Postgres へは移行しない。
+- 永続化は Compose 専用 Postgres、または overlay の platform Postgres（DB 名 `talent`）。単体テストは `MemoryStore`。検索は API 内部分一致。
 
 ## データモデル（MVP）
 
@@ -66,8 +66,8 @@ P10 は slot 計算を再実装しない。P05 を shared capability として�
 
 - webhook 認証は MVP ではヘッダ整合のみ。
 - P10 → P05 の internal API 呼び出しは `CALENDAR_INTERNAL_TOKEN` の Bearer を使用。
-- 応募一覧・企業求人一覧は `X-Dev-User-Sub` がパスの当事者と一致することをサーバーで検証する。UI の非表示は認可ではない。
-- `TALENT_DEV_AUTH` 未設定でも当面このヘッダを信じる。OIDC 必須は後続。
+- 応募一覧・企業求人一覧は `X-Dev-User-Sub`（`TALENT_DEV_AUTH=true`）または Bearer JWT がパスの当事者と一致することをサーバーで検証する。UI の非表示は認可ではない。
+- Compose は `TALENT_DEV_AUTH` 既定 true。overlay C の web は OIDC 必須、API は smoke 用にヘッダも残す。
 
 ## 競合・冪等
 
