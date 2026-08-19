@@ -112,8 +112,8 @@ Compose 単体デモは Docker Desktop の **Compose のみ** でも動く。K8s
 4. `pf-cloud-k8s` 骨組み + foundation overlay（P01 + P03 + o11y 最小）— **完了**
 5. overlay 群を A-F に分割し、まず `portfolio-integration-c-scheduling-talent` を完成 — **完了**（A は `portfolio-integration-a-foundation` 別名併存）
 6. P04 の `deploy/k8s/` と overlay `b-collab`（P01+P02+P03+P04。P11 portal は後続）— **P04 サブセット完了**
-7. GitHub OIDC と `pf-cloud-aws` モジュール
-8. 安価な環境に 3-tier を 1 アプリ載せる。請求アラーム必須
+7. GitHub OIDC と `pf-cloud-aws` モジュール — **モジュールは存在。学習アカウントでの apply は任意**（fmt + validate。plan は資格情報があるときだけ）
+8. 安価な環境に 3-tier を 1 アプリ載せる。請求アラーム必須 — **P09 attendance 向け env 配線まで。apply は任意**
 9. 障害注入手順（高レイテンシ、5xx、pod kill）を文書化。P12 のシナリオの素材になる
 
 ## 実装上の注意点

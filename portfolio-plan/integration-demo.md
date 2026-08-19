@@ -56,7 +56,7 @@ platform（Postgres / Redis / Garage / o11y）は両 overlay で共有する。`
 - `kubectl`（Docker Desktop 同梱）
 - 兄弟リポジトリを clone 済み（後述「リポジトリ配置」）
 
-AWS アカウント・LocalStack・**standalone kind** の別途インストールは **不要**（CI 用 kind overlay は将来。レビュア手順では使わない）
+AWS アカウント・LocalStack・**standalone kind** の別途インストールは **不要**（CI 用 kind overlay は将来。レビュア手順では使わない）。アイデア 16 の Terraform 3-tier（`pf-cloud-aws`）は **この連携デモの経路ではない**。K8s 手順はそのまま使う。
 
 ## リポジトリ配置
 
@@ -68,6 +68,7 @@ portfolio_20260817/
 ├── pf-identity/          # P01
 ├── pf-cloud-o11y/        # P02 観測
 ├── pf-cloud-k8s/         # P02 連携デモの束ね役
+├── pf-cloud-aws/         # P02 Terraform 3-tier（P09。K8s 連携デモとは別）
 └── pf-media/             # P03
 ```
 

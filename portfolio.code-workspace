@@ -17,6 +17,10 @@
                         "path":  "../pf-cloud-k8s"
                     },
                     {
+                        "name":  "pf-cloud-aws",
+                        "path":  "../pf-cloud-aws"
+                    },
+                    {
                         "name":  "pf-media",
                         "path":  "../pf-media"
                     },
