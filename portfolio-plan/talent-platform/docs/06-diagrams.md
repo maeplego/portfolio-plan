@@ -44,3 +44,19 @@ sequenceDiagram
   Talent-->>Worker: ok=true
 ```
 
+## ER（検索まわり）
+
+```mermaid
+erDiagram
+  jobs {
+    text id PK
+    text title
+    text description
+    text location
+    text[] skills
+    tsvector search_tsv
+  }
+```
+
+`search_tsv` は generated。GIN + `pg_trgm`。OpenSearch テーブルは無い。
+

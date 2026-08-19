@@ -3,7 +3,7 @@
 | 項目 | 値 |
 | --- | --- |
 | プロジェクト | P10 talent-platform |
-| 対象スライス | 現在：Compose 検索 UI + overlay C + Postgres |
+| 対象スライス | 現在：Compose 検索 UI + overlay C + Postgres FTS |
 | 最終更新 | 2026-08-19 |
 | 矛盾時の正 | `../pf-talent-api` / `../pf-talent-web` のテストとコード、次に `../DESIGN.md` |
 

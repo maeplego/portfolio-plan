@@ -25,7 +25,7 @@
 
 | パラメータ | 型 | 例 | 意味 |
 | --- | --- | --- | --- |
-| `q` | string | `kubernetes` | title / description のキーワード部分一致 |
+| `q` | string | `kubernetes` / `エンジ` | Postgres は `tsvector` + `pg_trgm`（title / description / location / skills）。日本語の部分文字列もヒット。メモリ実装は同じフィールドの部分一致 |
 | `employmentType` | enum | `full_time` | 雇用形態 |
 | `remote` | bool | `true` | リモート可否 |
 | `skills` | csv | `Go,PostgreSQL` | スキルタグ（OR 一致） |

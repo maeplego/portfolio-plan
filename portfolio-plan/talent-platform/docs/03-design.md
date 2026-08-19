@@ -12,7 +12,10 @@
 - `pf-talent-api`：Hono で API と webhook を同一サービス内に持つ。
 - `pf-talent-web`：Next.js（ポート 3010）。`TALENT_API_URL` と `X-Dev-User-Sub`。
 - overlay C では Ingress で `talent.localhost` を web、`talent-api.localhost` を API に分ける。
-- 永続化は Compose 専用 Postgres、または overlay の platform Postgres（DB 名 `talent`）。単体テストは `MemoryStore`。検索は API 内部分一致。
+- 永続化は Compose 専用 Postgres、または overlay の platform Postgres（DB 名 `talent`）。単体テストは `MemoryStore`。
+- 検索（Postgres）: generated `jobs.search_tsv`（`simple`、IMMUTABLE ラッパ `jobs_search_tsv`）と `pg_trgm` GIN。`q` は FTS `@@` または trigram / ILIKE 部分一致。ヒット時は `ts_rank_cd` と title 類似度、同点は `created_at`。OpenSearch は未接続。
+- 検索（MemoryStore）: title / description / location / skills の部分一致。単体テスト用。
+- 類似求人: P07 があれば優先。無い / 失敗時は skills overlap フォールバック（変更なし）。
 
 ## データモデル（MVP）
 

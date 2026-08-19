@@ -9,8 +9,8 @@
 
 ## 方針
 
-- MVP は DB を使わないため、`MemoryStore` の単体テスト（HTTP: `app.request`）を基本にする。
-- Postgres / integration はこのスライスでは未実装。
+- HTTP 単体は `MemoryStore`（`app.request`）。
+- Postgres 結合は `TALENT_DATABASE_URL` が届くときだけ。届かないときは skip（緑の偽装ではない）。
 
 ## テストケース（例）
 
@@ -57,6 +57,11 @@
 
 ### TS-F05 q キーワードフィルタ
 - `GET /v1/jobs?q=kubernetes` → title/description に含む求人
+
+### TS-F06 日本語の部分一致（q）
+- タイトル `バックエンドエンジニア募集` に対し `q=エンジ` がヒットする
+- ヒットしない対照求人（デザイナー）は返さない
+- Postgres 結合（`TALENT_DATABASE_URL` があるとき）でも同じ。FTS トークン分割では足りないため `pg_trgm` / ILIKE が担当する
 
 ### TS-SS01 保存検索の作成と一覧
 - `POST /v1/saved-searches` → `201`

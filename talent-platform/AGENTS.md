@@ -17,7 +17,7 @@
 - `../pf-talent-api` — 求人・応募・検索の正。OpenAPI 相当は docs `05-api.md`
 - `../pf-talent-web` — 候補者検索 UI、企業の求人管理、応募者一覧（ポート 3010）
 
-`pf-talent-search` は作らない。検索は API 内の部分一致のまま。件数が増えたら indexer を分離する。
+`pf-talent-search` は作らない。検索は API 内の `tsvector` + `pg_trgm`。件数が増えたら indexer を分離する。OpenSearch はこの段階では足さない。
 
 このフォルダは設計・指示・チャット記録用。入れ子 Git は作らない。
 

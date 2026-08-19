@@ -77,7 +77,7 @@
 
 ## 非機能要件
 
-- 学習用 MVP。永続化 DB と OIDC 必須は省略する。応募一覧は開発ヘッダでサーバー側検証する。
+- 学習用 MVP。Compose / overlay の求人検索は Postgres `tsvector` + `pg_trgm`。OpenSearch はまだ含めない。応募一覧は開発ヘッダでサーバー側検証する。
 - webhook 入力はスキーマで検証し、不正は `400 invalid_request`。
 - 失敗時に「秘密をログに出さない」。
 

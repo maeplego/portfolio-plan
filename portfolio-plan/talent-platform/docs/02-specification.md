@@ -77,6 +77,10 @@ MVP では `calendarExternalRef` は **`jobId` と同じ値**で初期化する�
 
 出力: application。存在しない場合 `404 not_found`。
 
+### `GET /v1/jobs` の `q`
+
+Postgres では `jobs.search_tsv`（`simple`）の全文検索と `pg_trgm` による部分一致・類似を OR する。フィルタ無しのときは published を `created_at` 順。`q` があるときは関連度（`ts_rank_cd` と title の trigram）を先にし、同点は `created_at`。OpenSearch は使わない。
+
 ### `POST /v1/saved-searches`
 
 候補者の保存検索を作成する。`name` と検索条件を保存し、後続の新着判定に使う。

@@ -28,7 +28,7 @@
 | --- | --- |
 | `pf-talent-web` | 候補者検索 UI、企業の求人管理、応募者一覧（ポート 3010） |
 | `pf-talent-api` | 求人・応募・プロフィールの正。OpenAPI |
-| `pf-talent-search` | 作らない。検索は API 内部分一致 |
+| `pf-talent-search` | 作らない。検索は API 内 `tsvector` + `pg_trgm` |
 | `pf-talent-infra` | Compose は各製品 `deploy/` |
 
 初期（求人 200 件）は `pf-talent-search` を作らず Postgres FTS だけ、と DESIGN に書いてある通り段階化してよい。件数が増えたら OpenSearch を足し、リポジトリを追加する。ポリレポ方針は「必要になったら indexer を独立させる」こと。
