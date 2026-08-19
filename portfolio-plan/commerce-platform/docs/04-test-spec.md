@@ -69,5 +69,6 @@ exploit / PoC は書かない。カード番号を fixture に置かない。
 ## 6. 未自動化
 
 - Compose 実機の `/demo` 同時クリック（契約は TS-H06）
+- overlay D 実機は `cluster-smoke-d-commerce.ps1`（手動・Docker Desktop）
 - Postgres 並列 UPDATE の integration タグ
 - 予約 TTL ワーカー

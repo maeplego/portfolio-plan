@@ -15,7 +15,7 @@
 製品コードはワークスペースの兄弟リポジトリ:
 
 - `../pf-cloud-o11y` — フェーズ 0 優先（Compose 観測）
-- `../pf-cloud-k8s` — 連携デモの kustomize 束ね役（`portfolio-integration` overlay）。P06 overlay は後追い
+- `../pf-cloud-k8s` — 連携デモの kustomize 束ね役。overlay D は P06 サブセット（P07/P11/P12/P13 は後続）
 - `../pf-cloud-aws` — アイデア 16 Terraform 3-tier。最初のスタック配線は P09 attendance。モジュールが成果物。**`apply` は非目標**（fmt + validate）
 
 チャット記録の次ファイルは `chat-context/P02_XXXXX_要約.md`（既存最大連番 + 1）。

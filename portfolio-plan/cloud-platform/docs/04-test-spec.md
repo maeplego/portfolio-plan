@@ -37,7 +37,7 @@ exploit / PoC は書かない。障害注入はローカル debug フラグだ�
 | TS-K03 | scheduling-talent smoke | C overlay（手動） |
 | TS-K04 | collab smoke | B サブセット（手動）。P11 は無い |
 | TS-K05 | e-content smoke | E overlay（手動）。P08 blog + shortener |
-| TS-K06 | f-ops smoke | F overlay（手動）。P15 は API のみ |
+| TS-K07 | d-commerce smoke | D overlay（手動）。P06 同時 checkout 201/409。P07 等は無い |
 
 ## 4. Terraform
 

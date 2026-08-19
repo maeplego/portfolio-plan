@@ -55,9 +55,9 @@ flowchart TB
   DD --> A[overlay A foundation]
   DD --> B[overlay B collab サブセット]
   DD --> C[overlay C scheduling-talent]
+  DD --> D[overlay D commerce サブセット]
   DD --> E[overlay E content]
   DD --> F[overlay F ops]
-  DD -.-> D[D 計画]
 ```
 
 同時に A–F を載せない。

@@ -3,7 +3,7 @@
 | 項目 | 値 |
 | --- | --- |
 | プロジェクト | P02 cloud-platform |
-| 対象スライス | 実装済みの Compose / overlay A–C, E, F / Terraform validate |
+| 対象スライス | 実装済みの Compose / overlay A–F / Terraform validate |
 | 最終更新 | 2026-08-19 |
 | 矛盾時の正 | 自動テストと製品コード、次に `DESIGN.md`。HTTP の細部は [05-api.md](05-api.md) |
 
@@ -16,7 +16,7 @@
 | 単体デモ | その製品の Compose だけ。他 Pxx 無しで完結 |
 | 連携デモ | Docker Desktop Kubernetes + `pf-cloud-k8s` overlay |
 | Collector | OpenTelemetry Collector。アプリの唯一の OTLP 出口 |
-| overlay | kustomize の用途別束。A/B/C/E/F は実装済み、D は計画 |
+| overlay | kustomize の用途別束。A/B/C/D/E/F は実装済み（D は P06 サブセット） |
 
 ## 2. 単体デモ（観測）
 
@@ -36,7 +36,7 @@
 - Ingress はホスト名（`idp.localhost` 等）。パス prefix は使わない
 - URL 表は `pf-cloud-k8s/docs/urls.md`（運用ランブック）
 
-未実装 overlay D を「完成」と書かない。apply すると欠ける Deployment がある。E は P11 なし。F は P15 Expo なし。
+未実装の P07/P11/P12/P13 を overlay D に「完成」と書かない。E は P11 なし。F は P15 Expo なし。
 
 ## 4. Terraform（面接用。実行は非目標）
 

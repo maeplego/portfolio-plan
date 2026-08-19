@@ -3,7 +3,7 @@
 | 項目 | 値 |
 | --- | --- |
 | プロジェクト | P02 cloud-platform |
-| 対象スライス | o11y Compose、計装契約、連携 overlay A/B/C/E/F、Terraform モジュール（apply は非目標） |
+| 対象スライス | o11y Compose、計装契約、連携 overlay A/B/C/D/E/F、Terraform モジュール（apply は非目標） |
 | 最終更新 | 2026-08-19 |
 | 矛盾時の正 | `../pf-cloud-o11y` / `../pf-cloud-k8s` / `../pf-cloud-aws` のテストとコード、次に `../DESIGN.md` |
 
@@ -34,6 +34,7 @@ kustomize の URL 一覧と overlay 切替は運用ランブックとして `../
 | 6 overlay B collab サブセット | 実装済み | 同上。P11 portal は計画 |
 | 7 overlay E content | 実装済み | P08。P11 は計画 |
 | 8 overlay F ops | 実装済み | P09 / P12 / P14 / P15 API。Expo は非搭載 |
+| 8b overlay D commerce | 実装済み（サブセット） | P06。P07/P11/P12/P13 は計画 |
 | 9 Terraform モジュール + GitHub OIDC | 実装済み（モジュール） | 設計の 3-tier。apply は計画ではなく非目標 |
 | 10 学習アカウントへ 3-tier 載せる | **非目標** | README のコスト・destroy のみ |
 | 11 障害注入手順の文書化 | 計画 | o11y debug エンドポイントは実装済み。P12 題材は後続 |

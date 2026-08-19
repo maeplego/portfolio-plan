@@ -77,7 +77,7 @@ envs/dev-p09-attendance    配線の置き場
 
 ## 6. 未実装（計画と明示）
 
-- overlay D
+- overlay D への P07 / P11 / P12 / P13
 - kind overlay（CI）
 - P02 → P12 の署名付きアラート webhook の固定 JSON（例は DESIGN。実装は P12 が受信側スライス済み、送信側は未配線）
 - AWS 上での P09 実デプロイ

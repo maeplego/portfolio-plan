@@ -19,14 +19,14 @@ pf-commerce/                    1 git リポジトリ（8 リポジトリには�
   apps/order                    チェックアウト。決済モックはここ。DB `orders`
   apps/api                      公開 gateway。カート。DB `gateway`
   apps/storefront               Next.js。REST クライアントは :8099 のみ
-  deploy/                       Compose。K8s / overlay D なし
+  deploy/                       Compose + `k8s/`（overlay D）
 ```
 
 注文確定の正は `apps/order`。gateway は公開契約とカート。在庫判定をブラウザに置かない。プロセス間に FK を張らない。
 
 ## 2. なぜ 8 リポジトリにしないか
 
-在庫と注文は独立デプロイしたい。ポリレポ 8 本は配線と版合わせが先に壊れる。スライス 2 は **同一リポジトリ・別プロセス・別 DB**。決済はまだ order 内モック。overlay D は Compose の購入〜不足が安定してから。
+在庫と注文は独立デプロイしたい。ポリレポ 8 本は配線と版合わせが先に壊れる。スライス 2 は **同一リポジトリ・別プロセス・別 DB**。決済はまだ order 内モック。overlay D は P01+P02+P03+P06。
 
 ## 3. 引当と同時購入
 

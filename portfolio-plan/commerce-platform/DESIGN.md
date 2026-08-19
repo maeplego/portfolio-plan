@@ -85,12 +85,13 @@ K8s 化では `cloud-platform/DESIGN.md`。商品画像は `media-platform/DESIG
 ## 実装順序
 
 1. **モジュラモノリス**（1 リポジトリ一時でも可）で購入〜在庫不足までテスト
-2. catalog / inventory / order を抽出。決済はまだ order 内モックでも可（同一リポジトリの `apps/`。8 git リポジトリと overlay D はしない）
-3. 注文をイベントストア化（テスト: Given/When/Then）
-4. payment と notify を抽出。outbox
-5. ops-web のグリッドとライブ更新
-6. BFF + storefront。DataLoader なしのトレースを残してから導入
-7. P03 画像、P07 推薦スロット、P02 kind
+2. catalog / inventory / order を抽出。決済はまだ order 内モックでも可（同一リポジトリの `apps/`。8 git リポジトリにはしない）
+3. overlay D（P01+P02+P03+P06）。P07/P11/P12/P13 は後続
+4. 注文をイベントストア化（テスト: Given/When/Then）
+5. payment と notify を抽出。outbox
+6. ops-web のグリッドとライブ更新
+7. BFF + storefront。DataLoader なしのトレースを残してから導入
+8. P03 画像、P07 推薦スロット
 
 ## 実装上の注意点
 

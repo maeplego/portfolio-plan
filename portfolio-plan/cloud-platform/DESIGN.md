@@ -60,13 +60,15 @@ Terraform と K8s と観測スタックはライフサイクルが違う。state
 | `pf-cloud-k8s/deploy/overlays/portfolio-integration/` | P01 + P03 + o11y 最小の foundation ルート |
 | `pf-cloud-k8s/deploy/overlays/portfolio-integration-a-foundation/` | 上記の別名（overlay 群 A の正本 ID） |
 | `pf-cloud-k8s/deploy/overlays/docker-desktop-a-foundation/` | foundation overlay 用ローカル patch |
+| `pf-cloud-k8s/deploy/overlays/portfolio-integration-d-commerce/` | P01 + P03 + P06 + platform。P07/P11/P12/P13 なし |
+| `pf-cloud-k8s/deploy/overlays/docker-desktop-d-commerce/` | d-commerce 用ローカル patch |
 | `pf-cloud-k8s/deploy/overlays/portfolio-integration-e-content/` | P01 + P03 + P08 + platform。P11 なし |
 | `pf-cloud-k8s/deploy/overlays/docker-desktop-e-content/` | e-content 用ローカル patch |
 | `pf-cloud-k8s/deploy/overlays/portfolio-integration-f-ops/` | P01 + P09 + P12 + P14 + P15 API + platform |
 | `pf-cloud-k8s/deploy/overlays/docker-desktop-f-ops/` | f-ops 用ローカル patch |
 | `pf-identity/deploy/k8s/` | idp, admin の Deployment / Service / ConfigMap |
 | `pf-media/deploy/k8s/` | api, web, processor |
-| `pf-calendar/deploy/k8s/` | api, web, worker |
+| `pf-commerce/deploy/k8s/` | catalog, inventory, order, gateway, storefront |
 | `pf-talent-api/deploy/k8s/` | talent api |
 | `pf-cloud-o11y/deploy/k8s/` | collector, grafana（Compose と同じ設定を K8s 化） |
 
