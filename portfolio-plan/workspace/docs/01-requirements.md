@@ -1,72 +1,60 @@
-# P04 要件定義書
+# 要件定義書
 
 | 項目 | 値 |
 | --- | --- |
-| プロジェクト | P04 workspace |
-| 対象スライス | 受け入れは 1–7。Postgres 永続化などは計画であり本書類の合格条件に含めない |
+| プロダクト | ワークスペース [pf-workspace](https://github.com/maeplego/pf-workspace) |
 | 最終更新 | 2026-08-19 |
-| 矛盾時の正 | 自動テストと製品コード、次に `DESIGN.md` |
+| 実装との関係 | この文書と実装が違うときは、製品リポジトリのコードとテストを優先する |
 
 ## 1. 背景と目的
 
-小さな開発チームは課題・文書・会話を別ツールに散らすと、招待と権限が 4 回生まれ、どれが正本か分からなくなる。P04 は共通のワークスペースとロールの上に、ボード / Wiki / チャット / 共同編集を載せる。Linear + Notion + Slack の学習用ミニ実装。学習用であり、本番 Linear の置き換えではない。
+小さな開発チームは課題・文書・会話を別ツールに散らすと、招待と権限が何度も生まれ、どれが正本か分からなくなる。ワークスペースは共通の場所とロールの上に、ボード / Wiki / チャット / 共同編集を載せる。Linear + Notion + Slack の学習用ミニ実装であり、各商用製品の置き換えではない。
 
-Wiki・チャット・共同編集のうち、スライス 3 はツリーと単一ユーザー Markdown まで。スライス 4 で Wiki 本文と独立ドキュメントに CRDT を接続する。スライス 5 はチャンネル履歴 REST と別 WS。スライス 6 は API スナップショットの横断検索、チャットのメンション、添付（P03 任意）。スライス 7 はボードのスプリントと Wiki の title+body 履歴 diff。
+## 2. 含む
 
-## 2. スコープ
+- 認証された主体（OIDC `sub` または開発ヘッダ）がワークスペースを作れる。作成者は owner
+- owner は member / guest を追加できる。所属ワークスペースだけが見える
+- ボードは既定 3 列（To Do / In Progress / Done）。member 以上がカード作成・更新・列間移動。guest は閲覧のみ（サーバー強制）
+- ページは親子と並び順のツリー。`draft` / `published`。guest は published のみ（下書きの存在は 404）
+- collab 稼働時は CRDT が Wiki 本文と独立ドキュメントの正。未接続時は API PATCH にフォールバック
+- 2 ブラウザで同じ部屋を同時編集できる。部屋名は ULID。チケットと不一致なら拒否
+- 横断検索（メモリ上の大小無視部分一致）。guest は draft とその配下を出さない
+- チャット履歴 REST と別 WebSocket。`@sub` はメンバーに解決できたものだけ `mentions`
+- スプリント（name, startAt, endAt UTC）とカード割り当て。バーンダウンは未完了カード数/日
+- Wiki の title+body 履歴（一覧・取得・行 diff・復元）
+- Compose の Postgres にカンバン・Wiki・チャット履歴を永続化する
 
-### 含む（スライス 1–7 で満たす）
-
-- 認証された主体（OIDC `sub` または開発ヘッダ）がワークスペースを作れる
-- 作成者は owner。owner は member / guest を追加できる
-- メンバーは自分が所属するワークスペースだけ一覧・参照できる
-- ボードは既定 3 列（To Do / In Progress / Done）で作れる
-- member 以上はカードの作成・更新・列間移動ができる
-- guest はボードを読めてもカード移動はできない（サーバー強制）
-- ページは親子と並び順を持つツリーで取れる
-- member 以上は Markdown 本文を保存できる。collab 稼働時は CRDT が本文の正。未接続時は API PATCH にフォールバック
-- ページは `draft` / `published`。guest は published のみ見え、下書きの存在は 404。guest の collab は read-only
-- Markdown のプレビューは表示側でサニタイズする（raw HTML・`javascript:` リンクを出さない）
-- 独立ドキュメントを作れ、2 ブラウザで同じ部屋を同時編集できる
-- WebSocket 部屋名は ULID のみ。チケットと部屋が一致しない接続は拒否
-- 横断検索はメモリ上の大小無視部分一致。guest は FilterGuestPages と同じ規則で draft / draft 配下を出さない
-- チャット本文の `@sub` はワークスペースメンバーに解決できたものだけ `mentions` に載る
-- ボードにスプリント（name, startAt, endAt UTC）を作れ、カードを割り当てられる。バーンダウンは未完了カード数/日
-- Wiki ページは title+body の版を持ち、一覧・取得・行 diff・復元ができる。guest は FilterGuestPages と同じ可視性
-
-### 含まない（意図的。計画スライスでも「できた」扱いにしない）
+## 3. 含まない
 
 | 項目 | 理由 |
 | --- | --- |
-| Postgres FTS / tsvector | スライス 6 はメモリ部分一致。ふりをしない |
-| Postgres 永続化 | Compose 専用 DB。overlay B は platform `workspace`。単体テストはメモリ |
+| Postgres FTS / tsvector | 検索はメモリ部分一致 |
 | 本番 OIDC 必須 | 単体デモは `WORKSPACE_DEV_AUTH`。overlay `b-collab` の web は OIDC 必須 |
-| ストーリーポイント必須化 | スライス 7 のバーンダウンはカード数。ポイントは発明しない |
-| リアルタイムのカード同期（他ブラウザ即反映） | スライス 2 は DnD + 再取得。WS はチャットと混ぜない |
-| GitHub 双方向同期 | 非目標。P11 と混ぜない |
-| 音声・ビデオ、E2EE | 非目標 |
-| P05 面談枠をワークスペースから取る | DESIGN どおり MVP 範囲外 |
-| メンションのメール / Push / 未読バッジ | 図表どおり計画のまま。別ソケットも作らない |
+| ストーリーポイント必須化 | バーンダウンはカード数 |
+| カンバンのリアルタイム同期（他ブラウザ即反映） | DnD + 再取得。WS はチャットと混ぜない |
+| GitHub 双方向同期 | 開発者基盤と混ぜない |
+| 音声・ビデオ、E2EE | 範囲外 |
+| 予約カレンダーからの面談枠取得 | 範囲外 |
+| メンションのメール / Push / 未読バッジ | 未実装 |
 
-## 3. アクター
+## 4. アクター
 
-| アクター | 定義 | 認証（現状） |
+| アクター | 定義 | 認証 |
 | --- | --- | --- |
-| owner | ワークスペース作成者。メンバー追加可 | 開発中は `X-Dev-User-Sub`。計画は P01 OIDC |
+| owner | ワークスペース作成者。メンバー追加可 | 開発中は `X-Dev-User-Sub`。連携時は認証基盤 [pf-identity](https://github.com/maeplego/pf-identity) |
 | member | ボードを編集できる所属者 | 同上 |
-| guest | 閲覧のみ。カード移動禁止 | owner が追加。公開リンク相当の最小形 |
-| システム（API） | 権限とカンバンの正 | — |
+| guest | 閲覧のみ。カード移動禁止 | owner が追加 |
+| システム（API / collab） | 権限と本文同期の正 | — |
 
-## 4. 前提・制約
+## 5. 前提
 
 - ID は ULID。外部に連番を出さない
 - 時刻は UTC（JSON は RFC3339）
-- 単体デモは Compose。他 Pxx 無しで動く
+- 単体デモは Compose。他製品無しで Web + API + collab が動く
 - API 再起動後も Compose / overlay の Postgres にカンバン・Wiki・チャット履歴は残る。Y.Doc は collab 再起動で消える
+- 添付は fileId。メディア基盤 [pf-media](https://github.com/maeplego/pf-media) 未設定時はローカル保存（20MB を超えない）
 
-## 5. 機能要件
-
-識別子は仕様・テストから参照する。
+## 6. 機能要件
 
 | ID | 要件 | なぜ |
 | --- | --- | --- |
@@ -76,63 +64,55 @@ Wiki・チャット・共同編集のうち、スライス 3 はツリーと単�
 | FR-04 | 未認証の `/v1/*` は 401 | UI 非表示は認可ではない |
 | FR-05 | ボード作成時に To Do / In Progress / Done が存在する | 画面デモを空ボードにしない |
 | FR-06 | member 以上はカードを列に追加し、タイトル・説明を更新できる | カンバンの本体 |
-| FR-07 | カード移動は `version` が一致したときだけ成功する。不一致は 409 | 2 人が同時に動かしたときの壊れ方を説明できる |
-| FR-08 | guest のカード移動・更新は 403。一覧・ボード参照は 200 | ロールをサーバーで強制する（DESIGN） |
+| FR-07 | カード移動は `version` が一致したときだけ成功する。不一致は 409 | 2 人が同時に動かしたときの壊れ方 |
+| FR-08 | guest のカード移動・更新は 403。一覧・ボード参照は 200 | ロールをサーバーで強制する |
 | FR-09 | ページの親子は API が正。1 レスポンスのツリーで返す | N+1 と Yjs にツリーを持たせない |
-| FR-10 | member 以上が title / Markdown body / status を更新できる | 単一ユーザー編集の本体。collab 未接続時のフォールバック |
-| FR-11 | guest のツリーと GET から draft と、draft 配下の published を出さない | アイデア 02。検索より先に漏洩経路を塞ぐ |
+| FR-10 | member 以上が title / Markdown body / status を更新できる | collab 未接続時のフォールバック |
+| FR-11 | guest のツリーと GET から draft と、draft 配下の published を出さない | 下書き漏洩 |
 | FR-12 | ページ更新も `version` 一致が必要。親を自分や子孫にすると 400 | ループしたツリーを作らせない |
-| FR-13 | Wiki 本文と独立ドキュメントの同時編集は CRDT（Yjs）。カンバン移動には使わない | NFR-01。プロトコルを混ぜない |
-| FR-14 | collab 接続は短命チケット。部屋名は ULID。チケットの文書 ID と不一致なら拒否 | 推測・パストラバーサル・他文書への付け替え |
+| FR-13 | Wiki 本文と独立ドキュメントの同時編集は CRDT（Yjs）。カンバン移動には使わない | プロトコルを混ぜない |
+| FR-14 | collab 接続は短命チケット。部屋名は ULID。チケットの文書 ID と不一致なら拒否 | 推測・パストラバーサル |
 | FR-15 | guest の collab は read-only。draft Wiki のチケットは出さない（404） | ロールを WS でも強制する |
-| FR-16 | 独立ドキュメントは member 以上が作成。guest は一覧・参照のみ | アイデア 26 の共有閲覧 |
+| FR-16 | 独立ドキュメントは member 以上が作成。guest は一覧・参照のみ | 共有閲覧 |
 | FR-17 | メッセージは store に書いてから WS で配る。seq はチャンネル内単調増加 | WS だけの記憶だと再接続で欠ける |
-| FR-18 | 再接続は `afterSeq` で差分を取る | 機内モード解除のデモ |
-| FR-19 | guest の投稿は 403。履歴 GET は 200。typing は永続化しない | ロール強制。入力中は履歴に残さない |
-| FR-20 | 横断検索は所属者のみ。空 q は 400。guest は draft / draft 配下をヒットさせない | アイデア 02 の核心。UI 非表示は認可ではない |
+| FR-18 | 再接続は `afterSeq` で差分を取る | 機内モード解除 |
+| FR-19 | guest の投稿は 403。履歴 GET は 200。typing は永続化しない | ロール強制 |
+| FR-20 | 横断検索は所属者のみ。空 q は 400。guest は draft / draft 配下をヒットさせない | UI 非表示は認可ではない |
 | FR-21 | 投稿本文の `@sub` はメンバーに解決できたものだけ `mentions` に入り、WS `type=message` にも載る | 別ソケットを増やさない |
-| FR-22 | 添付は fileId のみ。guest は追加 403。P03 未設定時はローカル保存（20MB を超えない） | 単体 Compose は media なしで動く |
-| FR-23 | ボードにスプリントを作れる（name, startAt, endAt UTC）。member+ 書き込み、guest 読み取り | アイデア 01 推奨。ロールはサーバー強制 |
-| FR-24 | カードをスプリントに割り当てられる。バーンダウンは期間内の日ごとの未完了カード数（Done 列以外） | ポイントは持たない。メモリでデモ可能 |
-| FR-25 | Wiki は title+body の API スナップショット版を列挙・取得・行 diff できる | アイデア 02。Y.Doc バイトは履歴にしない |
+| FR-22 | 添付は fileId のみ。guest は追加 403。メディア未設定時はローカル保存 | 単体 Compose は media なしで動く |
+| FR-23 | ボードにスプリントを作れる。member+ 書き込み、guest 読み取り | ロールはサーバー強制 |
+| FR-24 | カードをスプリントに割り当てられる。バーンダウンは期間内の日ごとの未完了カード数（Done 列以外） | ポイントは持たない |
+| FR-25 | Wiki は title+body の API スナップショット版を列挙・取得・行 diff できる | Y.Doc バイトは履歴にしない |
 | FR-26 | 版への復元は lock version 付きで本文を戻し新しい版を足す。guest の draft 履歴は 404 | 存在漏洩を検索・GET と同じ規則にする |
 
-## 6. 非機能要件
+## 7. 非機能
 
 | ID | 要件 | なぜ |
 | --- | --- | --- |
-| NFR-01 | カンバンの競合に CRDT を使わない | 列移動は全順序が要る。Wiki 本文と混ぜるとプロトコルが腐る |
-| NFR-02 | 学習用である旨を README に書く | 本番誤用 |
-| NFR-03 | 単体 Compose で Web + API + collab が起動する | overview の単独起動規約 |
+| NFR-01 | カンバンの競合に CRDT を使わない | 列移動は全順序が要る |
+| NFR-02 | README に学習用である旨を書く | 本番誤用 |
+| NFR-03 | 単体 Compose で Web + API + collab が起動する | 単独起動 |
 | NFR-04 | 秘密をログに出さない | 共通規約 |
-| NFR-05 | Markdown プレビューは raw HTML を出さず、`javascript:` リンクを無効化する | XSS。サニタイズは表示側（DESIGN） |
-| NFR-06 | 本文は 100000 文字まで。Y.Doc 更新は 512KiB まで | 巨大ペーストの上限 |
-| NFR-07 | collab は API と別プロセス。チャットは API 上の別パス `/chat/ws`（Yjs と混ぜない） | 3 種のリアルタイムを単一ソケットにしない |
+| NFR-05 | Markdown プレビューは raw HTML を出さず、`javascript:` リンクを無効化する | XSS。サニタイズは表示側 |
+| NFR-06 | 本文は 100000 文字まで。Y.Doc 更新は 512KiB まで | 巨大ペースト |
+| NFR-07 | collab は API と別プロセス。チャットは API 上の `/chat/ws`（Yjs と混ぜない） | 3 種のリアルタイムを単一ソケットにしない |
 | NFR-08 | IME 変換中は Y.Text に中間キーを送らない | 確定前の文字でキャレットが飛ぶのを防ぐ |
 
-## 7. 受け入れ（スライス 1–7）
-
-次を自動化または手動で示せたら、この要件定義の対象範囲は満たす。
+## 8. 受け入れ
 
 1. owner がワークスペースとボードを作り、3 列がある
-2. owner がカードを作り、別列へ `version` 付きで移動できる
-3. 古い `version` での再移動が 409
-4. 非メンバーのボード GET が 403
-5. guest のカード移動が 403
-6. 開発モードの Web でボードを開き、カードを DnD できる
-7. owner が公開ページと子ページを作り、guest の tree に draft が出ない
-8. guest の draft GET が 404、PATCH が 403
-9. 古い version のページ PATCH が 409。自分を親にする PATCH が 400
-10. owner が collab チケットを取れ、guest は published で read-only、draft は 404
-11. チケットと別の部屋名での内部認可が 403。パス風の部屋名は 400
-12. 2 ウィンドウで同じ Docs / Wiki 本文を編集できる（手動。README 手順）
-13. owner が general に投稿し seq が 1, 2。`afterSeq=1` で 2 だけ返る
-14. guest の投稿が 403、履歴 GET が 200
-15. 2 ウィンドウでチャット投稿と入力中が見える（手動）
-16. owner の検索が draft に当たり、guest の同じクエリは当たらない。非メンバー 403。空 q 400
-17. `@member` 投稿の `mentions` にその sub があり、未知の `@nobody` は入らない
-18. member が画像をローカル添付でき、guest の upload / page attach は 403
-19. member がスプリントを作りカードを割り当て、Done へ移すと当日の remaining が減る。guest の作成は 403、バーンダウン GET は 200
-20. 公開ページの 2 版を diff でき、guest は published の履歴を読め、draft 履歴は 404。guest の restore は 403
-
-Postgres 永続化・GitHub 同期はこの受け入れに含めない。
+2. owner がカードを作り、別列へ `version` 付きで移動できる。古い `version` は 409
+3. 非メンバーのボード GET が 403。guest のカード移動が 403
+4. 開発モードの Web でボードを開き、カードを DnD できる
+5. owner が公開ページと子ページを作り、guest の tree に draft が出ない。guest の draft GET は 404、PATCH は 403
+6. 古い version のページ PATCH が 409。自分を親にする PATCH が 400
+7. owner が collab チケットを取れ、guest は published で read-only、draft は 404
+8. チケットと別の部屋名での内部認可が 403。パス風の部屋名は 400
+9. 2 ウィンドウで同じ Docs / Wiki 本文を編集できる
+10. owner が general に投稿し seq が 1, 2。`afterSeq=1` で 2 だけ返る。guest の投稿は 403、履歴 GET は 200
+11. owner の検索が draft に当たり、guest の同じクエリは当たらない。非メンバー 403。空 q 400
+12. `@member` 投稿の `mentions` にその sub があり、未知の `@nobody` は入らない
+13. member が画像をローカル添付でき、guest の upload / page attach は 403
+14. member がスプリントを作りカードを割り当て、Done へ移すと当日の remaining が減る。guest の作成は 403、バーンダウン GET は 200
+15. 公開ページの 2 版を diff でき、guest は published の履歴を読め、draft 履歴は 404。guest の restore は 403
+16. Compose 再起動後もボードと Wiki が Postgres から戻る

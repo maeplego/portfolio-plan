@@ -1,12 +1,12 @@
-# P08 API 仕様書
+# API 仕様書
 
 | 項目 | 値 |
 | --- | --- |
-| プロジェクト | P08 content-platform |
-| 対象スライス | スライス 1 の HTTP。OpenAPI は未作成 |
+| プロダクト | コンテンツ基盤（GitHub: `pf-content-blog`、`pf-content-shortener`） |
 | 最終更新 | 2026-08-19 |
-| 矛盾時の正 | 自動テストと製品コード、次に `DESIGN.md` |
-| 基準 | ブログ `http://localhost:3007`、短縮 `http://localhost:8094` |
+| 実装との関係 | この文書と実装が違うときは、製品リポジトリのコードとテストを優先する |
+
+基準 URL はブログ `http://localhost:3007`、短縮 `http://localhost:8094`。OpenAPI ファイルは未作成。
 
 エラー本文:
 
@@ -49,11 +49,15 @@ Post:
 | author | string | 架空名 |
 | publishedAt | string \| null | RFC3339 |
 
+### GET `/posts/{slug}/opengraph-image`
+
+公開記事の題名画像。下書きの題は出さない。
+
 ## ブログ管理
 
 ### POST `/api/dev-login`
 
-`CONTENT_DEV_AUTH=true` のとき cookie をセット。201 相当ではなく 200 `{ ok, sub:"editor" }`。
+`CONTENT_DEV_AUTH=true` のとき cookie をセット。200 `{ ok, sub:"editor" }`。
 
 ### GET `/api/posts?all=1`
 

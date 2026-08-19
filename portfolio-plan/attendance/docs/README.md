@@ -1,31 +1,12 @@
-# P09 attendance — 書類索引
+# 勤怠の書類
 
-| 項目 | 値 |
-| --- | --- |
-| プロジェクト | P09 attendance |
-| 対象スライス | 1–2 実装済み（打刻・日次 + 月次カレンダー）。3 以降は計画 |
-| 最終更新 | 2026-08-19 |
-| 矛盾時の正 | `../pf-attendance` のテストとコード、次に `../DESIGN.md` |
-
-実装チャット用の短い設計は親の `DESIGN.md`。本ディレクトリは面接・レビュー用。書き方の正本は `portfolio-plan/documentation.md`。
+実装は [pf-attendance](https://github.com/maeplego/pf-attendance) です。打刻、休憩控除、月次カレンダーの説明です。給与計算や労基法の完全準拠ではありません。文書と実装が違うときは、コードとテストを優先してください。
 
 | ファイル | 内容 |
 | --- | --- |
-| [01-requirements.md](01-requirements.md) | 要件定義書。誰の課題か、含む/含まない、受け入れ |
-| [02-specification.md](02-specification.md) | 外部仕様書。打刻と日境界 |
-| [03-design.md](03-design.md) | 内部設計書。イベント、整数分、Tokyo |
-| [04-test-spec.md](04-test-spec.md) | テスト仕様書。自動化済みと未自動化 |
-| [05-api.md](05-api.md) | API 仕様書。現状の HTTP 契約 |
-| [06-diagrams.md](06-diagrams.md) | ユースケース、画面、シーケンス、状態、ER |
-
-## スライスと書類の対応
-
-| スライス | 状態 | 主に効く書類 |
-| --- | --- | --- |
-| 1 打刻と日次（休憩控除） | 実装済み | 要件 FR、仕様の日境界、API、TS-D*/P* |
-| 2 月次カレンダー UI | 実装済み | `/calendar`、`GET /v1/me/month-summary` |
-| 3 修正・休暇申請と承認 | 計画 | 実装順 3 |
-| 4 工数按分 | 計画 | 実装順 4 |
-| 5 月次締めと CSV | 計画 | 実装順 5。締め後 409 はまだ無い |
-| 6 未打刻リマインド / P01 | 計画 | 実装順 6–7 |
-| overlay F | 実装済み | `pf-cloud-k8s` `f-ops`。P01 OIDC は未配線 |
+| [01-requirements.md](01-requirements.md) | 目的、含む / 含まない、受け入れ |
+| [02-specification.md](02-specification.md) | 打刻と日付境界 |
+| [03-design.md](03-design.md) | イベント、整数分、Asia/Tokyo |
+| [04-test-spec.md](04-test-spec.md) | テストの観点 |
+| [05-api.md](05-api.md) | HTTP 契約 |
+| [06-diagrams.md](06-diagrams.md) | 図表 |

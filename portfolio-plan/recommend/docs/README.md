@@ -1,30 +1,14 @@
-# P07 recommend — 書類索引
+# 推薦の書類
 
-| 項目 | 値 |
-| --- | --- |
-| プロジェクト | P07 recommend |
-| 対象スライス | 人気 + item-item、時間 split、registry、jobs similar-items。P06 commerce namespace + overlay C/D 配線済み。events POST は任意 |
-| 最終更新 | 2026-08-19 |
-| 矛盾時の正 | `../pf-recommend` のテストとコード、次に `../DESIGN.md` |
+実装は [pf-recommend](https://github.com/maeplego/pf-recommend) です。オフライン学習と HTTP 推論の説明です。実顧客ログは使いません。文書と実装が違うときは、コードとテストを優先してください。
 
-実装チャット用の短い設計は親の `DESIGN.md`。書き方の正本は `portfolio-plan/documentation.md`。
+呼び出し側の例は求人 [pf-talent-api](https://github.com/maeplego/pf-talent-api) と EC の BFF [pf-commerce](https://github.com/maeplego/pf-commerce) です。失敗時は呼び出し側が自前の一覧へ戻します。
 
 | ファイル | 内容 |
 | --- | --- |
-| [01-requirements.md](01-requirements.md) | 要件定義書 |
-| [02-specification.md](02-specification.md) | 外部仕様書 |
-| [03-design.md](03-design.md) | 内部設計書 |
-| [04-test-spec.md](04-test-spec.md) | テスト仕様書 |
-| [05-api.md](05-api.md) | API 仕様書 |
+| [01-requirements.md](01-requirements.md) | 目的、含む / 含まない、受け入れ |
+| [02-specification.md](02-specification.md) | 推論 API の振る舞い |
+| [03-design.md](03-design.md) | 学習と成果物 |
+| [04-test-spec.md](04-test-spec.md) | テストの観点 |
+| [05-api.md](05-api.md) | HTTP 契約 |
 | [06-diagrams.md](06-diagrams.md) | 図表 |
-
-## スライスと書類の対応
-
-| スライス | 状態 | 主に効く書類 |
-| --- | --- | --- |
-| 人気 API + demo-web | 実装済み | 要件、05-api |
-| item-item + 時間 split | 実装済み | 設計、テスト |
-| コールドスタート fallback | 実装済み | 仕様 |
-| ファイル registry | 実装済み。Postgres/MinIO は未接続（計画） | 設計 |
-| P06 アダプタ | 実装済み（SKU item_id。events POST 未配線） | |
-| P10 配線 | 推論 API + overlay C。未知 ULID は 404 → skill overlap。品質ゲートあり | 05-api |

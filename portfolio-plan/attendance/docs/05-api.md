@@ -1,14 +1,13 @@
-# P09 API 仕様書
+# API 仕様書
 
 | 項目 | 値 |
 | --- | --- |
-| プロジェクト | P09 attendance |
-| 対象スライス | スライス 1 の HTTP。OpenAPI は未作成 |
+| プロダクト | attendance（GitHub: [pf-attendance](https://github.com/maeplego/pf-attendance)） |
 | 最終更新 | 2026-08-19 |
-| 矛盾時の正 | 自動テストと製品コード、次に `DESIGN.md` |
+| 実装との関係 | この文書と実装が違うときは、製品リポジトリのコードとテストを優先する |
 | 基準 | `http://localhost:8019`（Compose） |
 
-エラー本文:
+OpenAPI ファイルは未作成。エラー本文:
 
 ```json
 { "error": { "code": "conflict", "message": "already clocked in" } }
@@ -56,7 +55,7 @@
 
 ### GET `/v1/me/month-summary?month=YYYY-MM`
 
-200 `{ "month", "zone": "Asia/Tokyo", "days": [ { workDate, workMinutes, breakMinutes, status, punchCount } ] }`。`days` はその月の暦日すべて（8月は 31）。他人の打刻は 0。不正な month は 400。
+月次カレンダー UI が使う。200 `{ "month", "zone": "Asia/Tokyo", "days": [ { workDate, workMinutes, breakMinutes, status, punchCount } ] }`。`days` はその月の暦日すべて（8 月は 31）。他人の打刻は 0。不正な month は 400。
 
 ## 打刻
 

@@ -1,11 +1,10 @@
-# P04 内部設計書
+# 内部設計書
 
 | 項目 | 値 |
 | --- | --- |
-| プロジェクト | P04 workspace |
-| 対象スライス | 1–7 |
+| プロダクト | チーム作業場所 [pf-workspace](https://github.com/maeplego/pf-workspace) |
 | 最終更新 | 2026-08-19 |
-| 矛盾時の正 | 自動テストと製品コード、次に `DESIGN.md` |
+| 実装との関係 | この文書と実装が違うときは、製品リポジトリのコードとテストを優先する |
 
 「やりたいこと」は [01-requirements.md](01-requirements.md)。ここでは守り方。
 
@@ -13,13 +12,13 @@
 
 現状は 1 リポジトリ `pf-workspace`。
 
-| プロセス | 実装 | 持つ正本 |
+| プロセス | 実装 | 持つデータ |
 | --- | --- | --- |
 | `apps/api` | Go, `net/http` + gorilla websocket `/chat/ws` | workspace / member / board / card / page メタ / document メタ / チケット / channel / message / 検索の走査対象 / ローカル添付 / sprint / page_version。本文のスナップショット。Compose と overlay は Postgres。単体テストはメモリ |
 | `apps/collab` | Node, Hocuspocus + Yjs | 接続中の Y.Doc と中継。会員リストは持たない |
 | `apps/web` | Next.js 15 App Router | 画面。認可の正ではない。Server Action 経由で API を叩く |
 
-chat WS は API プロセスの `/chat/ws`（JSON）。collab の Yjs とは別ソケット。将来 `pf-workspace-chat` に分ける。空の git は作らない。
+chat WS は API プロセスの `/chat/ws`（JSON）。collab の Yjs とは別ソケット。将来プロセスを分けるときは空の git を先に作らない。
 
 ## 2. 認証の内部
 
@@ -48,7 +47,7 @@ Web は開発モードなら cookie なしで `X-Dev-User-Sub` を付ける。OI
 
 ## 4. データ（Postgres / メモリ）
 
-`WORKSPACE_DATABASE_URL` があるときは `internal/store/postgres`。空なら `internal/store/memory`（`go test` とフォールバック）。フィールドは同じ。カード移動は Postgres ではトランザクション + `WHERE version = $expected`。
+`WORKSPACE_DATABASE_URL` があるときは `internal/store/postgres`。空なら `internal/store/memory`（`go test` とフォールバック）。フィールドは同じ。カード移動は Postgres ではトランザクション + `WHERE version = $expected`。Compose は専用 Postgres を起動する。
 
 論理エンティティ:
 
@@ -59,7 +58,7 @@ Web は開発モードなら cookie なしで `X-Dev-User-Sub` を付ける。OI
 - Document（独立文書。`collabDocumentId`）
 - CollabTicket / ChatTicket（sub, 対象, readOnly, expiresAt）
 - Channel / ChatMessage（`seq` はチャンネル内 1,2,3…。削除しない。`mentions` は投稿時に解決）
-- StoredFile（ローカル一時ファイルまたは P03 fileId。`viewToken` 付き）
+- StoredFile（ローカル一時ファイルまたはメディア基盤の fileId。`viewToken` 付き）
 - Sprint（`boardId`, `startAt`, `endAt` UTC）
 - PageVersion（page ごとの title+body スナップショット。番号は単調増加）
 
@@ -67,7 +66,7 @@ Web は開発モードなら cookie なしで `X-Dev-User-Sub` を付ける。OI
 
 横断検索は `Search` が pages / documents / cards / messages を走査する。Postgres FTS のふりをしない。本文は API の `body` スナップショット。
 
-添付の実体は Y.Doc に入れない。Wiki は Markdown の画像 URL、チャットは `attachmentFileId`。`MEDIA_API_URL` が空なら `SaveLocalFile`。
+添付の実体は Y.Doc に入れない。Wiki は Markdown の画像 URL、チャットは `attachmentFileId`。`MEDIA_API_URL` が空なら `SaveLocalFile`。設定時はメディア基盤 [pf-media](https://github.com/maeplego/pf-media)。
 
 ツリーは `domain.BuildPageTree`（隣接リスト → ネスト）。guest 向けは `FilterGuestPages` で draft と draft 祖先付き published を落とす。検索の page ヒットも同じ関数。
 
@@ -81,7 +80,7 @@ Wiki 履歴は `AppendPageVersionIfChanged`。title+body が直前と同じな�
 
 ## 5. 楽観ロック
 
-CRDT をカンバンに使わない理由: 列と順序は全順序が必要で、Yjs の挿入位置と「Done に移した」が衝突すると面接で説明しにくい。カード本文の同時編集は文書側。
+CRDT をカンバンに使わない理由: 列と順序は全順序が必要で、Yjs の挿入位置と「Done に移した」が衝突すると説明しにくい。カード本文の同時編集は文書側。
 
 競合時は 409 と最新カードを返す。サーバーがマージしない。
 
@@ -112,7 +111,7 @@ IME: `yCollabIME` は `view.composing` 中に CM→Yjs も remote→CM もしな
 
 ## 9. 既知の制限
 
-- API の正本は Postgres（Compose 専用 DB / overlay の platform `workspace`）。Y.Doc とチャット Hub はプロセスメモリ。複数 collab レプリカは sticky 前提
+- API の永続化は Postgres（Compose 専用 DB / overlay の platform `workspace`）。Y.Doc とチャット Hub はプロセスメモリ。複数 collab レプリカは sticky 前提
 - カード移動のリアルタイム他ブラウザ同期なし
 - 列カスタム・ストーリーポイント未実装
 - バーンダウンは現在の割り当てと Done 時刻。過去の割り当て変更は遡及しない
@@ -120,4 +119,4 @@ IME: `yCollabIME` は `view.composing` 中に CM→Yjs も remote→CM もしな
 - チケット 15 分。長期編集は再読込が必要
 - チャット未読バッジ・既読ウォーターマークは未実装（last_read_seq は後続）
 - 検索はストア走査の部分一致。Postgres FTS ではない
-- P03 結合は `MEDIA_API_URL` 任意。単体 Compose はローカル添付
+- メディア結合は `MEDIA_API_URL` 任意。単体 Compose はローカル添付

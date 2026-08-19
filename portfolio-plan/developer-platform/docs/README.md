@@ -1,31 +1,12 @@
-# P11 developer-platform — 書類索引
+# 開発者向けツールの書類
 
-| 項目 | 値 |
-| --- | --- |
-| プロジェクト | P11 developer-platform |
-| 対象スライス | scanner MVP + CLI/templates + portal MVP + oasdiff Action + CI dash + review BFF。web シェルは計画 |
-| 最終更新 | 2026-08-19 |
-| 矛盾時の正 | `../pf-developer-scanner` / `../pf-developer-cli` / `../pf-developer-templates` / `../pf-developer-portal` / `../pf-developer-ci-dash` / `../pf-developer-review` のテストとコード、次に `../DESIGN.md` |
-
-実装チャット用の短い設計は親の `DESIGN.md`。書き方の正本は `portfolio-plan/documentation.md`。
+実装は [pf-developer-scanner](https://github.com/maeplego/pf-developer-scanner)、[pf-developer-cli](https://github.com/maeplego/pf-developer-cli)、[pf-developer-templates](https://github.com/maeplego/pf-developer-templates)、[pf-developer-portal](https://github.com/maeplego/pf-developer-portal)、[pf-developer-ci-dash](https://github.com/maeplego/pf-developer-ci-dash)、[pf-developer-review](https://github.com/maeplego/pf-developer-review) です。攻撃手順は置きません。文書と実装が違うときは、コードとテストを優先してください。
 
 | ファイル | 内容 |
 | --- | --- |
-| [01-requirements.md](01-requirements.md) | 要件定義書 |
-| [02-specification.md](02-specification.md) | 外部仕様書 |
-| [03-design.md](03-design.md) | 内部設計書 |
-| [04-test-spec.md](04-test-spec.md) | テスト仕様書 |
-| [05-api.md](05-api.md) | CLI / scanner / portal / dash / review HTTP |
+| [01-requirements.md](01-requirements.md) | 目的、含む / 含まない、受け入れ |
+| [02-specification.md](02-specification.md) | CLI と各 HTTP の振る舞い |
+| [03-design.md](03-design.md) | リポジトリ分割と安全境界 |
+| [04-test-spec.md](04-test-spec.md) | テストの観点 |
+| [05-api.md](05-api.md) | コマンドと HTTP |
 | [06-diagrams.md](06-diagrams.md) | 図表 |
-
-## スライスと書類の対応
-
-| スライス | 状態 | 主に効く書類 |
-| --- | --- | --- |
-| scanner MVP | 実装済み | 要件、05-api、TS。**K8s overlay 非搭載** |
-| CLI + templates（P04/P06 実ファイル） | 実装済み | 仕様、設計。oasdiff workflow を同梱 |
-| portal MVP（overlay B） | 実装済み | `portal.localhost`。管理アップロードは計画 |
-| oasdiff Action | 実装済み | portal `testdata/openapi` + `oasdiff/oasdiff-action` |
-| CI dashboard | 実装済み | 公開 Actions、allowlist。PAT は git に置かない |
-| review BFF | 実装済み | GitHub API のみ。ローカル path 拒否 |
-| web シェル | 計画 | 受け入れに含めない |

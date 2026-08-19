@@ -1,13 +1,12 @@
-# P15 API 仕様書
+# API 仕様書
 
 | 項目 | 値 |
 | --- | --- |
-| プロジェクト | P15 habit-tracker |
-| 対象スライス | 1（`pf-habit-api`） |
+| プロダクト | habit-tracker（GitHub: [pf-habit-api](https://github.com/maeplego/pf-habit-api)） |
 | 最終更新 | 2026-08-19 |
-| 矛盾時の正 | 自動テストと製品コード、次に `DESIGN.md` |
+| 実装との関係 | この文書と実装が違うときは、製品リポジトリのコードとテストを優先する |
 
-ベース URL: `http://localhost:8015`。認可: `X-Dev-User-Sub`（`/v1/*`）。OpenAPI ファイルは未着手。
+ベース URL: `http://localhost:8015`（Compose）。認可: `X-Dev-User-Sub`（`/v1/*`）。OpenAPI ファイルは未着手。[pf-habit-mobile](https://github.com/maeplego/pf-habit-mobile) はいまこの API を呼ばない。Kubernetes 向けマニフェストは置かない。
 
 ## ヘルス
 
@@ -44,5 +43,6 @@
 
 ## 形
 
-Habit: `id`, `userId`, `name`, `color`, `scheduleKind`, `timesPerWeek`, `archived`, `createdAt`, `updatedAt`  
+Habit: `id`, `userId`, `name`, `color`, `scheduleKind`, `timesPerWeek`, `archived`, `createdAt`, `updatedAt`
+
 HabitLog: `habitId`, `localDate`, `completed`, `note`, `updatedAt`

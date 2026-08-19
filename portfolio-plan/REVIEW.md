@@ -6,10 +6,7 @@
 | 既定の経路 | ブラウザ、必要なら Docker Compose。**Kubernetes は任意** |
 | 最終更新 | 2026-08-19 |
 
-このマシンでの確認記録（2026-08-19）:
-
-- `.\scripts\review-up.ps1 -Pack p04 -UseLocalImages` — `3006` / `8096` / `8097` の health が 200。その後 `review-down.ps1 -Pack p04`
-- `.\scripts\review-up.ps1 -Pack p06 -UseLocalImages` — ストアフロント `/` と `/demo` が 200、`8099/health` と `8110/health` が `{"ok":true}`、シード SKU `MUG-1`。その後 `review-down.ps1 -Pack p06`。古い `commerce-pg` に `commerce` データベースしか無い場合は、`commerce-db-init` が `catalog` / `inventory` / `orders` / `gateway` を足す
+GitHub でコードを見て、必要なら Docker Compose を 1 パック起動してください。Kubernetes は必須ではありません。
 
 ## 0. ブラウザだけ（約 5 分）
 
@@ -88,13 +85,13 @@ GHCR が無いとき:
 2. **P01** `pf-identity`、または本線の **P04** `pf-workspace` / **P06** `pf-commerce` のどちらか
 3. 深さ 1 本: `pf-cloud-o11y`（観測）、`pf-developer-portal`（oasdiff）、`pf-reliability`（訓練採点）、`pf-recommend`（fail-closed）のいずれか
 
-## 面接 5 分（口頭）
+## 口頭での説明例（約 5 分）
 
-15 個全部は説明しない。
+15 個全部は扱いません。
 
-- **P01**: PKCE、redirect URI の完全一致、refresh の回転（再利用で family 無効化）
-- **本線どちらか**: P04 ならワークスペース作成。P06 なら `/demo` で在庫 1 の同時購入（片方 201、片方 409）
-- **深さ 1 つ**: トレースが Grafana に出ること、OpenAPI breaking で CI が落ちること、訓練で scale が減点になること、推薦失敗時に人気へ戻ること、のいずれか
+- **認証（pf-identity）**: PKCE、redirect URI の完全一致、refresh の回転（再利用で family 無効化）
+- **本線どちらか**: ワークスペース（pf-workspace）ならワークスペース作成。EC（pf-commerce）なら `/demo` で在庫 1 の同時購入（片方 201、片方 409）
+- **深さ 1 つ**: トレースが Grafana に出ること、OpenAPI の破壊的変更で CI が落ちること、訓練で scale が減点になること、推薦失敗時に人気へ戻ること、のいずれか
 
 やらなかったこと（Terraform apply、習慣アプリの K8s、全 Pxx 同時起動）はブログ記事 `why-fifteen-products` と `00-overview.md` に書いてある。
 

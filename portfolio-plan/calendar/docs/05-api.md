@@ -1,18 +1,17 @@
-# P05 API 仕様書
+# API 仕様書
 
 | 項目 | 値 |
 | --- | --- |
-| プロジェクト | P05 calendar |
-| 対象スライス | 1–11 実装済みの HTTP。OpenAPI は `packages/openapi/openapi.yaml` と `GET /openapi.yaml` |
-| 最終更新 | 2026-08-18 |
-| 矛盾時の正 | 自動テストと製品コード、次に `DESIGN.md` |
+| プロダクト | 予約カレンダー [pf-calendar](https://github.com/maeplego/pf-calendar) |
+| 最終更新 | 2026-08-19 |
+| 実装との関係 | この文書と実装が違うときは、製品リポジトリのコードとテストを優先する |
 | 基準 | `http://localhost:8095`（Compose）。時刻は Instant の ISO-8601 |
 
 機械可読 OpenAPI は `packages/openapi/openapi.yaml`。API は `GET /openapi.yaml` で同内容を返す。本ファイルは人間向け要約。
 
-## ドメインイベント（P10）
+## ドメインイベント
 
-予約 **新規確定**（201、冪等再送 200 ではない）時に `outbox_events` へ enqueue。worker が `CALENDAR_WEBHOOK_URL` へ POST する。
+予約 **新規確定**（201、冪等再送 200 ではない）時に `outbox_events` へ enqueue。worker が `CALENDAR_WEBHOOK_URL` へ POST する。求人 API [pf-talent-api](https://github.com/maeplego/pf-talent-api) の受信は未実装。
 
 ```json
 {
@@ -36,9 +35,9 @@
 
 ヘッダ: `Content-Type: application/json`、`X-Calendar-Event-Type: calendar.booking.confirmed`。`CALENDAR_WEBHOOK_URL` 未設定時 worker は配信をスキップ。
 
-## Dev webhook（P10 結合の土台）
+## Dev webhook（疎通スタブ）
 
-P10 結合がまだ無い場合の **疎通スタブ**。worker が POST する outbox 配信を受けて 200 を返す。
+worker が POST する outbox 配信を受けて 200 を返す。求人結合がまだ無い場合の確認用。
 
 ### POST `/webhooks/calendar`
 
@@ -198,7 +197,7 @@ PII フィールドを足さない。
 
 `cancelToken` / ハッシュは返さない。
 
-## 内部 `/internal/v1`（P10）
+## 内部 `/internal/v1`
 
 `CALENDAR_INTERNAL_TOKEN` が空なら **503** `unavailable`。設定時は `Authorization: Bearer ${CALENDAR_INTERNAL_TOKEN}` 必須。不正は 401。
 
@@ -208,7 +207,7 @@ PII フィールドを足さない。
 
 | フィールド | 制約 |
 | --- | --- |
-| hostSub | 必須。P01 の `sub`（企業ユーザー） |
+| hostSub | 必須。認証基盤 [pf-identity](https://github.com/maeplego/pf-identity) の `sub`（企業ユーザー） |
 | externalRef | 任意。同一 host 内で冪等。既存があれば 200 で返す（slug 衝突は起こさない） |
 
 201: 新規。200: `externalRef` 一致で既存返却。
@@ -247,4 +246,4 @@ PII フィールドを足さない。
 
 | 予定 | 備考 |
 | --- | --- |
-| P10 側 webhook 受信と応募ステータス更新 | pf-talent-api |
+| webhook 受信と応募ステータス更新 | [pf-talent-api](https://github.com/maeplego/pf-talent-api) |

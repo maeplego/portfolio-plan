@@ -1,119 +1,60 @@
-# P10 テスト仕様書
+# テスト仕様書
 
 | 項目 | 値 |
 | --- | --- |
-| プロジェクト | P10 talent-platform |
-| 対象スライス | P10 最小 + 検索 + 保存検索 + 一覧 ACL |
+| プロダクト | talent-platform（GitHub: [pf-talent-api](https://github.com/maeplego/pf-talent-api)、[pf-talent-web](https://github.com/maeplego/pf-talent-web)） |
 | 最終更新 | 2026-08-19 |
-| 矛盾時の正 | 製品リポジトリの vitest。本表と食い違ったらテストを直すか本表を追随 |
+| 実装との関係 | 自動化は製品リポジトリの vitest。この表と食い違ったらテストかこの文書を直す |
 
 ## 方針
 
 - HTTP 単体は `MemoryStore`（`app.request`）。
-- Postgres 結合は `TALENT_DATABASE_URL` が届くときだけ。届かないときは skip（緑の偽装ではない）。
+- Postgres 結合は `TALENT_DATABASE_URL` が届くときだけ。届かないときは skip（未実行を成功扱いにしない）。
+- Compose の実行系は Postgres。メモリ店舗だけの常時運用は想定しない。
 
-## テストケース（例）
+## webhook と状態
 
-### TS-W01 webhook により application が interview へ更新される
-- `POST /webhooks/calendar` に正しいヘッダとペイロードを送る
-- `data.externalRef` に一致する application がある
-- 期待: `200`、`status=interview`、`interviewBookingId` がセット
+| ID | 観点 | 期待 |
+| --- | --- | --- |
+| TS-W01 | 正しいヘッダと `externalRef` | 200、応募ステータス `interview`、`interviewBookingId` |
+| TS-W02 | 面接 event type の provision | Bearer 付きで pf-calendar の内部 API へ `externalRef = job.id` |
+| TS-S01 | applied → interview | 409 `invalid_transition` |
+| TS-S02 | applied → document_passed | 200 |
 
-### TS-W02 provision endpoint が P05 internal API を呼ぶ
-- `POST /v1/jobs/:id/provision-interview-event-type`
-- `CALENDAR_INTERNAL_TOKEN` と `CALENDAR_API_URL` を設定
-- 期待: `Authorization: Bearer ...` を付けて P05 の `POST /internal/v1/event-types` へ `externalRef = job.id` で送る
+## プロフィール・求人・検索
 
-### TS-S01 不正な状態遷移は 409 を返す
-- applied → interview は不正: `409 invalid_transition`
+| ID | 観点 | 期待 |
+| --- | --- | --- |
+| TS-P01 | PUT/GET プロフィール | 200 |
+| TS-P02 | 未知の sub | 404 |
+| TS-J01 | 求人作成後の一覧 | 取得できる |
+| TS-J02 | skills / 年収 / remote | 保持される |
+| TS-F01–F04 | employmentType / remote / skills / salary | 条件に合う published のみ |
+| TS-F05 | `q=kubernetes` | title/description に含む |
+| TS-F06 | 日本語部分一致 `q=エンジ` | FTS だけでは足りないため trigram / ILIKE。Postgres 結合でも同じ |
 
-### TS-S02 正当な状態遷移は 200
-- applied → document_passed: `200`
+## 保存検索・枠・類似
 
-### TS-P01 候補者プロフィールの upsert / get
-- `PUT /v1/profiles/:sub` → `200`
-- `GET /v1/profiles/:sub` → プロフィール
+| ID | 観点 | 期待 |
+| --- | --- | --- |
+| TS-SS01 | 作成と一覧 | 201 と保存内容 |
+| TS-SS02 | run | `matchedJobs` と `lastRunAt` |
+| TS-SS03 | 未知 id の run | 404 |
+| TS-I01 | 書類通過後の枠 | pf-calendar の `starts` |
+| TS-I02 | applied で枠 | 409 `invalid_state` |
+| TS-R01 | pf-recommend 未接続 | `source=fallback`（スキル重なり） |
+| TS-R02 | 推薦が成功し重なりが同等以上 | `source=recommend` |
+| TS-R03 | 推薦の重なりが明らかに劣る | `source=fallback`（閉じる） |
 
-### TS-P02 未知のプロフィールは 404
-- `GET /v1/profiles/unknown` → `404`
+## 一覧 ACL と UI
 
-### TS-J01 求人一覧（GET /v1/jobs）
-- 求人作成後に一覧で取得
-
-### TS-J02 拡張フィールド付き求人作成
-- skills, salaryMin/Max, remote 等が保持される
-
-### TS-F01 employmentType フィルタ
-- `GET /v1/jobs?employmentType=contract` → contract のみ
-
-### TS-F02 remote フィルタ
-- `GET /v1/jobs?remote=true` → リモート可のみ
-
-### TS-F03 skills フィルタ
-- `GET /v1/jobs?skills=Go` → Go を含む求人のみ
-
-### TS-F04 salary フィルタ
-- `GET /v1/jobs?salaryMin=5000000` → salaryMax ≥ 5000000 の求人
-
-### TS-F05 q キーワードフィルタ
-- `GET /v1/jobs?q=kubernetes` → title/description に含む求人
-
-### TS-F06 日本語の部分一致（q）
-- タイトル `バックエンドエンジニア募集` に対し `q=エンジ` がヒットする
-- ヒットしない対照求人（デザイナー）は返さない
-- Postgres 結合（`TALENT_DATABASE_URL` があるとき）でも同じ。FTS トークン分割では足りないため `pg_trgm` / ILIKE が担当する
-
-### TS-SS01 保存検索の作成と一覧
-- `POST /v1/saved-searches` → `201`
-- `GET /v1/candidates/:sub/saved-searches` → 保存内容
-
-### TS-SS02 保存検索の実行
-- `POST /v1/saved-searches/:id/run` → `matchedJobs`, `matchedCount`
-- `lastRunAt` が更新される
-
-### TS-SS03 未知の保存検索実行は 404
-- `POST /v1/saved-searches/unknown/run` → `404`
-
-### TS-I01 書類通過後の応募に対して P05 スロットを返す
-- `GET /v1/applications/:id/interview-slots`
-- internal API で event type を引き、public slots API の `starts` を返す
-
-### TS-I02 書類通過前は面接スロットを引けない
-- applied 状態で `GET /v1/applications/:id/interview-slots`
-- `409 invalid_state`
-
-### TS-R01 類似求人の fallback
-- `GET /v1/jobs/:id/similar`
-- P07 未接続時に `skills` overlap で類似求人を返す
-
-### TS-R02 類似求人の recommend 優先
-- `RECOMMEND_API_URL` 設定時、P07 `similar-items` の結果を優先する
-
-### TS-L01 公開求人 GET
-- `GET /v1/jobs/:id` → `200`
-
-### TS-L02 無い id は 404
-- `GET /v1/jobs/missing-id` → `404`
-
-### TS-L03 他社の応募一覧は 403
-- `GET /v1/jobs/:id/applications` に別 `X-Dev-User-Sub` → `403`
-- 当該 employer なら `200`
-
-### TS-L04 他候補者の応募一覧は 403
-- `GET /v1/candidates/:sub/applications` に別ヘッダ → `403`
-
-### TS-UI01 API 未接続でもエラーを表示できる
-- `talentFetch` が接続失敗時に `503` と固定メッセージを返す（web は落ちない）
-
-### TS-UI02 開発セッションは user 必須
-- `?user=` なしは null（ゲスト相当を出さない）
-
-### TS-UI03 手動: 応募の見え方
-- candidate-1 で応募 → `/me/applications` に出る
-- employer-1 で応募者一覧に履歴書が出る
-- employer-2 で同じ求人の応募者一覧は 403
-### TS-UI04 保存検索とスロット
-- run で matchedCount を表示
-- P05 未接続なら「カレンダー未接続」
-- 予約リンクはカレンダー公開ページ（枠 UI を再実装しない）
-
+| ID | 観点 | 期待 |
+| --- | --- | --- |
+| TS-L01 | 公開求人 GET | 200 |
+| TS-L02 | 無い id | 404 |
+| TS-L03 | 他社の応募一覧 | 403 |
+| TS-L04 | 他候補者の応募一覧 | 403 |
+| TS-UI01 | API 未接続 | Web は落ちず 503 相当のメッセージ |
+| TS-UI02 | `?user=` なし | ゲスト相当を出さない |
+| TS-UI03 | 手動: 履歴書の見え方 | 当事者だけ全文。他社 403 |
+| TS-UI04 | 手動: 保存検索と枠 | 未接続なら「カレンダー未接続」。予約は pf-calendar の公開ページ |

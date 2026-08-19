@@ -1,11 +1,10 @@
-# P05 外部仕様書
+# 外部仕様書
 
 | 項目 | 値 |
 | --- | --- |
-| プロジェクト | P05 calendar |
-| 対象スライス | 1–7 の現行 API・Web・ワーカー |
-| 最終更新 | 2026-08-18 |
-| 矛盾時の正 | 自動テストと製品コード、次に `DESIGN.md`。HTTP の細部は [05-api.md](05-api.md) |
+| プロダクト | 予約カレンダー [pf-calendar](https://github.com/maeplego/pf-calendar) |
+| 最終更新 | 2026-08-19 |
+| 実装との関係 | この文書と実装が違うときは、製品リポジトリのコードとテストを優先する。HTTP の細部は [05-api.md](05-api.md) |
 
 ユーザーと呼び出し側から見た振る舞い。内部のテーブル名や TOCTOU は [03-design.md](03-design.md)。
 
@@ -25,19 +24,19 @@
 
 1. **空きの定義はホストの壁時計。** 「月曜 9:00–12:00 Asia/Tokyo」は、東京のカレンダー上のその時間だけが候補になる。
 2. **API に出す開始時刻は Instant。** 例: 東京 2026-03-02 09:00 → `2026-03-02T00:00:00Z`。オフセット付き現地文字列を正にしない。
-3. **ゲスト TZ は表示と記録用。** `GET slots` の `starts` 配列は `guestTimeZone` を変えても同じ。クライアントが Instant を壁時計ラベルに変換する（画面はスライス 4）。
+3. **ゲスト TZ は表示と記録用。** `GET slots` の `starts` 配列は `guestTimeZone` を変えても同じ。クライアントが Instant を壁時計ラベルに変換する。
 4. **`now` はサーバー。** 最短予約期限は API プロセスの時計。クエリ `now` はテスト用。本番 UI は付けない。
 5. **クライアントの `slotStart` は「どの枠を指すか」の ID。** 形式が ISO でも、オファー中でなければ予約は成立しない。
 6. **range は Instant の半開区間** `[rangeStart, rangeEnd)` 相当（終了 Instant を含まない列挙窓）。14×24 時間を超えると 400。暦日 14 日ではない（DST で 14 日の長さが変わるため）。
 
-idea 11 の初期案 `GET .../slots?date=&tz=` は採用しない。TZ をクエリで渡すと「誰の日付か」が曖昧になる。現行は Instant 窓 + レスポンスの `hostTimeZone`。
+初期案 `GET .../slots?date=&tz=` は採用しない。TZ をクエリで渡すと「誰の日付か」が曖昧になる。現行は Instant 窓 + レスポンスの `hostTimeZone`。
 
 ## 3. ホスト（認証あり）
 
 現状の認証:
 
 - **開発:** Web は `/host?host=` で `X-Dev-Host-Sub` を API に渡す。`CALENDAR_DEV_AUTH=true` が前提。
-- **P01 連携:** Web と API に `OIDC_*` を設定し `CALENDAR_DEV_AUTH=false` にすると、ホスト API は `Authorization: Bearer`（JWT または opaque + userinfo）のみ受理する。
+- **OIDC:** Web と API に `OIDC_*` を設定し `CALENDAR_DEV_AUTH=false` にすると、ホスト API は `Authorization: Bearer`（JWT または opaque + userinfo）のみ受理する。発行点は認証基盤 [pf-identity](https://github.com/maeplego/pf-identity)。
 
 | 操作 | 仕様 |
 | --- | --- |
@@ -98,7 +97,7 @@ DST: ホスト TZ で存在しない壁時計は枠にしない。秋の重複�
 | 409 | `conflict` | slug 重複、冪等キーの中身不一致 |
 | 503 | （ready） | store ping 失敗 |
 
-## 7. 画面（Web — スライス 4）
+## 7. 画面（Web — 現行）
 
 | 画面 | パス | 役割 |
 | --- | --- | --- |
@@ -107,25 +106,26 @@ DST: ホスト TZ で存在しない壁時計は枠にしない。秋の重複�
 | ホスト一覧 | `/host` | イベントタイプ一覧。OIDC 有効時は未ログインで `/login` |
 | イベント作成 | `/host/event-types/new` | 初期ルール付きで POST `/v1/event-types` |
 | イベント詳細 | `/host/event-types/:id` | ルール・オファー枠・確定予約 |
-
 | キャンセル | `/cancel?token=` | トークンで API cancel を呼ぶ。成功後は枠再表示の案内 |
 
 ゲスト TZ セレクタは `/book/:slug` のラベルのみ変更する。`starts` 配列は API が返した Instant のまま。
 
 予約完了画面から ICS ダウンロードとキャンセルページへのリンクあり。
 
-## 8. リマインド（スライス 6）
+## 8. リマインド（現行）
 
 ワーカーが Postgres をポーリングし、開始 24 時間前・1 時間前にゲストメールへ通知（開発は Mailhog `:8025`）。`reminder_sent` で二重送信を防ぐ。
 
-## 9. 内部 API（スライス 7 — P10）
+## 9. 内部 API（求人連携用）
 
-Bearer `CALENDAR_INTERNAL_TOKEN`。求人ごとに `externalRef` 付き event type をプロビジョニングし、予約 id からゲスト・イベントメタデータを取得する。ゲスト向け公開 URL の slug は内部 API 作成時に指定。
+Bearer `CALENDAR_INTERNAL_TOKEN`。求人ごとに `externalRef` 付き event type をプロビジョニングし、予約 id からゲスト・イベントメタデータを取得する。ゲスト向け公開 URL の slug は内部 API 作成時に指定。呼び出し側は求人 API [pf-talent-api](https://github.com/maeplego/pf-talent-api)（受信側の応募ステータス更新は未実装）。
 
 ## 10. 既知の制限（現状を偽らない）
 
-- UI なし → **Web UI あり**（http://localhost:3005）。curl も引き続き可
+- Web UI あり（http://localhost:3005）。curl も引き続き可
 - ホスト認証は開発ヘッダまたは OIDC Bearer（`CALENDAR_DEV_AUTH=false`）
-- **`calendar.booking.confirmed` は outbox + webhook 配信済み**（P10 受信側は未実装）
+- **`calendar.booking.confirmed` は outbox + webhook 配信済み**（求人側の受信は未実装）
 - 公開 API のレート制限なし
 - 単体テストの同時 book はメモリ store。Postgres 上の同時 INSERT は Compose 手動または未自動化
+- Google カレンダー同期は未実装
+- 勤怠 [pf-attendance](https://github.com/maeplego/pf-attendance) とは統合しない

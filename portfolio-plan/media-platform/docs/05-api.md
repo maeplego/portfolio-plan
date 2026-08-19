@@ -1,14 +1,13 @@
-# P03 API 仕様書
+# API 仕様書
 
 | 項目 | 値 |
 | --- | --- |
-| プロジェクト | P03 media-platform |
-| 対象スライス | 現行 HTTP。OpenAPI は未作成 |
+| プロダクト | メディア基盤 [pf-media](https://github.com/maeplego/pf-media) |
 | 最終更新 | 2026-08-19 |
-| 矛盾時の正 | 自動テストと製品コード、次に `DESIGN.md` |
-| 基準 | `http://localhost:8090` |
+| 実装との関係 | この文書と実装が違うときは、製品リポジトリのコードとテストを優先する |
+| 基準 | `http://localhost:8090`（Compose） |
 
-認可: `/v1/*` はユーザー。共有 GET はトークン。内部 finish は processor トークン。
+OpenAPI ファイルは未作成。認可: `/v1/*` はユーザー。共有 GET はトークン。内部 finish は processor トークン。
 
 | メソッド | パス | 用途 |
 | --- | --- | --- |

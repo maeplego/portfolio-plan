@@ -1,12 +1,12 @@
-# P11 API 仕様書
+# API 仕様書
 
 | 項目 | 値 |
 | --- | --- |
-| プロジェクト | P11 developer-platform |
-| 対象スライス | CLI、portal、ci-dash、review。admin アップロードは計画 |
+| プロダクト | 開発者基盤（GitHub: `pf-developer-cli`、`pf-developer-portal`、`pf-developer-ci-dash`、`pf-developer-review`） |
 | 最終更新 | 2026-08-19 |
-| 矛盾時の正 | 自動テストと製品コード、次に `DESIGN.md` |
-| 基準 | portal `http://localhost:8111`、ci-dash `:8115`、review `:8118` |
+| 実装との関係 | この文書と実装が違うときは、製品リポジトリのコードとテストを優先する |
+
+基準: portal `http://localhost:8111`、ci-dash `:8115`、review `:8118`。管理アップロードは計画であり、受け入れに入れない。
 
 ## コマンド
 
@@ -39,8 +39,6 @@ oasdiff-gate [-fail-on ERR] <base.yaml> <revision.yaml>
 ```json
 { "error": { "code": "invalid_request", "message": "amountMinor is required" } }
 ```
-
-計画: `POST /admin/specs`。受け入れに入れない。
 
 ## CI dash HTTP（`:8115`）
 

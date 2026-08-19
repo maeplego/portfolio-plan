@@ -1,13 +1,13 @@
-# P04 図表
+# 図表
 
 | 項目 | 値 |
 | --- | --- |
-| プロジェクト | P04 workspace |
-| 対象スライス | 1–7 実装 |
+| プロダクト | チーム作業場所 [pf-workspace](https://github.com/maeplego/pf-workspace) |
 | 最終更新 | 2026-08-19 |
-| 矛盾時の正 | コードと [05-api.md](05-api.md) |
+| 実装との関係 | コードと [05-api.md](05-api.md) を優先する |
+| 記法 | Mermaid |
 
-## ユースケース（現状）
+## ユースケース（現行）
 
 ```mermaid
 flowchart LR
@@ -273,5 +273,3 @@ erDiagram
     string title
   }
 ```
-
-id は ULID（TEXT）、時刻は timestamptz。

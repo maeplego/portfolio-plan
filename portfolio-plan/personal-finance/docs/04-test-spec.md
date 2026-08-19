@@ -1,11 +1,10 @@
-# P14 テスト仕様書
+# テスト仕様書
 
 | 項目 | 値 |
 | --- | --- |
-| プロジェクト | P14 personal-finance |
-| 対象スライス | 1。自動化は `npm test`（money + api vitest） |
+| プロダクト | personal-finance（GitHub: [pf-finance](https://github.com/maeplego/pf-finance)） |
 | 最終更新 | 2026-08-19 |
-| 矛盾時の正 | 製品リポジトリの vitest。本表と食い違ったらテストを直すか本表を追随 |
+| 実装との関係 | 自動化は `npm test`（`packages/money` と `apps/api`）。この表と食い違ったらテストかこの文書を直す |
 
 ## 1. 方針
 
@@ -13,41 +12,38 @@
 | --- | --- | --- |
 | money | DB なし | 整数円だけ通す |
 | report | 純関数 | 予算残りと日次 |
-| HTTP | Hono `app.request` + メモリ Store | CRUD、401、隔離、float 400、シード |
+| HTTP | Hono `app.request` + メモリ Store | CRUD、401、隔離、float 400、シード、CSV |
 
-exploit / PoC は書かない。実家計を fixture に置かない。
+実家計を fixture に置かない。
 
-## 2. 金額
+## 2. 金額とレポート
 
 | ID | 観点 | 期待 |
 | --- | --- | --- |
 | TS-M01 | 整数 | `parseYen(1200) = 1200` |
 | TS-M02 | 12.5 / `"100.0"` / `"1e2"` | YenError |
-| TS-M03 | 0 と負の positive 円 | YenError |
-| TS-M04 | 符号付き | 収入正・支出負 |
+| TS-M03 | 0 と負 | YenError |
+| TS-R01 | 食費と給与と予算 | 整数の合計と残り、月の日数 |
 
-## 3. レポート
+## 3. HTTP
 
 | ID | 観点 | 期待 |
 | --- | --- | --- |
-| TS-R01 | 食費 4200+3100、給与 280000、予算 200000 | 支出 7300、残り 192700、6 月 30 日 |
+| TS-H01 | `/health` `/ready` | 認証なし 200 |
+| TS-H02 | `/v1` ヘッダなし | 401 |
+| TS-H03 | alice の取引を bob が list | 空 |
+| TS-H04 | bob が alice の id を GET/DELETE | 404 |
+| TS-H05 | `amountYen: 12.5` | 400 |
+| TS-H06 | 自分の PATCH/DELETE | 200/204 のち list 空 |
+| TS-H07 | demo 2026-06 レポート | 支出 97780、収入 280000、残り 102220 |
+| TS-H08 | other の 2026-06 | 0 |
+| TS-H09 | 予算更新 | 残りが変わる |
+| TS-H10 | export 後に他ユーザーへ import | 件数は増える。元 id は混ざらない |
+| TS-H11 | import の小数円 | 400 |
 
-## 4. HTTP
-
-| ID | 観点 | 期待 | 要件 |
-| --- | --- | --- | --- |
-| TS-H01 | `/health` `/ready` | 認証なし 200 | |
-| TS-H02 | `/v1` ヘッダなし | 401 | |
-| TS-H03 | alice の取引を bob が list | 空 | FR-02 |
-| TS-H04 | bob が alice の id を GET/DELETE | 404 | FR-02 |
-| TS-H05 | `amountYen: 12.5` | 400 | FR-01 |
-| TS-H06 | 自分の PATCH/DELETE | 200/204 のち list 空 | FR-02 |
-| TS-H07 | demo 2026-06 レポート | 支出 97780、収入 280000、残り 102220 | FR-03–05 |
-| TS-H08 | other の 2026-06 | 0 | FR-02 |
-| TS-H09 | 予算を 150000 に更新 | 残り 52220 | FR-04 |
-
-## 5. 未自動化
+## 4. 未自動化
 
 - Compose 実機の画面操作と Chrome インストール
-- Playwright の Offline 模擬（次スライス）
+- Playwright の Offline 模擬
 - Postgres integration タグ
+- Kubernetes overlay の apply（マニフェストは存在する）

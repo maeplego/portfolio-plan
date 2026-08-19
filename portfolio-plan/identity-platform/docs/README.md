@@ -1,31 +1,14 @@
-# P01 identity-platform — 書類索引
+# 認証基盤の書類
 
-| 項目 | 値 |
-| --- | --- |
-| プロジェクト | P01 identity-platform |
-| 対象スライス | 認可コード + PKCE、refresh 回転、管理 UI、sample-rp、logout。メール検証は未実装 |
-| 最終更新 | 2026-08-19 |
-| 矛盾時の正 | `../pf-identity` のテストとコード、次に `../DESIGN.md` |
+実装は [pf-identity](https://github.com/maeplego/pf-identity) です。このフォルダは、何を満たすか・外からどう見えるか・中をどう守るか・何をテストするかを分けて書いています。文書と実装が違うときは、コードとテストを優先してください。
 
-実装チャット用の短い設計は親の `DESIGN.md`。本ディレクトリは面接・レビュー用。書き方の正本は `portfolio-plan/documentation.md`。
+メール検証、パスキー、SAML はありません。
 
 | ファイル | 内容 |
 | --- | --- |
-| [01-requirements.md](01-requirements.md) | 要件定義書 |
-| [02-specification.md](02-specification.md) | 外部仕様書 |
-| [03-design.md](03-design.md) | 内部設計書 |
-| [04-test-spec.md](04-test-spec.md) | テスト仕様書 |
-| [05-api.md](05-api.md) | API 仕様書（OIDC エンドポイント） |
+| [01-requirements.md](01-requirements.md) | 目的、含む / 含まない、受け入れ |
+| [02-specification.md](02-specification.md) | ログインとトークンの振る舞い |
+| [03-design.md](03-design.md) | セッション、ハッシュ、鍵 |
+| [04-test-spec.md](04-test-spec.md) | テストの観点 |
+| [05-api.md](05-api.md) | OpenID Connect のエンドポイント |
 | [06-diagrams.md](06-diagrams.md) | 図表 |
-
-## スライスと書類の対応
-
-| スライス | 状態 | 主に効く書類 |
-| --- | --- | --- |
-| 登録・ログイン Cookie | 実装済み | 要件、仕様のセッション |
-| authorize / consent / token / PKCE | 実装済み | 仕様、シーケンス、TS |
-| ID Token / JWKS / Discovery | 実装済み | 05-api |
-| refresh 回転 | 実装済み | 設計、テスト |
-| 管理 UI・クライアント CRUD | 実装済み | 05-api `/admin/api` |
-| sample-rp + logout | 実装済み | デモ、Front/Back-channel |
-| メール検証・パスキー・PAR/CIBA | 計画 / 非目標 | 要件の含まない |

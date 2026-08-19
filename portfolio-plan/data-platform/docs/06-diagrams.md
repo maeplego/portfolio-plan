@@ -1,12 +1,13 @@
-# P13 図表
+# 図表
 
 | 項目 | 値 |
 | --- | --- |
-| プロジェクト | P13 data-platform |
-| 対象スライス | 現行 DAG。P06 ソースは計画 |
+| プロダクト | data-platform（GitHub: [pf-data](https://github.com/maeplego/pf-data)） |
 | 最終更新 | 2026-08-19 |
-| 矛盾時の正 | 自動テストと製品コード、次に `DESIGN.md` |
+| 実装との関係 | この文書と実装が違うときは、製品リポジトリのコードとテストを優先する |
 | 記法 | Mermaid |
+
+## DAG
 
 ```mermaid
 flowchart LR
@@ -16,4 +17,21 @@ flowchart LR
   Gate -->|ng| Fail[job_runs failed]
   Raw --> Stg[staging]
   Stg --> Mart[marts]
+  Mart --> SQL[marts_kpis.sql]
+  Mart --> MB[Metabase profile bi]
+```
+
+Metabase は任意プロファイル。パイプライン本体とは独立に起動する。
+
+## 失敗時
+
+```mermaid
+sequenceDiagram
+  participant P as pipeline
+  participant G as validate
+  participant M as marts
+  P->>G: PIPELINE_SOURCE=broken
+  G-->>P: fail
+  Note over M: 昨日の行のまま
+  P->>P: ops.job_runs failed
 ```

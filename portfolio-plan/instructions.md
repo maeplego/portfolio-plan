@@ -73,7 +73,7 @@ Cursor ルール（`.cursor/rules/`）はこのファイルの要約である。
 人間向けの正式書類（要件定義、外部仕様、内部設計、テスト仕様、API、図表）の置き方と必須セットは `portfolio-plan/documentation.md` を正とする。
 
 - 実装チャット用の短い設計は従来どおり `portfolio-plan/<project>/DESIGN.md`
-- 面接・レビュー用は `portfolio-plan/<project>/docs/`（Git 管理。`chat-context/` とは別）
+- 人間向けの要件・仕様・設計は `portfolio-plan/<project>/docs/`（Git 管理。`chat-context/` とは別）。採用担当も読む。『面接用』と書かない
 - 未着手 Pxx に空の `docs/` は作らない
 - 矛盾したらテストとコードが正。次に `DESIGN.md`。`docs/` は追随する
 - 「書類を書いて」と言われたら `documentation.md` の必須セットを確認し、見本は `calendar/docs/`

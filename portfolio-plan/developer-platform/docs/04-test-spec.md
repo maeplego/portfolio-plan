@@ -1,11 +1,12 @@
-# P11 テスト仕様書
+# テスト仕様書
 
 | 項目 | 値 |
 | --- | --- |
-| プロジェクト | P11 developer-platform |
-| 対象スライス | scanner / CLI の `go test`、portal / ci-dash / review の `go test ./...` |
+| プロダクト | 開発者基盤（GitHub: `pf-developer-scanner`、`pf-developer-cli`、`pf-developer-portal`、`pf-developer-ci-dash`、`pf-developer-review`） |
 | 最終更新 | 2026-08-19 |
-| 矛盾時の正 | 製品リポジトリのテスト。本表と食い違ったらテストを直すか本表を追随 |
+| 実装との関係 | 製品リポジトリの `go test` を優先する。本表と違うときはテストか本表のどちらかを直す |
+
+自動化は scanner / CLI の `go test`、portal / ci-dash / review の `go test ./...`。exploit / PoC は書かない。
 
 | ID | 観点 | 期待 |
 | --- | --- | --- |

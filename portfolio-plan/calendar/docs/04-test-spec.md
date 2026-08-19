@@ -1,11 +1,12 @@
-# P05 テスト仕様書
+# テスト仕様書
 
 | 項目 | 値 |
 | --- | --- |
-| プロジェクト | P05 calendar |
-| 対象スライス | 1–11。自動化は `npm test`（slot-engine 13 + api 30 + worker 5。integration 1 は DB あり時のみ） |
-| 最終更新 | 2026-08-18 |
-| 矛盾時の正 | 製品リポジトリの vitest。本表と食い違ったらテストを直すか本表を追随 |
+| プロダクト | 予約カレンダー [pf-calendar](https://github.com/maeplego/pf-calendar) |
+| 最終更新 | 2026-08-19 |
+| 実装との関係 | 製品リポジトリの vitest を優先する。本表と食い違ったらテストを直すか本表を追随する |
+
+自動化はリポジトリルートの `npm test`（slot-engine、api、worker）。Postgres 統合 1 件は DB あり時のみ。
 
 ## 1. 方針
 
@@ -17,7 +18,7 @@
 
 メモリの同時 book は「Store 第 2 段 + イベントループ」を検証する。Postgres の真の並列 INSERT とは同じ期待結果（201 と 409）だが、ロック実装は別物。CI がメモリだけでも要件 FR-09 の回帰は拾える。本番同等の排他は手動デモか将来の integration テスト。
 
-exploit / PoC は書かない。不正 Instant の book は 409 を期待する正規テストに留める。
+攻撃手順は書かない。不正 Instant の book は 409 を期待する正規テストに留める。
 
 ## 2. エンジン（`packages/slot-engine`）
 
@@ -80,8 +81,8 @@ Clock はテストで東京 2026-03-01 00:00 などに固定する。
 
 | ID | 観点 | 期待 |
 | --- | --- | --- |
-| TS-E01 | 新規 book | outbox に `calendar.booking.confirmed` 1 件 |
-| TS-E02 | 冪等再送 | outbox 件数は増えない |
+| TS-EV01 | 新規 book | outbox に `calendar.booking.confirmed` 1 件 |
+| TS-EV02 | 冪等再送 | outbox 件数は増えない |
 
 ## 5. ワーカー
 
@@ -99,12 +100,12 @@ Clock はテストで東京 2026-03-01 00:00 などに固定する。
 | TS-M01 | Postgres gist が 23P01 を返す | `postgres.integration.test.ts`。`CALENDAR_DATABASE_URL` 必須。未起動時 skip |
 | TS-M02 | ゲスト TZ 切替 UI | `/book/:slug` 手動。API では `starts` が TZ クエリを持たないことで代替 |
 | TS-M03 | キャンセル画面 | `/cancel?token=` 手動。API は TS-B06 |
-| TS-M04 | 2 タブ手動デモ | UI 後。API では TS-B03 |
+| TS-M04 | 2 タブ手動デモ | UI。API では TS-B03 |
 | TS-M05 | Mailhog でリマインド本文 | Compose 手動 |
 
 失敗したテストを skip して緑にしない。Postgres が無い環境で TS-M01 を skip する場合は、未実施と README に書く。
 
-## 6. トレース可能性
+## 7. トレース可能性
 
 | 要件 | テスト |
 | --- | --- |

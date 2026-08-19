@@ -1,11 +1,10 @@
-# P09 図表
+# 図表
 
 | 項目 | 値 |
 | --- | --- |
-| プロジェクト | P09 attendance |
-| 対象スライス | スライス 1 |
+| プロダクト | attendance（GitHub: [pf-attendance](https://github.com/maeplego/pf-attendance)） |
 | 最終更新 | 2026-08-19 |
-| 矛盾時の正 | 自動テストと製品コード、次に `DESIGN.md` |
+| 実装との関係 | この文書と実装が違うときは、製品リポジトリのコードとテストを優先する |
 | 記法 | Mermaid |
 
 ## 1. ユースケース
@@ -17,15 +16,19 @@ flowchart LR
   Emp --> UC2[休憩する]
   Emp --> UC3[退勤する]
   Emp --> UC4[本日の分数を見る]
+  Emp --> UC5[月次カレンダーを見る]
 ```
 
-月次・承認は未実装。
+申請・承認・締めは未実装。
 
 ## 2. 画面遷移
 
 ```mermaid
 flowchart TB
   H[打刻ホーム /]
+  C[月次カレンダー /calendar]
+  H --> C
+  C --> H
 ```
 
 ## 3. 打刻
@@ -43,7 +46,19 @@ sequenceDiagram
   API-->>Web: 整数分
 ```
 
-## 4. 日境界
+## 4. 月次カレンダー
+
+```mermaid
+sequenceDiagram
+  actor U
+  participant Web
+  participant API
+  U->>Web: /calendar で月を選ぶ
+  Web->>API: GET /v1/me/month-summary?month=2026-08
+  API-->>Web: 31 日分の分数と状態
+```
+
+## 5. 日境界
 
 ```mermaid
 sequenceDiagram
@@ -55,7 +70,7 @@ sequenceDiagram
   API-->>API: workDate 2026-08-19
 ```
 
-## 5. 状態（1 勤務日）
+## 6. 状態（1 勤務日）
 
 ```mermaid
 stateDiagram-v2
@@ -67,7 +82,7 @@ stateDiagram-v2
   clocked_out --> [*]
 ```
 
-## 6. ER（論理）
+## 7. ER（論理）
 
 ```mermaid
 erDiagram

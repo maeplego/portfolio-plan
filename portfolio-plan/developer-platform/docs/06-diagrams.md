@@ -1,12 +1,12 @@
-# P11 図表
+# 図表
 
 | 項目 | 値 |
 | --- | --- |
-| プロジェクト | P11 developer-platform |
-| 対象スライス | scanner + CLI + portal + oasdiff + CI dash + review。web シェルは計画 |
+| プロダクト | 開発者基盤（GitHub: `pf-developer-cli`、`pf-developer-scanner`、`pf-developer-portal`、`pf-developer-ci-dash`、`pf-developer-review`） |
 | 最終更新 | 2026-08-19 |
-| 矛盾時の正 | 自動テストと製品コード、次に `DESIGN.md` |
-| 記法 | Mermaid |
+| 実装との関係 | この文書と実装が違うときは、製品リポジトリのコードとテストを優先する |
+
+記法は Mermaid。横断 web シェルは点線（未実装）。
 
 ```mermaid
 flowchart LR
@@ -17,7 +17,7 @@ flowchart LR
   Dev --> UC5[oasdiff で breaking を止める]
   Dev --> UC6[CI dash で Actions を見る]
   Dev --> UC7[review BFF で PR を見る]
-  Dev -.-> UC8[web シェル_計画]
+  Dev -.-> UC8[web シェル 未実装]
 ```
 
 ## ポータル画面遷移（実装済み）

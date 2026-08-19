@@ -1,12 +1,13 @@
-# P12 図表
+# 図表
 
 | 項目 | 値 |
 | --- | --- |
-| プロジェクト | P12 reliability-platform |
-| 対象スライス | 状態は実装済み。訓練 UI 本編は計画 |
+| プロダクト | reliability-platform（GitHub: [pf-reliability](https://github.com/maeplego/pf-reliability)） |
 | 最終更新 | 2026-08-19 |
-| 矛盾時の正 | 自動テストと製品コード、次に `DESIGN.md` |
+| 実装との関係 | この文書と実装が違うときは、製品リポジトリのコードとテストを優先する |
 | 記法 | Mermaid |
+
+## インシデント状態
 
 ```mermaid
 stateDiagram-v2
@@ -17,11 +18,28 @@ stateDiagram-v2
   resolved --> [*]
 ```
 
+## Webhook の再送と集約
+
 ```mermaid
 sequenceDiagram
   participant S as Sender
-  participant A as API
-  S->>A: POST events HMAC
-  S->>A: 同じ body
+  participant A as pf-reliability API
+  participant DB as Postgres
+  S->>A: POST /v1/integrations/key/events HMAC
+  A->>DB: 未解決を dedup_key で検索
+  A-->>S: incident
+  S->>A: 同じ event_id
   A-->>S: 同一 incident
 ```
+
+## 訓練採点（クラスタ操作なし）
+
+```mermaid
+flowchart LR
+  UI[Web] --> Score[POST /v1/training/score]
+  Score --> Eng[packages/scenario]
+  Eng -->|rollback| Pass[合格]
+  Eng -->|scale| Fail[減点]
+```
+
+訓練 UI の本編と履歴は計画。状態機械と採点 HTTP は実装済み。

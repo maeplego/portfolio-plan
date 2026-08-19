@@ -1,13 +1,10 @@
-# P15 テスト仕様書
+# テスト仕様書
 
 | 項目 | 値 |
 | --- | --- |
-| プロジェクト | P15 habit-tracker |
-| 対象スライス | 1 |
+| プロダクト | habit-tracker（GitHub: [pf-habit-mobile](https://github.com/maeplego/pf-habit-mobile)、[pf-habit-api](https://github.com/maeplego/pf-habit-api)） |
 | 最終更新 | 2026-08-19 |
-| 矛盾時の正 | 自動テストと製品コード、次に `DESIGN.md` |
-
-矛盾したら自動テストが正。
+| 実装との関係 | モバイルは `src/domain` の `npm test`。API は `npm test`。この表と食い違ったらテストかこの文書を直す |
 
 | ID | 観点 | 操作 | 期待 | 自動化 |
 | --- | --- | --- | --- | --- |
@@ -20,9 +17,9 @@
 | TS-S04 | 年末ストリーク | 12/30–1/1 | 3 | 同上 |
 | TS-S05 | 週 3 回 | 3 週連続で 3 日 | 3 週。1 週飛ばすと 1 | 同上 |
 | TS-C01 | カレンダー | 2026-08 | 先頭が月曜 2026-07-27 | `calendar.test.ts` |
+| TS-ST01 | 30 日窓 | 完了 3 日、今日 8/19 | from 7/21、rate 3/30、ストリーク 2 | `stats.test.ts` |
 | TS-A01 | API 隔離 | alice の習慣を bob が GET/PUT | 404、一覧 0 件 | api `app.test.ts` |
 | TS-A02 | 日付形式 | ログ日付に `...T00:00:00Z` | 400 | 同上 |
 | TS-A03 | シード | demo vs other | demo 5 件、other 0 | 同上 |
-| TS-ST01 | 30 日窓 | 完了 3 日、今日 8/19 | from 7/21、rate 3/30、ストリーク 2 | `stats.test.ts` |
-| TS-M01 | 手動 | Expo でチェック → 再起動 | SQLite に残る | なし |
+| TS-M01 | 手動 | Expo でチェック → 再起動 | SQLite に残る。API は呼ばない | なし |
 | TS-M02 | 手動 | Compose `/ready` | 200 | なし |

@@ -1,11 +1,10 @@
-# P14 図表
+# 図表
 
 | 項目 | 値 |
 | --- | --- |
-| プロジェクト | P14 personal-finance |
-| 対象スライス | スライス 1 |
+| プロダクト | personal-finance（GitHub: [pf-finance](https://github.com/maeplego/pf-finance)） |
 | 最終更新 | 2026-08-19 |
-| 矛盾時の正 | 自動テストと製品コード、次に `DESIGN.md` |
+| 実装との関係 | この文書と実装が違うときは、製品リポジトリのコードとテストを優先する |
 | 記法 | Mermaid |
 
 ## 1. ユースケース
@@ -17,7 +16,8 @@ flowchart LR
   User --> UC2[取引を追加する]
   User --> UC3[予算を置く]
   User --> UC4[グラフを見る]
-  User --> UC5[PWAを入れる]
+  User --> UC5[CSV入出力]
+  User --> UC6[PWAを入れる]
 ```
 
 ## 2. 画面遷移
@@ -29,6 +29,8 @@ flowchart TB
   H --> R
   R --> H
 ```
+
+CSV 操作はホーム上。起動の正は Compose。Kubernetes は ops overlay 経由。
 
 ## 3. 取引追加
 
@@ -47,7 +49,22 @@ sequenceDiagram
   API-->>Web: 整数の合計
 ```
 
-## 4. 認可
+## 4. CSV
+
+```mermaid
+sequenceDiagram
+  actor U
+  participant Web
+  participant API
+  U->>Web: 書き出し
+  Web->>API: GET /v1/export.csv?month=
+  API-->>Web: text/csv
+  U->>Web: 取り込み
+  Web->>API: POST /v1/import
+  API-->>Web: 201 imported
+```
+
+## 5. 認可
 
 ```mermaid
 sequenceDiagram
@@ -61,7 +78,7 @@ sequenceDiagram
   API-->>Bob: transactions []
 ```
 
-## 5. ER（論理）
+## 6. ER（論理）
 
 ```mermaid
 erDiagram

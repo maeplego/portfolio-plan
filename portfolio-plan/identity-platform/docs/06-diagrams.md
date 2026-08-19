@@ -1,12 +1,13 @@
-# P01 図表
+# 図表
 
 | 項目 | 値 |
 | --- | --- |
-| プロジェクト | P01 identity-platform |
-| 対象スライス | 認可コード。画面は実装済みログイン / Consent |
+| プロダクト | 認証基盤 [pf-identity](https://github.com/maeplego/pf-identity) |
 | 最終更新 | 2026-08-19 |
-| 矛盾時の正 | 自動テストと製品コード、次に `DESIGN.md` |
+| 実装との関係 | この文書と実装が違うときは、製品リポジトリのコードとテストを優先する |
 | 記法 | Mermaid |
+
+ログイン画面と Consent は実装済み。メール検証やパスキーは図に含めない（未実装または非目標）。
 
 ```mermaid
 flowchart LR
@@ -30,5 +31,3 @@ sequenceDiagram
   RP->>IdP: /token
   IdP->>RP: tokens
 ```
-
-未実装: メール検証フロー、パスキー。計画として図に足さない（非目標に近いものは書かない）。

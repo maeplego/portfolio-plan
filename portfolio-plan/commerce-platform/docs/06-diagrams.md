@@ -1,12 +1,12 @@
-# P06 図表
+# 図表
 
 | 項目 | 値 |
 | --- | --- |
-| プロジェクト | P06 commerce-platform |
-| 対象スライス | シーケンスはスライス 6。overlay D は P06 サブセット（新サービス未搭載） |
+| プロダクト | EC コマース（GitHub: `pf-commerce`） |
 | 最終更新 | 2026-08-19 |
-| 矛盾時の正 | 自動テストと製品コード、次に `DESIGN.md` |
-| 記法 | Mermaid。ユースケースは UML 楕円の代替としてフロー |
+| 実装との関係 | この文書と実装が違うときは、製品リポジトリのコードとテストを優先する |
+
+記法は Mermaid。ユースケースは UML 楕円の代わりにフローで書く。Kubernetes 連携デモの commerce 構成には payment / notify / BFF / ops-web と推薦 API（`pf-recommend`）が含まれる。
 
 ## 1. ユースケース
 
@@ -16,7 +16,7 @@ flowchart LR
     Buyer[購入者]
     Ops[ops]
   end
-  subgraph uc [P06 スライス2]
+  subgraph uc [購入と在庫]
     UC1[商品を見る]
     UC2[カートに入れる]
     UC3[チェックアウトする]
@@ -95,7 +95,27 @@ sequenceDiagram
 
 在庫 1 に数量 2 の単独リクエストでは、Reserve が shortage のあと `ReleaseOrder` が空の held を見る。残高は UPDATE が 0 行なので減っていない。
 
-## 5. 注文状態
+## 5. 推薦スロット（fail-closed）
+
+```mermaid
+sequenceDiagram
+  participant SF as storefront
+  participant BFF as bff
+  participant Rec as pf-recommend
+  participant Cat as catalog
+  SF->>BFF: GraphQL recommended
+  BFF->>Cat: GET /v1/products
+  BFF->>Rec: GET /v1/recommend namespace=commerce
+  alt 2xx かつ SKU がカタログにある
+    Rec-->>BFF: items[].item_id
+    BFF-->>SF: source recommend fallback false
+  else 失敗・空・未マップ
+    Rec-->>BFF: 5xx / 空 / 未知 SKU
+    BFF-->>SF: source popularity fallback true
+  end
+```
+
+## 6. 注文状態
 
 ```mermaid
 stateDiagram-v2
@@ -109,7 +129,7 @@ stateDiagram-v2
 
 `Ship` は paid 以外を拒否。決済モックはカードを持たない。
 
-## 6. ER（論理）
+## 7. ER（論理）
 
 ```mermaid
 erDiagram

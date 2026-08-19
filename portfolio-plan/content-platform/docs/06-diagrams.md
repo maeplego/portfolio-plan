@@ -1,12 +1,12 @@
-# P08 図表
+# 図表
 
 | 項目 | 値 |
 | --- | --- |
-| プロジェクト | P08 content-platform |
-| 対象スライス | シーケンス・状態・ER はスライス 1。overlay E は P08 連携デモ |
+| プロダクト | コンテンツ基盤（GitHub: `pf-content-blog`、`pf-content-shortener`） |
 | 最終更新 | 2026-08-19 |
-| 矛盾時の正 | 自動テストと製品コード、次に `DESIGN.md` |
-| 記法 | Mermaid。ユースケースは UML 楕円の代替としてフロー |
+| 実装との関係 | この文書と実装が違うときは、製品リポジトリのコードとテストを優先する |
+
+記法は Mermaid。ユースケースは UML 楕円の代わりにフローで書く。Kubernetes の content 構成は Compose の任意の連携デモであり、開発者ポータルは載せない。
 
 ## 1. ユースケース
 
@@ -16,20 +16,23 @@ flowchart LR
     Reader[読者]
     Editor[編集者]
   end
-  subgraph uc [P08 スライス1]
+  subgraph uc [記事と短縮]
     UC1[公開記事を読む]
     UC2[下書きをプレビューする]
     UC3[公開する]
     UC4[短縮 URL を作る]
     UC5[短縮を踏む]
+    UC6[日次クリックを見る]
   end
   Reader --> UC1
   Reader --> UC5
   Editor --> UC2
   Editor --> UC3
   Editor --> UC4
+  Editor --> UC6
   UC3 --> UC4
   UC4 --> UC5
+  UC5 --> UC6
 ```
 
 ## 2. 画面遷移
@@ -38,14 +41,17 @@ flowchart LR
 flowchart TB
   Home[公開一覧 /]
   Post[記事 /posts/slug]
+  OG[OG /posts/slug/opengraph-image]
   Demo[デモ /demo]
   Admin[管理 /admin]
   Preview[プレビュー /admin/preview/slug]
   Home --> Post
+  Post --> OG
   Home --> Demo
   Home --> Admin
   Admin --> Preview
   Admin -->|Publish| Post
+  Admin -->|Draft Mode| Post
   Admin -->|shorten| Short[短縮 302]
   Short --> Post
   Draft404[下書き公開 URL 404]
@@ -67,7 +73,7 @@ sequenceDiagram
   Go->>DB: click_count + click_daily
 ```
 
-## 4. 下書き漏洩させない
+## 4. 下書きを公開 URL に出さない
 
 ```mermaid
 sequenceDiagram
@@ -79,6 +85,9 @@ sequenceDiagram
   Editor->>Blog: Dev login
   Editor->>Blog: GET /admin/preview/notes-on-scheduled-posts
   Blog-->>Editor: 200 Markdown
+  Editor->>Blog: POST /api/draft
+  Editor->>Blog: GET /posts/notes-on-scheduled-posts
+  Blog-->>Editor: 200 + Draft Mode バナー
 ```
 
 ## 5. 記事状態

@@ -1,10 +1,23 @@
-# P13 外部仕様書
+# 外部仕様書
 
 | 項目 | 値 |
 | --- | --- |
-| プロジェクト | P13 data-platform |
-| 対象スライス | Compose パイプライン。BI は未実装 |
+| プロダクト | data-platform（GitHub: [pf-data](https://github.com/maeplego/pf-data)） |
 | 最終更新 | 2026-08-19 |
-| 矛盾時の正 | 自動テストと製品コード、次に `DESIGN.md` |
+| 実装との関係 | この文書と実装が違うときは、製品リポジトリのコードとテストを優先する |
 
-Dagster ジョブ `fictional_csv_sales`: extract → validate → load → dbt。`PIPELINE_SOURCE=broken` は負の数量等で validate 失敗。staging/marts はロードしない。フルリフレッシュ（raw truncate）。日付パーティションの P06 オブジェクトは計画。
+公開の製品 HTTP API は無い。利用者から見える口は Compose の一回実行、Dagster UI、Postgres の SQL、任意の Metabase である。
+
+## パイプライン
+
+Dagster ジョブ `fictional_csv_sales` は extract → validate → load → dbt。ソースは架空 CSV（MinIO）。`PIPELINE_SOURCE=broken` は負の数量などで validate 失敗し、staging / marts をロードしない。成功時は raw を truncate してフルリフレッシュする（同じシードを二度回しても duplication しない）。
+
+金額は整数円。mart は `marts.daily_sales` と `marts.sales_by_product`。品質失敗で「昨日の mart」を中途更新しない（ゲートが先）。
+
+## BI
+
+Metabase は **Compose の任意プロファイル `bi`**。既定の `up` では起動しない。使うときは `docker compose --profile bi up -d metabase`（ポート 3313）。読むスキーマは `marts`（と健全性の `ops.job_runs`）。ダッシュボードの最小経路は `bi/dashboards/marts_kpis.sql`。計画だけではない。
+
+## まだ無いもの
+
+[pf-commerce](https://github.com/maeplego/pf-commerce) の日付パーティション JSON コネクタ、[pf-talent-api](https://github.com/maeplego/pf-talent-api) の集計コネクタ、Spark / CDC、本番 DWH 移行。

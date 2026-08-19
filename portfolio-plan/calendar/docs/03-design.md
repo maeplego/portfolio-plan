@@ -1,13 +1,12 @@
-# P05 内部設計書
+# 内部設計書
 
 | 項目 | 値 |
 | --- | --- |
-| プロジェクト | P05 calendar |
-| 対象スライス | 1–7 の実装 |
-| 最終更新 | 2026-08-18 |
-| 矛盾時の正 | 自動テストと製品コード、次に `DESIGN.md` |
+| プロダクト | 予約カレンダー [pf-calendar](https://github.com/maeplego/pf-calendar) |
+| 最終更新 | 2026-08-19 |
+| 実装との関係 | この文書と実装が違うときは、製品リポジトリのコードとテストを優先する |
 
-要件の「何を守るか」に対し、モジュールと永続化で「どう守るか」。スタック選定の短文は `DESIGN.md`。
+要件の「何を守るか」に対し、モジュールと永続化で「どう守るか」。スタック選定の短文は親の `DESIGN.md`。
 
 ## 1. 全体構成
 
@@ -15,9 +14,9 @@
 pf-calendar/
   packages/slot-engine   純関数。ホスト TZ の壁時計 → Instant[]
   apps/api               Hono。HTTP、認可、再検証、永続化
-  apps/web               未実装。枠計算も book も置かない
-  apps/worker            未実装
-  deploy/                Postgres + API
+  apps/web               公開予約とホスト UI。枠計算も book も置かない
+  apps/worker            リマインドと outbox webhook
+  deploy/                Postgres + API + Web + worker + Mailhog
 ```
 
 予約確定の正は `apps/api`。slot-engine は「この条件ならどの Instant がオファーか」だけを返す。UI が同じ関数を表示用に呼んでも、INSERT してよい根拠にはしない。
@@ -28,7 +27,7 @@ Store はインタフェース。`MemoryStore`（テスト・DB なし起動）�
 
 | 層 | 型 | 役割 |
 | --- | --- | --- |
-| ルール | `dayOfWeek` + `startLocal`/`endLocal` + `hostTimeZone` | 正本の意図 |
+| ルール | `dayOfWeek` + `startLocal`/`endLocal` + `hostTimeZone` | ホストが決めた空きの意図 |
 | 例外 | ホスト現地 `PlainDate` | その暦日を生成対象から外す |
 | engine 入出力 | `Temporal.Instant` | 比較可能な一点 |
 | HTTP | Instant の ISO 文字列 | 言語非依存の契約 |
@@ -136,7 +135,7 @@ Postgres は INSERT 文の評価と制約をストレージのロック下で行
 
 ホスト → イベントタイプ 1:N。ルール・例外・予約はイベントタイプに従属。
 
-`bookings.during` は `tstzrange(start_at, end_at, '[)')` の生成列。半開で隣接枠（9:00–9:30 と 9:30–10:00）は重ならない。exclusion は `status = 'confirmed'` のみ。キャンセル状態を足すときは、確定だけが排他に残るようにする。
+`bookings.during` は `tstzrange(start_at, end_at, '[)')` の生成列。半開で隣接枠（9:00–9:30 と 9:30–10:00）は重ならない。exclusion は `status = 'confirmed'` のみ。キャンセル後は排他対象外。
 
 キャンセルトークンは sha256 ハッシュを保存。平文は 201 のときだけ。ログ禁止。
 
@@ -149,22 +148,22 @@ Postgres は INSERT 文の評価と制約をストレージのロック下で行
 | `app.ts` | バリデーション、再検証してから store | Instant を検証なし INSERT |
 | Store | 永続化と重なり/一意の最後の拒否 | ホスト壁時計の解釈 |
 
-## 6. セキュリティ設計（現状）
+## 6. セキュリティ設計（現行）
 
 - 公開 API は認証なし。返すフィールドを最小にする
 - ホスト資源はサーバー側で host id を照合。UI の非表示を認可にしない
 - 409 本文に他ゲスト PII を出さない（同時失敗側にもメールを返さない）
-- OIDC 未接続。`CALENDAR_DEV_AUTH` が本番相当ではない
+- ホスト OIDC は任意。単体デモ既定は `CALENDAR_DEV_AUTH`。本番相当ではない
 
-## 7. デプロイ（現状）
+## 7. デプロイ（現行）
 
 Compose: Web `:3005`、API `:8095`、Postgres `:5434`、Mailhog `:8025`、worker。`CALENDAR_DATABASE_URL` が空ならメモリ（複数プロセスで共有されない。デモに使わない）。
 
-## 8. スライス 4–7 で増えた内部要素
+## 8. 現行で増えた内部要素
 
-| スライス | 設計インパクト |
+| 範囲 | 設計インパクト |
 | --- | --- |
-| 4 Web + OIDC | book は Route Handler に移さない。BFF は API を呼ぶだけ |
-| 5 cancel | トークン照合はハッシュ比較。status 変更後は exclusion 対象外 |
-| 6 worker | `start_at`（UTC）とサーバー now でリマインド。ゲスト TZ は本文用 |
-| 7 P10 | 同じ Instant 契約。ホストは企業ユーザーの `sub`。`external_ref` で求人と event type を紐付け |
+| Web + OIDC | book は Route Handler に移さない。BFF は API を呼ぶだけ |
+| cancel | トークン照合はハッシュ比較。status 変更後は exclusion 対象外 |
+| worker | `start_at`（UTC）とサーバー now でリマインド。ゲスト TZ は本文用 |
+| 求人連携 | 同じ Instant 契約。ホストは企業ユーザーの `sub`。`external_ref` で求人と event type を紐付け。受信は [pf-talent-api](https://github.com/maeplego/pf-talent-api) 側が未実装 |

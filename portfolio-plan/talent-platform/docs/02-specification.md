@@ -1,157 +1,55 @@
-# P10 外部仕様書
+# 外部仕様書
 
 | 項目 | 値 |
 | --- | --- |
-| プロジェクト | P10 talent-platform |
-| 対象スライス | P10 最小 + 検索フィルタ + 保存検索 + 一覧 ACL |
+| プロダクト | talent-platform（GitHub: [pf-talent-api](https://github.com/maeplego/pf-talent-api)、[pf-talent-web](https://github.com/maeplego/pf-talent-web)） |
 | 最終更新 | 2026-08-19 |
-| 矛盾時の正 | 自動テストと製品コード、次に `DESIGN.md`。HTTP の細部は [05-api.md](05-api.md) |
+| 実装との関係 | この文書と実装が違うときは、製品リポジトリのコードとテストを優先する。HTTP の細部は [05-api.md](05-api.md) |
+
+候補者と企業から見た求人検索・応募・応募ステータス。予約の空き計算は [pf-calendar](https://github.com/maeplego/pf-calendar) に任せる。類似求人の学習モデルは [pf-recommend](https://github.com/maeplego/pf-recommend) があれば使う。
 
 ## 時刻
 
-- 本 MVP は時刻を保持・表示しない。ただし webhook エンベロープの `occurredAt` を受け取っても内部更新に使わない。
+この範囲では応募の業務時刻を保持・表示しない。カレンダー webhook の `occurredAt` を受け取っても内部更新には使わない。
 
-## webhook 契約（P05 → P10）
+## 応募ステータス
+
+`applied` → `document_passed` → `interview` → `offered`。どの時点でも `rejected` へ。ここでの **interview** は選考の面接段階であり、人事面接の練習資料という意味ではない。不正な飛び越し（例: `applied` → `interview`）は 409。
+
+## webhook（pf-calendar → pf-talent-api）
 
 - HTTP: `POST /webhooks/calendar`
-- 必須ヘッダ:
-  - `X-Calendar-Event-Type: calendar.booking.confirmed`
-- 必須本文:
-  - `calendar.booking.confirmed` エンベロープ（`id`, `type`, `occurredAt`, `data` を含む）
-- `data.externalRef`：
-  - **MVP では job id**。P05 の `event_type.externalRef` を P10 の application に紐付けるためのキー。
+- 必須ヘッダ: `X-Calendar-Event-Type: calendar.booking.confirmed`
+- 必須本文: `calendar.booking.confirmed` エンベロープ（`id`, `type`, `occurredAt`, `data`）
+- `data.externalRef`: いまは **job id**。pf-calendar の `event_type.externalRef` を応募へ紐付ける
 
-### 成功時
+対象応募があれば `200 { ok: true, matched: true, applicationId, status }`。無ければ `200 { ok: true, matched: false }`。ヘッダ不一致 / 本文不正は `400 invalid_request`。
 
-- 対象 application がある場合: `200 { ok: true, matched: true, applicationId, status }`
-- 対象 application がない場合: `200 { ok: true, matched: false }`
+## 検索と一覧
 
-### エラー
+公開の `GET /v1/jobs` は published のみ。`q` は Postgres の全文検索と trigram 部分一致を OR する（日本語の途中一致を含む）。フィルタ無しは `created_at` 順。`q` があるときは関連度が先。OpenSearch は使わない。
 
-- ヘッダ不一致 / ペイロード不正: `400 { error: { code: "invalid_request", message } }`
+下書きは企業向け `GET /v1/employers/:sub/jobs`。応募一覧は当事者の開発ヘッダ（または Bearer）が一致しないと 403。ゲスト画面は無い。Web は `?user=` 必須。
 
-## API 契約（MVP）
+## 保存検索
 
-### `POST /v1/jobs`
+候補者が条件を名前付きで保存し、`run` でいまの published 求人に対して同期再実行する。非同期ワーカーは無い。
 
-入力:
+## 面接枠
 
-```json
-{ "employerSub": "employer-1", "title": "Backend Engineer", "status": "published" }
-```
+`GET /v1/applications/:id/interview-slots` は、応募が `document_passed` または `interview` のときだけ、pf-calendar の公開枠 API を返す。枠 UI は再実装しない。対応する event type が無ければ 404。範囲クエリは必須。
 
-出力: job そのもの（`id` 含む）。詳細は `05-api.md`。
+## 類似求人
 
-### `POST /v1/jobs/:id/applications`
+`GET /v1/jobs/:id/similar` は `source: "recommend" | "fallback"` を返す。
 
-入力:
+- `RECOMMEND_API_URL` が設定され、pf-recommend の `/v1/similar-items?namespace=jobs` が成功し、かつスキル重なりがローカル順位と同等以上なら `recommend`
+- 未接続・失敗・スキル重なりが明らかに劣る場合は **スキル重なりに閉じる**（`fallback`）。推薦結果を無理に採用しない
 
-```json
-{ "candidateSub": "candidate-1", "resumeSnapshot": "..." }
-```
+## ファセットと通報
 
-出力: application（`id`, `jobId`, `status`, `calendarExternalRef` を含む）。
-MVP では `calendarExternalRef` は **`jobId` と同じ値**で初期化する。
+`GET /v1/jobs/facets` は現在の検索条件に対する published の件数。通報は `POST /v1/reports`。一覧は open のみ。
 
-### `PUT /v1/applications/:id/calendar-link`
+## シード
 
-入力:
-
-```json
-{ "externalRef": "job-id-or-externalRef" }
-```
-
-出力: 更新後 application。
-
-### `PATCH /v1/applications/:id/status`
-
-入力:
-
-```json
-{ "status": "applied" | "document_passed" | "interview" | "rejected" }
-```
-
-出力: 更新後 application。
-
-### `GET /v1/applications/:id`
-
-出力: application。存在しない場合 `404 not_found`。
-
-### `GET /v1/jobs` の `q`
-
-Postgres では `jobs.search_tsv`（`simple`）の全文検索と `pg_trgm` による部分一致・類似を OR する。フィルタ無しのときは published を `created_at` 順。`q` があるときは関連度（`ts_rank_cd` と title の trigram）を先にし、同点は `created_at`。OpenSearch は使わない。
-
-### `POST /v1/saved-searches`
-
-候補者の保存検索を作成する。`name` と検索条件を保存し、後続の新着判定に使う。
-
-### `GET /v1/candidates/:sub/saved-searches`
-
-候補者に紐づく保存検索一覧を返す。
-
-### `POST /v1/saved-searches/:id/run`
-
-保存検索を現在時点で再実行し、`matchedJobs` と `matchedCount` を返す。MVP では非同期ジョブ化せず同期で返す。
-
-### `GET /v1/applications/:id/interview-slots`
-
-P05 calendar の `GET /public/:slug/slots` を利用して候補スロットを返す。P10 側ではまず internal API でホストの event type 一覧を取得し、`externalRef = job.id` の event type を探して slug を特定する。
-
-- `rangeStart`, `rangeEnd` は必須
-- application が `document_passed` または `interview` でない場合は `409 invalid_state`
-- 対応する event type が無ければ `404`
-
-### `GET /v1/jobs/:id/similar`
-
-類似求人一覧を返す。
-
-- `RECOMMEND_API_URL` が設定され、P07 `/v1/similar-items?namespace=jobs&item_id=&k=` が成功する場合はその結果を使う
-- P07 が未接続または失敗時は P10 内の `skills` overlap でフォールバック
-- 返り値には `source: "recommend" | "fallback"` を含む
-
-### ファセット件数
-
-### `GET /v1/jobs/facets`
-
-現在の検索条件（`q`, `employmentType`, `remote`, `skills`, `salaryMin`, `salaryMax`）を使い、published jobs への facet counts を返す。
-
-- 成功: `200 { total, employmentType, remote, skills }`
-
-### 管理通報
-
-### `POST /v1/reports`
-
-通報を作成する。
-
-入力:
-
-```json
-{ "reporterSub": "candidate-1", "jobId": "job-id", "reason": "spam" }
-```
-
-成功: `201 { id, reporterSub, jobId, reason, status: "open", createdAt }`
-
-### `GET /v1/reports`
-
-通報一覧を返す（MVP では `open` のみ表示）。
-
-### `GET /v1/jobs/:id`
-
-存在する求人を返す。無い id は `404`。
-
-### `GET /v1/employers/:sub/jobs`
-
-企業の求人一覧（draft 含む）。`X-Dev-User-Sub` ≠ `:sub` なら `403`。
-
-### `GET /v1/jobs/:id/applications`
-
-求人の応募一覧。他社ヘッダは `403`。求人が無ければ `404`。
-
-### `GET /v1/candidates/:sub/applications`
-
-候補者の応募一覧。ヘッダ ≠ `:sub` なら `403`。
-
-### `POST /v1/dev/seed`
-
-架空デモ求人を投入。起動時にも空ストアへ投入する。
-
+`POST /v1/dev/seed` と起動時の空ストア投入。架空企業。実在企業名は使わない。

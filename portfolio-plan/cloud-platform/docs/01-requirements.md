@@ -1,69 +1,69 @@
-# P02 要件定義書
+# 要件定義書
 
 | 項目 | 値 |
 | --- | --- |
-| プロジェクト | P02 cloud-platform |
-| 対象スライス | 受け入れはローカル観測と連携 overlay。AWS `apply` は合格条件に含めない |
+| プロダクト | クラウド基盤（観測 [pf-cloud-o11y](https://github.com/maeplego/pf-cloud-o11y)、Kubernetes [pf-cloud-k8s](https://github.com/maeplego/pf-cloud-k8s)、Terraform [pf-cloud-aws](https://github.com/maeplego/pf-cloud-aws)） |
 | 最終更新 | 2026-08-19 |
-| 矛盾時の正 | 自動テストと製品コード、次に `DESIGN.md` |
+| 実装との関係 | この文書と実装が違うときは、製品リポジトリのコードとテストを優先する |
 
 ## 1. 背景と目的
 
-各製品リポジトリに VPC や Grafana をコピーすると、計装キーと破棄手順がすぐドリフトする。「アプリの箱」と「見る手段」を標準化する。学習用であり、本番クラウド運用の置き換えではない。
+各製品リポジトリに VPC や Grafana をコピーすると、計装キーと破棄手順がすぐドリフトする。「アプリの箱」と「見る手段」を標準化する。学習用であり、商用クラウド運用の置き換えではない。
 
-ローカルデモは 2 モードだけを必須にする。AWS 3-tier は面接で構成を話すための Terraform モジュールであり、このポートフォリオは **本番として AWS に載せない。**
+ローカルデモは **単体 Compose** と **Docker Desktop Kubernetes の用途別 overlay** の 2 モード。AWS 3-tier はモジュールと配線が成果物である。このポートフォリオは **AWS へ `terraform apply` しない。**
 
-## 2. スコープ
-
-### 含む（現状スライスで満たす）
+## 2. 含む
 
 - Compose で Collector / Prometheus / Loki / Tempo / Grafana を起動し、サンプルアプリの RED とトレースを相関できる
-- アプリは OTLP を Collector に送り、ベンダー SDK を Grafana / Tempo に直接繋がない
-- Docker Desktop Kubernetes 上の用途別 overlay（A foundation、B collab + P11 portal、C scheduling-talent、D commerce サブセット、E content、F ops）
+- アプリは OTLP を Collector に送る。ベンダー SDK を Grafana / Tempo に直接繋がない
+- Docker Desktop Kubernetes 上の用途別 overlay（A foundation、B collab + 開発者ポータル、C scheduling-talent、D commerce、E content、F ops）
+- overlay D は EC [pf-commerce](https://github.com/maeplego/pf-commerce) の payment / notify / BFF / ops-web と推薦 [pf-recommend](https://github.com/maeplego/pf-recommend) を含む
 - `GET /health` と `GET /ready`、JSON ログの最低キー
-- P09 向け 3-tier モジュール（VPC / ALB / ECS / RDS / GitHub OIDC / 請求アラーム）と `terraform fmt` / `validate`
+- 勤怠 [pf-attendance](https://github.com/maeplego/pf-attendance) 向け 3-tier モジュール（VPC / ALB / ECS / RDS / GitHub OIDC / 請求アラーム）と `terraform fmt` / `validate`
 
-### 含まない（意図的。「できた」扱いにしない）
+## 3. 含まない
 
 | 項目 | 理由 |
 | --- | --- |
-| AWS への `terraform apply` / 本番相当の常時稼働 | 非目標。課金と秘密の正本を個人アカウントに置かない |
-| overlay D への P11 / P12 / P13 | 計画。いまの D は P06 フル + P07 |
-| overlay E への P11 portal | 計画。B には portal を載せた |
-| サービスメッシュ、マルチリージョン、長期保持の課金最適化 | 非目標 |
-| 15 Pxx を 1 クラスタで同時フル起動 | 非目標 |
+| AWS への `terraform apply` と本番相当の常時稼働 | 課金と秘密の正本を個人アカウントに置かない |
+| overlay D への開発者ポータル / 信頼性 / データ基盤 | いまの D は EC フルと推薦まで |
+| overlay E への開発者ポータル | B に portal を載せた |
+| サービスメッシュ、マルチリージョン、長期保持の課金最適化 | 範囲外 |
+| 15 製品を 1 クラスタで同時フル起動 | メモリ制約。用途別に切る |
 
-## 3. アクター
+## 4. アクター
 
-| アクター | 定義 | 認証（現状） |
+| アクター | 定義 | 認証 |
 | --- | --- | --- |
-| レビュア | Compose または overlay を起動する人 | なし。Grafana はローカルパスワード |
-| 製品アプリ | OTLP と health を守る `pf-*` | 各 Pxx の dev 認証または P01 |
-| オペレーター（自分） | overlay 切替、イメージ build | kubectl context `docker-desktop` |
-| P12（将来） | アラート webhook を受ける | 計画。今は o11y の debug 注入 |
+| レビュア | Compose または overlay を起動する人 | Grafana はローカルパスワード |
+| 製品アプリ | OTLP と health を守る `pf-*` | 各製品の開発認証または認証基盤 [pf-identity](https://github.com/maeplego/pf-identity) |
+| オペレーター | overlay 切替、イメージ build | kubectl context `docker-desktop` |
+| 信頼性基盤 [pf-reliability](https://github.com/maeplego/pf-reliability) | アラート webhook の受け口（任意） | 観測側の debug 注入が現行のデモ |
 
-## 4. 前提・制約
+## 5. 前提
 
-- 単体デモは各 `pf-*/deploy/compose.yaml`。連携デモは Docker Desktop Kubernetes。採用の既定は REVIEW.md の Compose パック（K8s オフで可）
+- 単体デモは各 `pf-*/deploy/compose.yaml`。連携デモは Docker Desktop Kubernetes
+- 採用の既定経路は `portfolio-plan/REVIEW.md` の Compose パック（Kubernetes オフで可）
 - standalone kind をレビュア手順の正にしない
-- Terraform state の完成形は S3 + lock だが、apply しないならローカル validate で足りる
+- Terraform state の完成形は S3 + lock だが、apply しないためローカル `validate` で足りる
 - NAT 二重、多 AZ RDS を個人課金で再現しない
 
-## 5. 機能要件
+## 6. 機能要件
 
 | ID | 要件 | なぜ |
 | --- | --- | --- |
 | FR-01 | 観測スタックを Compose だけで起動できる | レビュアが AWS 無しで RED を見る |
-| FR-02 | サンプルアプリが Collector 経由でメトリクス・ログ・トレースを出す | 直接 Tempo 送信だと P02 の意味が消える |
+| FR-02 | サンプルアプリが Collector 経由でメトリクス・ログ・トレースを出す | 直接 Tempo 送信だと観測基盤の意味が消える |
 | FR-03 | 障害注入（高レイテンシ / 5xx）で Grafana 上の症状が変わる | 症状ベースのデモ |
 | FR-04 | 連携 overlay は用途別に分け、同時フル起動しない | 12 GB 制約 |
 | FR-05 | 製品 manifest 本文は各 `pf-*/deploy/k8s/`、束ねは `pf-cloud-k8s` | ライフサイクル分離 |
 | FR-06 | アプリは `/health` と `/ready` を持つ | kubelet とデモ smoke |
-| FR-07 | Terraform モジュールは fmt + validate できる | 面接で 3-tier をコードとして示す |
+| FR-07 | Terraform モジュールは `fmt` と `validate` できる | 3-tier をコードとして示す。apply はしない |
 | FR-08 | README に学習用・destroy・概算コストを書く | 誤 apply と放置課金 |
-| FR-09 | レビュアが K8s なしで 3 点セットを Compose パック起動できる | 12 GB overlay を既定にしない |
+| FR-09 | レビュアが Kubernetes なしで Compose パックを起動できる | overlay を既定にしない |
+| FR-10 | overlay D は payment / notify / BFF / ops-web と推薦 API を載せる | Compose と同じプロセス集合 |
 
-## 6. 非機能要件
+## 7. 非機能
 
 | ID | 要件 | なぜ |
 | --- | --- | --- |
@@ -73,12 +73,11 @@
 | NFR-04 | SSH `0.0.0.0/0:22` をモジュールに置かない | 踏み台を作らない |
 | NFR-05 | 観測スタックの保持は数日 | ディスク |
 
-## 7. 受け入れ
+## 8. 受け入れ
 
-次を示せたら、この要件定義の対象範囲は満たす。AWS 上で ALB が応答することは含めない。
-
-1. `pf-cloud-o11y` Compose で Grafana が開き、demo-api の `/work` がトレースにつながる
+1. `pf-cloud-o11y` の Compose で Grafana が開き、demo-api の `/work` がトレースにつながる
 2. debug slow / fail で p95 または 5xx がダッシュボードに出る
-3. 採用経路: `REVIEW.md` の Compose パックを起動できる。K8s overlay smoke は任意（`integration-demo.md`）
+3. `REVIEW.md` の Compose パックを起動できる。Kubernetes overlay の smoke は任意
 4. `terraform -chdir=envs/dev-p09-attendance init -backend=false` のあと `validate` が成功する
 5. README に「本番 apply しない」「destroy / コスト」がある
+6. AWS 上で ALB が応答することは受け入れに入れない

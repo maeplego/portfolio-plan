@@ -1,78 +1,57 @@
-# P10 内部設計書
+# 内部設計書
 
 | 項目 | 値 |
 | --- | --- |
-| プロジェクト | P10 talent-platform |
-| 対象スライス | P10 最小 + 検索フィルタ + 保存検索 + 一覧 ACL + Postgres |
+| プロダクト | talent-platform（GitHub: [pf-talent-api](https://github.com/maeplego/pf-talent-api)、[pf-talent-web](https://github.com/maeplego/pf-talent-web)） |
 | 最終更新 | 2026-08-19 |
-| 矛盾時の正 | 自動テストと製品コード、次に `DESIGN.md` |
+| 実装との関係 | この文書と実装が違うときは、製品リポジトリのコードとテストを優先する |
 
 ## 構成
 
-- `pf-talent-api`：Hono で API と webhook を同一サービス内に持つ。
-- `pf-talent-web`：Next.js（ポート 3010）。`TALENT_API_URL` と `X-Dev-User-Sub`。
-- overlay C では Ingress で `talent.localhost` を web、`talent-api.localhost` を API に分ける。
-- 永続化は Compose 専用 Postgres、または overlay の platform Postgres（DB 名 `talent`）。単体テストは `MemoryStore`。
-- 検索（Postgres）: generated `jobs.search_tsv`（`simple`、IMMUTABLE ラッパ `jobs_search_tsv`）と `pg_trgm` GIN。`q` は FTS `@@` または trigram / ILIKE 部分一致。ヒット時は `ts_rank_cd` と title 類似度、同点は `created_at`。OpenSearch は未接続。
-- 検索（MemoryStore）: title / description / location / skills の部分一致。単体テスト用。
-- 類似求人: P07 があれば優先。無い / 失敗時は skills overlap フォールバック（変更なし）。
+- `pf-talent-api`: Hono。求人・応募・webhook を同一プロセスに持つ。
+- `pf-talent-web`: Next.js（ポート 3010）。`TALENT_API_URL` と `X-Dev-User-Sub`。
+- 永続化の正は **Postgres**。Compose は専用 Postgres。Kubernetes overlay では platform Postgres の DB 名 `talent`。
+- 単体テストだけ `MemoryStore`。Compose をメモリ店舗のまま運用しない。
+- 検索（Postgres）: generated `jobs.search_tsv`（`simple`）と `pg_trgm` GIN。OpenSearch は未接続。
+- 検索（MemoryStore）: 部分一致。テスト用。
 
-## データモデル（MVP）
+Ingress 例: `talent.localhost` が Web、`talent-api.localhost` が API。
 
-- `Job`
-  - `id`, `employerSub`, `title`, `status`
-- `Application`
-  - `id`, `jobId`, `candidateSub`, `resumeSnapshot`
-  - `status`: `applied` | `document_passed` | `interview` | `rejected`
-  - webhook 連携キー: `calendarExternalRef`
-  - `interviewBookingId`（webhook 時にセット）
-- `SavedSearch`
-  - `id`, `candidateSub`, `name`
-  - 検索条件: `query`, `employmentType`, `remote`, `skills`, `salaryMin`, `salaryMax`
-  - `lastRunAt`
+## データモデル
 
-## 保存検索の実行
+- `Job`: `id`, `employerSub`, `title`, `status`、雇用形態・リモート・年収範囲・skills など
+- `Application`: `id`, `jobId`, `candidateSub`, `resumeSnapshot`, `status`（`applied` | `document_passed` | `interview` | `rejected` | `offered`）、`calendarExternalRef`, `interviewBookingId`
+- `SavedSearch`: 候補者の条件と `lastRunAt`
 
-1. 候補者が検索条件を `SavedSearch` として保存する
-2. `run` endpoint で現在の published 求人に対して同条件を再適用する
-3. 一致した求人を `matchedJobs` として返す
-4. `lastRunAt` を更新する
+応募ステータスの `interview` は選考段階。枠の計算は [pf-calendar](https://github.com/maeplego/pf-calendar) 側。
 
-MVP では別 worker を作らず同期実行とする。将来 `pf-talent-search` や通知バッチへ切り出す前段階。
+## 保存検索
 
-## P05 面接スロット提示
+1. 条件を保存する
+2. `run` で published に再適用する
+3. `matchedJobs` を返し `lastRunAt` を更新する
 
-1. P10 で application を読む
-2. `status` が `document_passed` か `interview` であることを確認
-3. job を読み、`employerSub` と `job.id` を取得
-4. P05 internal API `GET /internal/v1/hosts/:sub/event-types` を呼ぶ
-5. `externalRef = job.id` の event type を探す
-6. その slug に対して P05 public slots API を呼び、候補スロットをそのまま返す
+別ワーカーは作らない。将来 indexer を分ける前段階。
 
-P10 は slot 計算を再実装しない。P05 を shared capability として利用する。
+## カレンダー連携
 
-## P07 類似求人
+1. 応募を読む
+2. `document_passed` または `interview` を確認する
+3. 企業 `sub` と `job.id` で pf-calendar の内部 API から event type を探す（`externalRef = job.id`）
+4. 公開 slots をそのまま返す
 
-- `RECOMMEND_API_URL` があるときは P07 `similar-items` を使う
-- 無い / 失敗時は P10 内で `skills` overlap を計算してフォールバックする
-- P10 側は fallback を持つことで、推薦が未学習・停止中でも求人詳細を壊さない
+`CALENDAR_INTERNAL_TOKEN` の Bearer が無いとスロット API は 503。
 
-## webhook 受信処理
+## 類似求人
 
-1. `X-Calendar-Event-Type` が `calendar.booking.confirmed` であることを検証
-2. ペイロードをスキーマ検証
-3. `data.externalRef` から application を引く
-4. 見つかれば `status=interview`、`interviewBookingId=bookingId` を更新
-5. 見つからなければ `matched=false` を返す（P05 側のリトライ前提）
+`RECOMMEND_API_URL` があれば [pf-recommend](https://github.com/maeplego/pf-recommend) の `similar-items` を呼ぶ。失敗時、および推薦リストのスキル重なりがローカル順位より劣るときは **スキル重なりへ閉じる**。検索本体を推薦停止で壊さない。
 
-## セキュリティ境界（MVP）
+## webhook
 
-- webhook 認証は MVP ではヘッダ整合のみ。
-- P10 → P05 の internal API 呼び出しは `CALENDAR_INTERNAL_TOKEN` の Bearer を使用。
-- 応募一覧・企業求人一覧は `X-Dev-User-Sub`（`TALENT_DEV_AUTH=true`）または Bearer JWT がパスの当事者と一致することをサーバーで検証する。UI の非表示は認可ではない。
-- Compose は `TALENT_DEV_AUTH` 既定 true。overlay C の web は OIDC 必須、API は smoke 用にヘッダも残す。
+同一 `calendar.booking.confirmed` が複数回来ても最終状態は `interview`。専用の冪等テーブルは持たない。見つからなければ `matched=false`（送信側の再送前提）。
 
-## 競合・冪等
+## 認可
 
-- M(V)P：同一 webhook が複数回届いても最終状態が同じ（`interview`）になるため、厳密な冪等テーブルは持たない。
-
+- webhook はヘッダ整合（署名なし）
+- 一覧は `X-Dev-User-Sub`（`TALENT_DEV_AUTH=true`）または Bearer がパスの当事者と一致すること。UI の非表示は認可ではない
+- Compose は開発ヘッダ既定 true。Kubernetes の Web は OIDC 必須にする構成がある

@@ -1,12 +1,12 @@
-# P06 API 仕様書
+# API 仕様書
 
 | 項目 | 値 |
 | --- | --- |
-| プロジェクト | P06 commerce-platform |
-| 対象スライス | スライス 6 の公開 HTTP / GraphQL。OpenAPI は未作成 |
+| プロダクト | EC コマース（GitHub: `pf-commerce`） |
 | 最終更新 | 2026-08-19 |
-| 矛盾時の正 | 自動テストと製品コード、次に `DESIGN.md` |
-| 基準 | `http://localhost:8099`（Compose の gateway。catalog/inventory/order は内部） |
+| 実装との関係 | この文書と実装が違うときは、製品リポジトリのコードとテストを優先する |
+
+公開 REST の基準 URL は Compose の gateway `http://localhost:8099`。catalog / inventory / order は内部。GraphQL は BFF `http://localhost:8110`。OpenAPI ファイルは未作成。
 
 エラー本文:
 
@@ -41,7 +41,7 @@ Product:
 | description | string | |
 | priceMinor | integer | 円 |
 | currency | string | JPY |
-| imageUrl | string | P03 未接続の URL |
+| imageUrl | string | メディア未接続の URL |
 | active | boolean | |
 | availableQty | integer | 利用可能 |
 
@@ -134,4 +134,12 @@ ops。notify のログ。
 
 ## GraphQL BFF（`http://localhost:8110`）
 
-`POST /graphql`。スキーマは `product` / `products`。REST 下位: catalog products、inventory available、catalog reviews。
+`POST /graphql`。下位 REST: catalog products、inventory available、catalog reviews。推薦は `pf-recommend`（任意）。
+
+スキーマ（実装）:
+
+- `Query.products`, `Query.product(id)`, `Query.recommended(userId, k=5)`
+- `Product.inventory { availableQty }`, `Product.reviews`, `Product.similar(k=5)`
+- `RecommendSlot { source, fallback, products }`
+
+`source` は `"recommend"` または `"popularity"`。推薦失敗時もフィールドは返り、`fallback` は true。

@@ -1,11 +1,10 @@
-# P02 テスト仕様書
+# テスト仕様書
 
 | 項目 | 値 |
 | --- | --- |
-| プロジェクト | P02 cloud-platform |
-| 対象スライス | o11y 単体テスト、k8s smoke スクリプト、Terraform validate |
+| プロダクト | クラウド基盤（観測 [pf-cloud-o11y](https://github.com/maeplego/pf-cloud-o11y) / Kubernetes [pf-cloud-k8s](https://github.com/maeplego/pf-cloud-k8s) / Terraform [pf-cloud-aws](https://github.com/maeplego/pf-cloud-aws)） |
 | 最終更新 | 2026-08-19 |
-| 矛盾時の正 | 製品リポジトリのテストとスクリプト。本表と食い違ったらテストを直すか本表を追随 |
+| 実装との関係 | 製品リポジトリのテストとスクリプトを優先する。本表と食い違ったらテストを直すか本表を追随する |
 
 ## 1. 方針
 
@@ -16,7 +15,7 @@
 | overlay | `kubectl kustomize` / dry-run スクリプト | 参照切れ |
 | 実機 smoke | Docker Desktop 必須。CI 既定では動かさない | 横断 |
 
-exploit / PoC は書かない。障害注入はローカル debug フラグだけ。
+攻撃手順は書かない。障害注入はローカル debug フラグだけ。
 
 ## 2. 観測
 
@@ -35,9 +34,9 @@ exploit / PoC は書かない。障害注入はローカル debug フラグだ�
 | TS-K01 | context 不一致 | `assert-docker-desktop.ps1` が停止 |
 | TS-K02 | foundation smoke | A overlay の Pod Ready（手動・実機） |
 | TS-K03 | scheduling-talent smoke | C overlay（手動） |
-| TS-K04 | collab smoke | B サブセット（手動）。P11 は無い |
-| TS-K05 | e-content smoke | E overlay（手動）。P08 blog + shortener |
-| TS-K07 | d-commerce smoke | D overlay（手動）。P06 同時 checkout 201/409。P07 BFF recommended。P11/P12/P13 は無い |
+| TS-K04 | collab smoke | B overlay（手動）。チーム作業場所 + 開発者ポータル |
+| TS-K05 | e-content smoke | E overlay（手動）。ブログ + 短縮 URL |
+| TS-K07 | d-commerce smoke | D overlay（手動）。EC 同時 checkout 201/409。推薦 BFF recommended。開発者ポータル / 信頼性 / データ基盤は無い |
 | TS-K08 | overlay スコープ | `build-images` の a-foundation は 5、c-scheduling-talent は 7（`test-scripts.ps1`） |
 | TS-K09 | スクリプト構文 | `test-scripts.ps1` が *.ps1 を ParseFile |
 
@@ -49,6 +48,6 @@ exploit / PoC は書かない。障害注入はローカル debug フラグだ�
 | TS-T02 | fmt | 差分なし（開発者） |
 | TS-T03 | apply | **自動化しない。合格条件にしない** |
 
-## 5. 未自動化（計画と書かないが手動）
+## 5. 未自動化（手動）
 
 Grafana 相関、Ingress `*.localhost`、OIDC ログイン〜 media アップロードは `integration-demo.md` の手動手順。

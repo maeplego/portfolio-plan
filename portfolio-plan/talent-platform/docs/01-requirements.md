@@ -1,89 +1,89 @@
-# P10 要件定義書
+# 要件定義書
 
 | 項目 | 値 |
 | --- | --- |
-| プロジェクト | P10 talent-platform |
-| 対象スライス | P10 最小 + プロフィール + 検索フィルタ + 保存検索 + 一覧 ACL |
+| プロダクト | 求人マッチング（API [pf-talent-api](https://github.com/maeplego/pf-talent-api)、Web [pf-talent-web](https://github.com/maeplego/pf-talent-web)） |
 | 最終更新 | 2026-08-19 |
-| 矛盾時の正 | 自動テストと製品コード、次に `DESIGN.md` |
+| 実装との関係 | この文書と実装が違うときは、製品リポジトリのコードとテストを優先する |
 
-## 目的
+## 1. 背景と目的
 
-- 求人（jobs）と応募（applications）を最小モデルで保持する。
-- P05 予約確定（`calendar.booking.confirmed`）を webhook 受信し、応募ステータスを `interview` に更新する。
-- 検索と保存検索は最小形。候補者検索画面は `pf-talent-web`（`?user=` 必須、ゲストなし）。
+架空の IT 求人と候補者の検索・応募・ステータス管理。検索品質（フィルタ、ファセット、日本語）が本領である。予約は予約カレンダー [pf-calendar](https://github.com/maeplego/pf-calendar) を呼び、類似求人は推薦エンジン [pf-recommend](https://github.com/maeplego/pf-recommend) を呼ぶ。どちらもこのリポジトリに再実装しない。
 
-## アクター
+学習用であり、実在求人のクローリングや ATS 全機能の置き換えではない。シードに実在企業名・実在人物を使わない。
 
-- `employer`：求人を作成する（認証は MVP では省略）
-- `candidate`：応募を作成する（認証は MVP では省略）
-- P05：予約完了イベント `calendar.booking.confirmed` を webhook で通知する（認証はヘッダ整合のみ）
+## 2. 含む
 
-## 含む機能要件
+- 求人 CRUD（draft / published）、応募、プロフィール、通報
+- 検索フィルタ（q, employmentType, remote, skills, salary）とファセット件数
+- Postgres `tsvector` + `pg_trgm`（Compose の正は Postgres。メモリ店舗だけの常時運用は想定しない）
+- 保存検索と手動 run（新着マッチ）
+- 応募ステータス。書類通過後に面接候補スロットを提示する。予約確定 webhook で `interview` に更新する（ここでの interview は **選考の面接**）
+- 類似求人。推薦 API があれば優先し、失敗または品質不足ならスキル重なりへ閉じる（fail-closed）
+- 候補者検索 UI と企業画面。応募一覧は当事者以外 403
+- overlay C（`talent.localhost` / `talent-api.localhost`）
 
-1. 求人作成（`POST /v1/jobs`）
-2. 応募作成（`POST /v1/jobs/:id/applications`）
-3. 応募参照（`GET /v1/applications/:id`）
-4. 応募ステータス更新（`PATCH /v1/applications/:id/status`）
-5. P05 契約に従い、P05 の `event_type.externalRef`（MVP では job id）を application に紐付け（`PUT /v1/applications/:id/calendar-link`）
-6. webhook 受信（`POST /webhooks/calendar`）
-   - `X-Calendar-Event-Type: calendar.booking.confirmed` を必須とする
-   - `data.externalRef` が一致する application を `interview` に更新
-   - 該当なしなら `200 { ok: true, matched: false }`（リトライ可能性のため）
-7. P05 internal API を呼ぶ「イベントタイプ自動プロビジョン」学習用 endpoint
-   - `POST /v1/jobs/:id/provision-interview-event-type`
-   - `CALENDAR_INTERNAL_TOKEN` と `CALENDAR_API_URL` が必要
-   - `externalRef = job.id` で `interview` 用 event type を作る
-8. 候補者は保存検索を登録できる
-   - `POST /v1/saved-searches`
-   - `GET /v1/candidates/:sub/saved-searches`
-9. 保存検索の新着マッチを手動実行できる
-   - `POST /v1/saved-searches/:id/run`
-   - 返り値に `matchedJobs` と `matchedCount` を含む
-10. 書類通過後の応募に対して P05 の面接候補スロットを提示できる
-   - `GET /v1/applications/:id/interview-slots`
-   - `document_passed` または `interview` の応募のみ
-   - job の `employerSub` と `job.id` を使って P05 の event type を特定する
-11. ✅ 類似求人を返せる
-   - `GET /v1/jobs/:id/similar`
-   - P07 recommend API があればそれを優先
-   - 未接続時は skills overlap でフォールバック
-12. ✅ ファセット件数と管理通報の最小形
-   - `GET /v1/jobs/facets`（同じフィルタ条件を入力に応じて集計）
-   - `POST /v1/reports` / `GET /v1/reports`（管理レビュー用の通報保存）
-13. ✅ 画面が呼ぶ一覧と詳細
-   - `GET /v1/jobs/:id`
-   - `GET /v1/employers/:sub/jobs`
-   - `GET /v1/jobs/:id/applications` / `GET /v1/candidates/:sub/applications`
-   - 応募一覧は `X-Dev-User-Sub` が当事者と一致しないと 403
-14. ✅ 架空求人シード（8〜12 件、実在企業名禁止）
-15. ✅ 候補者検索 UI
-   - `/` で q / employmentType / remote / skills / salaryMin/Max とファセット件数
-   - `/jobs/:id` 詳細と類似求人（`source` バッジ）
-   - API 未起動でも web は起動し、接続エラーを表示
-   - 手動: フィルタ後の一覧件数とファセット `total` が一致すること
-16. ✅ 応募と企業画面
-   - 候補者: 詳細から応募 → `/me/applications`
-   - 企業: 求人作成（draft/published）→ 応募者一覧 → ステータス PATCH（不正遷移は 409 を表示）
-   - プロフィール PUT/GET、通報 → `/admin/reports`
-   - 手動: 同じ応募が候補者と企業で見え方が違う。他社は 403
-17. ✅ 保存検索と面接枠
-   - 保存検索の作成 / 一覧 / run（新着件数）
-   - `document_passed` で P05 スロット。未接続は「カレンダー未接続」
-   - 予約は `http://localhost:3005/book/<slug>` へのリンク（カレンダー UI はコピーしない）
-18. ✅ overlay C に web
-   - `talent.localhost` → web、`talent-api.localhost` → API
-   - メモリのまま。platform Postgres へは移行しない
+## 3. 含まない
 
-## 非機能要件
+| 項目 | 理由 |
+| --- | --- |
+| OpenSearch / 独立 indexer | 件数が増えたら足す。いまは Postgres FTS |
+| 候補者・企業の本番 OIDC | 開発ヘッダ `X-Dev-User-Sub`。認証基盤 [pf-identity](https://github.com/maeplego/pf-identity) は後続 |
+| 実在求人のクローリング、課金・掲載プラン | 範囲外 |
+| ATS 全機能（課題管理） | ワークスペース [pf-workspace](https://github.com/maeplego/pf-workspace) に任せ、埋め込まない |
+| カレンダー UI のコピー | 予約は `http://localhost:3005/book/<slug>` へのリンク |
 
-- 学習用 MVP。Compose / overlay の求人検索は Postgres `tsvector` + `pg_trgm`。OpenSearch はまだ含めない。応募一覧は開発ヘッダでサーバー側検証する。
-- webhook 入力はスキーマで検証し、不正は `400 invalid_request`。
-- 失敗時に「秘密をログに出さない」。
+## 4. アクター
 
-## 含まない機能要件（非目標）
+| アクター | 定義 | 認証 |
+| --- | --- | --- |
+| employer | 求人を作成し応募者を見る | `X-Dev-User-Sub` |
+| candidate | 検索し応募する | 同上。Web は `?user=` 必須、ゲストなし |
+| admin | 通報の閲覧 | 開発ヘッダ |
+| 予約カレンダー | `calendar.booking.confirmed` を webhook で通知 | `X-Calendar-Event-Type` とヘッダ整合 |
+| 推薦エンジン | `similar-items?namespace=jobs` | 任意。未接続時はスキル重なり |
 
-- 求人検索・ページング・推薦（P07）
-- 候補者/企業認証（P01 の OIDC 連携は後続）
-- outbox 配信の厳密な冪等性（P05 が 201 と outbox で担保する前提）
+## 5. 前提
 
+- ID は ULID。年収は数値範囲。「応相談」は null 範囲 + フラグ
+- Compose は専用 Postgres。overlay は platform Postgres の DB 名 `talent`
+- 応募時に求人をスナップショットする
+- 公開デモは応募メールを実送しない
+
+## 6. 機能要件
+
+| ID | 要件 | なぜ |
+| --- | --- | --- |
+| FR-01 | 求人を作成・取得できる（`POST /v1/jobs`、`GET /v1/jobs/:id`） | 掲載の正 |
+| FR-02 | 公開検索は published のみ。`q` は全文検索と trigram 部分一致を OR する | 日本語の途中一致 |
+| FR-03 | 候補者は応募を作成し、自分の応募だけ一覧できる | 認可 |
+| FR-04 | 企業は自分の求人の応募だけ一覧できる。当事者以外は 403 | 他社漏洩 |
+| FR-05 | 応募ステータス更新は不正遷移を 409 にする | 状態機械 |
+| FR-06 | `externalRef`（求人 id）でカレンダーと連携し、webhook で一致する応募を `interview` にする。該当なしは `200 { ok: true, matched: false }` | リトライ可能性。選考の面接 |
+| FR-07 | 書類通過後（`document_passed` または `interview`）に面接スロットを提示できる | カレンダー再実装をしない |
+| FR-08 | 保存検索の登録・一覧・run ができる | 新着 |
+| FR-09 | `GET /v1/jobs/:id/similar` は推薦を優先し、失敗またはスキル重なりが劣るときは fallback | 検索本体を推薦停止で壊さない |
+| FR-10 | ファセット件数と通報の保存・一覧 | 管理の最小形 |
+| FR-11 | プロフィール PUT/GET | 応募者情報 |
+| FR-12 | Web は API 未起動でも立ち上がり、接続エラーを表示する | 単独起動 |
+| FR-13 | 架空求人シード（8〜12 件）。実在企業名禁止 | 公開前提 |
+
+## 7. 非機能
+
+| ID | 要件 | なぜ |
+| --- | --- | --- |
+| NFR-01 | Compose / overlay の検索は Postgres。OpenSearch を前提にしない | 段階化 |
+| NFR-02 | webhook 入力はスキーマ検証。不正は `400 invalid_request` | 契約 |
+| NFR-03 | 失敗時に秘密をログに出さない | 共通規約 |
+| NFR-04 | 応募一覧の ACL はサーバー側。UI 非表示だけでは足りない | 認可 |
+
+## 8. 受け入れ
+
+1. 公開検索でフィルタ後の一覧件数とファセット `total` が一致する
+2. 同じ応募が候補者と企業で見え方が違う。他社は 403
+3. 不正なステータス遷移が 409
+4. 保存検索の run が `matchedJobs` と `matchedCount` を返す
+5. `document_passed` でカレンダー未接続なら「カレンダー未接続」。接続時は予約リンク
+6. webhook で `interview` に更新される。該当なしは `matched: false` の 200
+7. 類似求人に `source` が付き、推薦停止時はスキル重なりへ閉じる
+8. Compose 再起動後も求人が Postgres から戻る

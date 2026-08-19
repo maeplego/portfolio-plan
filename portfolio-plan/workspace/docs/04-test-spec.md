@@ -1,13 +1,12 @@
-# P04 テスト仕様書
+# テスト仕様書
 
 | 項目 | 値 |
 | --- | --- |
-| プロジェクト | P04 workspace |
-| 対象スライス | 1–7 |
+| プロダクト | チーム作業場所 [pf-workspace](https://github.com/maeplego/pf-workspace) |
 | 最終更新 | 2026-08-19 |
-| 矛盾時の正 | `apps/api` の `go test` と `apps/collab` の `npm test`。未自動化は本表の「手動」 |
+| 実装との関係 | `apps/api` の `go test` と `apps/collab` の `npm test` を優先する。未自動化は本表の「手動」 |
 
-実行: `pf-workspace/apps/api` で `go test ./...`。collab 部屋名は `apps/collab` で `npm test`。IME diff は `apps/web` で `npm test`。
+実行: `pf-workspace/apps/api` で `go test ./...`。collab 部屋名は `apps/collab` で `npm test`。IME diff は `apps/web` で `npm test`。Postgres 結合は `WORKSPACE_DATABASE_URL` があるとき（TS-PG01）。
 
 ## 自動化済み
 

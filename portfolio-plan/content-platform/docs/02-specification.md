@@ -1,13 +1,24 @@
-# P08 外部仕様書
+# 外部仕様書
 
 | 項目 | 値 |
 | --- | --- |
-| プロジェクト | P08 content-platform |
-| 対象スライス | スライス 1 の現行ブログ / 短縮 |
+| プロダクト | コンテンツ基盤（GitHub: `pf-content-blog`、`pf-content-shortener`、Compose 束ね役 `pf-content-infra`） |
 | 最終更新 | 2026-08-19 |
-| 矛盾時の正 | 自動テストと製品コード、次に `DESIGN.md`。HTTP の細部は [05-api.md](05-api.md) |
+| 実装との関係 | この文書と実装が違うときは、製品リポジトリのコードとテストを優先する。HTTP の細部は [05-api.md](05-api.md) |
 
-## 1. 用語
+読者と編集者、公開 URL と短縮 302 から見た振る舞い。ホットパスの内部は [03-design.md](03-design.md)。
+
+## 1. 目的
+
+技術記事の下書きと公開を分け、シェア用の短い URL を同じ製品として扱う。公開サイトは匿名、管理だけ開発ログイン。学習用であり、本番 CMS や商用短縮の置き換えではない。
+
+## 2. 含む / 含まない
+
+含む: Markdown CMS、下書き / 公開、公開 URL の 404、編集者プレビュー、Draft Mode、OG 画像（公開題名）、RSS / sitemap、短縮作成と 302、非同期クリック、日次グラフ、宛先ホスト許可リスト。
+
+含まない: Tailwind + MDX、本番 OIDC（`pf-identity`）、メディア基盤（`pf-media`）の実パイプライン、コメント、全文検索、k6 の数値公表、マルチテナント独自ドメイン。
+
+## 3. 用語
 
 | 用語 | 意味 |
 | --- | --- |
@@ -15,12 +26,14 @@
 | 下書き | `status=draft`。未ログインの公開 URL では 404。Draft Mode + 編集者 cookie のときだけ同じ URL で見える |
 | 短縮コード | 7 文字（カスタム時は 3–32）。記事 slug とは別空間 |
 | 許可ホスト | デモで短縮してよい宛先の hostname |
+| Draft Mode | Next.js の下書きプレビュー。cookie だけでは匿名読者に下書きを出さない |
+| OG 画像 | `/posts/{slug}/opengraph-image`。公開記事の題名。下書きの題は出さない |
 
-## 2. 時刻
+## 4. 時刻
 
 API の時刻は UTC RFC3339。DB は `timestamptz`。表示は ISO 日付で足りる（ユーザー TZ 切替は未実装）。
 
-## 3. 読者（認証なし）
+## 5. 読者（認証なし）
 
 | 操作 | 仕様 |
 | --- | --- |
@@ -31,7 +44,7 @@ API の時刻は UTC RFC3339。DB は `timestamptz`。表示は ISO 日付で足
 | `GET /{code}` | 302 Location。不明・無効・期限切れは 404 |
 | `/admin` | ログイン画面は見える。記事 API は 401 |
 
-## 4. 編集者
+## 6. 編集者
 
 開発: 管理画面の Dev login（cookie `content_dev_sub`）または `X-Dev-User-Sub`。
 
@@ -44,7 +57,7 @@ API の時刻は UTC RFC3339。DB は `timestamptz`。表示は ISO 日付で足
 | 短縮作成 | 公開済み記事のみ。宛先は `CONTENT_PUBLIC_URL/posts/{slug}` |
 | 日次グラフ | 管理画面。`GET /v1/links/{id}/stats` の `daily` をバー表示 |
 
-## 5. 短縮の拒否
+## 7. 短縮の拒否
 
 次は 400（作成しない）:
 
@@ -53,7 +66,7 @@ API の時刻は UTC RFC3339。DB は `timestamptz`。表示は ISO 日付で足
 - URL 内 userinfo
 - 数字のみのカスタム slug、予約語（`health`, `ready`, `v1` 等）
 
-## 6. エラー
+## 8. エラー
 
 短縮とブログ API の本文:
 
@@ -62,3 +75,11 @@ API の時刻は UTC RFC3339。DB は `timestamptz`。表示は ISO 日付で足
 ```
 
 未認証の管理操作は 401。他人の短縮リソースは 403。
+
+## 9. 受け入れ
+
+1. 公開記事 `why-redirect-is-not-nextjs` が読める。下書き slug の公開 URL は 404。
+2. 編集ログイン後にプレビューでき、Publish すると公開される。Draft Mode で公開 URL にバナー付き下書きが見える。
+3. 公開記事の OG 画像が題名を出す。下書き題は出さない。
+4. 許可ホスト向け短縮が 201、`javascript:` と許可外ホストが 400。`GET /:code` が 302。
+5. 管理画面の日次バーが `daily: [{ date, count }]` を表示する（クリックは非同期なので数秒遅れ可）。

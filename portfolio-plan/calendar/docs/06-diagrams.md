@@ -1,14 +1,13 @@
-# P05 図表
+# 図表
 
 | 項目 | 値 |
 | --- | --- |
-| プロジェクト | P05 calendar |
-| 対象スライス | シーケンス・ER・状態は 1–3。画面遷移はスライス 4 の計画を含む |
-| 最終更新 | 2026-08-18 |
-| 矛盾時の正 | 自動テストと製品コード、次に `DESIGN.md` |
+| プロダクト | 予約カレンダー [pf-calendar](https://github.com/maeplego/pf-calendar) |
+| 最終更新 | 2026-08-19 |
+| 実装との関係 | この文書と実装が違うときは、製品リポジトリのコードとテストを優先する |
 | 記法 | Mermaid。ユースケースは UML 楕円の代替としてフロー |
 
-詳細な文章は仕様・設計を正とする。図は構造の索引。
+詳細な文章は仕様・設計を参照する。図は構造の索引。
 
 ## 1. ユースケース
 
@@ -17,17 +16,17 @@ flowchart LR
   subgraph actors [アクター]
     Host[ホスト]
     Guest[ゲスト]
-    P10[P10 将来]
+    Talent[求人 API]
   end
 
-  subgraph uc [P05]
+  subgraph uc [予約カレンダー]
     UC1[イベントタイプと空きルールを定義する]
     UC2[例外日をブロックする]
     UC3[空き枠を Instant で列挙する]
     UC4[オファー中の枠を予約する]
     UC5[自分の予約一覧を見る]
-    UC6[キャンセルする_未実装]
-    UC7[面談枠を求人に紐づける_未実装]
+    UC6[キャンセルする]
+    UC7[面談枠を求人に紐づける]
   end
 
   Host --> UC1
@@ -37,45 +36,45 @@ flowchart LR
   Guest --> UC3
   Guest --> UC4
   Guest --> UC6
-  P10 --> UC7
+  Talent --> UC7
   UC4 --> UC3
 ```
 
-P10 はソフト依存。今はテキスト希望日時で P10 側 MVP が成立する。
+求人側の webhook 受信は未実装。カレンダー側の内部 API と outbox 配信は現行。
 
-## 2. 画面遷移（計画）
-
-実装はスライス 4。現状の操作面は HTTP。
+## 2. 画面遷移（実装済み）
 
 ```mermaid
 flowchart TB
-  subgraph guestUi [ゲスト_未実装]
-    G1[公開 URL /:slug]
+  subgraph guestUi [ゲスト]
+    G1[公開 URL /book/:slug]
     G2[週または日を選ぶ]
     G3[starts をゲスト TZ で表示]
     G4[氏名メールで確定]
-    G5[完了_時刻と cancelToken]
-    G6[キャンセル_スライス5]
+    G5[完了_ICS とキャンセルリンク]
+    G6[/cancel?token=]
     G1 --> G2 --> G3 --> G4 --> G5
-    G5 -.-> G6
+    G5 --> G6
   end
 
-  subgraph hostUi [ホスト_未実装]
-    H0[P01 ログイン_計画]
-    H1[ダッシュボード_今後の予約]
+  subgraph hostUi [ホスト]
+    H0[/login OIDC 任意]
+    H1[/host ダッシュボード]
     H2[イベントタイプ設定]
     H0 --> H1
     H1 --> H2
   end
 
-  subgraph api [実装済み API]
+  subgraph api [API]
     A1[GET /public/:slug/slots]
     A2[POST /public/:slug/book]
     A3[GET /v1/event-types]
+    A4[POST /public/bookings/cancel]
   end
 
   G3 --> A1
   G4 --> A2
+  G6 --> A4
   H1 --> A3
 ```
 
@@ -165,17 +164,15 @@ Postgres なら拒否は `EXCLUDE USING gist`（23P01）。Memory なら `overla
 
 ## 6. 予約の状態
 
-現状は `confirmed` のみ。キャンセルは計画。
-
 ```mermaid
 stateDiagram-v2
   [*] --> confirmed: POST book 201
   confirmed --> confirmed: 同一冪等キー再送 200
-  confirmed --> cancelled: トークンキャンセル_未実装
+  confirmed --> cancelled: トークンキャンセル
   cancelled --> [*]
 ```
 
-exclusion は `confirmed` だけに掛ける。cancelled 同士や cancelled と confirmed の扱いはスライス 5 で仕様化する。
+exclusion は `confirmed` だけに掛ける。cancelled 同士や cancelled と confirmed は重ならない。
 
 ## 7. ER（現行テーブル）
 

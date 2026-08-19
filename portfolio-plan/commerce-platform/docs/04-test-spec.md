@@ -1,11 +1,12 @@
-# P06 テスト仕様書
+# テスト仕様書
 
 | 項目 | 値 |
 | --- | --- |
-| プロジェクト | P06 commerce-platform |
-| 対象スライス | 2–6。自動化は `go test ./...` と `apps/bff` の `npm test` |
+| プロダクト | EC コマース（GitHub: `pf-commerce`） |
 | 最終更新 | 2026-08-19 |
-| 矛盾時の正 | 製品リポジトリの Go テスト。本表と食い違ったらテストを直すか本表を追随 |
+| 実装との関係 | 製品リポジトリの Go テストと `apps/bff` の `npm test` を優先する。本表と違うときはテストか本表のどちらかを直す |
+
+自動化は `go test ./...` と BFF の `npm test`。
 
 ## 1. 方針
 
@@ -15,11 +16,11 @@
 | inventory / order | メモリ Store + 固定 Clock | 不足、補償、TTL、同時引当 |
 | HTTP | httptest。gateway は catalog/inventory/order/payment/notify を別サーバとして接続 | 公開契約、401/403、冪等 200、float 価格、同時 409、ops グリッド、notify |
 | 注文 ES | Given events / When command / Then events | 不正遷移、リプレイ |
-| BFF | Node test。DataLoader あり/なしの REST 回数 | N+1 |
+| BFF | Node test。DataLoader あり/なしの REST 回数。推薦の fail-closed | N+1 と推薦スロット |
 
 exploit / PoC は書かない。カード番号を fixture に置かない。
 
-メモリの同時 checkout は inventory の mutex 下 `ReserveHeld`（Postgres では 1 TX の UPDATE）と同じ**契約**。gateway の TS-H06 はプロセス間 HTTP でも 201 と 409 が 1 ずつ。
+メモリの同時 checkout は inventory の mutex 下 `ReserveHeld`（Postgres では 1 TX の UPDATE）と同じ契約。gateway の TS-H06 はプロセス間 HTTP でも 201 と 409 が 1 ずつ。
 
 ## 2. 金額
 
@@ -44,17 +45,17 @@ exploit / PoC は書かない。カード番号を fixture に置かない。
 
 ## 4. 注文（プロセスマネージャ）
 
-| ID | 観点 | 期待 | 要件 |
-| --- | --- | --- | --- |
-| TS-C01 | 在庫 5 を 1 点 | paid。available 4 | FR-05 |
-| TS-C02 | 在庫 1 を 2 点 | cancelled + shortage。available 1 | FR-04 |
-| TS-C03 | 同時 2 人・在庫 1 | paid 1 と shortage 1。available 0 | FR-03 |
-| TS-C04 | 同一冪等キー | 同じ order id。追加減算なし | FR-02 |
-| TS-C05 | 決済モック失敗 | cancelled + payment_failed。在庫復元 | FR-06 |
-| TS-C06 | カート経由 | 金額 qty×単価。カート空 | |
-| TS-C07 | 他人の注文 | forbidden | FR-07 |
+| ID | 観点 | 期待 |
+| --- | --- | --- |
+| TS-C01 | 在庫 5 を 1 点 | paid。available 4 |
+| TS-C02 | 在庫 1 を 2 点 | cancelled + shortage。available 1 |
+| TS-C03 | 同時 2 人・在庫 1 | paid 1 と shortage 1。available 0 |
+| TS-C04 | 同一冪等キー | 同じ order id。追加減算なし |
+| TS-C05 | 決済モック失敗 | cancelled + payment_failed。在庫復元 |
+| TS-C06 | カート経由 | 金額 qty×単価。カート空 |
+| TS-C07 | 他人の注文 | forbidden |
 
-## 5. HTTP
+## 5. HTTP と BFF
 
 | ID | 観点 | 期待 |
 | --- | --- | --- |
@@ -73,11 +74,13 @@ exploit / PoC は書かない。カード番号を fixture に置かない。
 | TS-O01 | outbox drain | paid で 1 通。再 drain で増えない |
 | TS-G01 | DataLoader あり | 3 商品で inventory REST 1 回 |
 | TS-G02 | DataLoader なし | 3 商品で inventory REST 3 回 |
+| TS-G03 | 推薦 API 空または未マップ SKU | `recommended` / `similar` は `source: popularity` |
+| TS-G04 | 推薦 API が既知 SKU を返す | `source: recommend`。カタログ行に写像 |
 
 ## 6. 未自動化
 
 - Compose 実機の `/demo` 同時クリック（契約は TS-H06）
 - ops-web ブラウザの SSE（契約は hub 単体と入庫 HTTP）
-- overlay D 実機は `cluster-smoke-d-commerce.ps1`（手動・Docker Desktop）。BFF `recommended` と ops Ingress を含む
+- Kubernetes 実機は `cluster-smoke-d-commerce.ps1`（手動・Docker Desktop）。BFF `recommended` と ops Ingress を含む
 - Postgres 並列 UPDATE の integration タグ
 - 予約 TTL ワーカー

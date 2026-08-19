@@ -1,13 +1,12 @@
-# P04 API 仕様書
+# API 仕様書
 
 | 項目 | 値 |
 | --- | --- |
-| プロジェクト | P04 workspace |
-| 対象スライス | 1–7 |
+| プロダクト | チーム作業場所 [pf-workspace](https://github.com/maeplego/pf-workspace) |
 | 最終更新 | 2026-08-19 |
-| 矛盾時の正 | `apps/api` のハンドラとテスト |
+| 実装との関係 | `apps/api` のハンドラとテストを優先する |
 
-OpenAPI ファイルは未作成。本ファイルが HTTP 契約の正本。
+OpenAPI ファイルは未作成。本ファイルが HTTP 契約の要約。
 
 ## 共通
 
@@ -214,7 +213,7 @@ OpenAPI ファイルは未作成。本ファイルが HTTP 契約の正本。
 
 ### `POST /v1/uploads`
 
-multipart: `workspaceId`, `purpose`（`wiki`|`chat`）, `file`。成功 201 FileView（`id`, `url`, `name`）。guest 403。20MB 超 413。P03 未設定時のローカル保存。
+multipart: `workspaceId`, `purpose`（`wiki`|`chat`）, `file`。成功 201 FileView（`id`, `url`, `name`）。guest 403。20MB 超 413。メディア未設定時のローカル保存。
 
 ### `POST /v1/uploads/link`
 

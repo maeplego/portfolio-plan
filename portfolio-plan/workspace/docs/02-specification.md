@@ -1,11 +1,10 @@
-# P04 外部仕様書
+# 外部仕様書
 
 | 項目 | 値 |
 | --- | --- |
-| プロジェクト | P04 workspace |
-| 対象スライス | 1–7 の現行 API・Web |
+| プロダクト | チーム作業場所 [pf-workspace](https://github.com/maeplego/pf-workspace) |
 | 最終更新 | 2026-08-19 |
-| 矛盾時の正 | 自動テストと製品コード、次に `DESIGN.md`。HTTP の細部は [05-api.md](05-api.md) |
+| 実装との関係 | この文書と実装が違うときは、製品リポジトリのコードとテストを優先する。HTTP の細部は [05-api.md](05-api.md) |
 
 ユーザーと呼び出し側から見た振る舞い。内部のマップ構造は [03-design.md](03-design.md)。
 
@@ -13,7 +12,7 @@
 
 | 用語 | 意味 |
 | --- | --- |
-| workspace | 権限の境界。ボード・Wiki・（将来）チャットが属する |
+| workspace | 権限の境界。ボード・Wiki・チャットが属する |
 | page | Wiki 1 記事。`parentId` 空はルート。本文は Markdown。同時編集時の正は CRDT |
 | document | Wiki ツリーに載らない独立文書。本文の正は CRDT |
 | collab ticket | WS 接続用の短命トークン。部屋名（`collabDocumentId`）とセット |
@@ -27,8 +26,8 @@
 
 1. **API の `/v1/*` は認証必須。** ヘッダなしは 401。
 2. **開発:** `X-Dev-User-Sub: <sub>` を API が信じるのは `WORKSPACE_DEV_AUTH=true` のときだけ。
-3. **OIDC:** `Authorization: Bearer`。JWT（issuer / 任意 audience）または opaque + userinfo。Web は `/login` → `/callback` で cookie に access token を置く。
-4. **単体デモ既定は開発モード。** OIDC を「必須で動く」とは書かない。
+3. **OIDC:** `Authorization: Bearer`。JWT（issuer / 任意 audience）または opaque + userinfo。発行点は認証基盤 [pf-identity](https://github.com/maeplego/pf-identity)。Web は `/login` → `/callback` で cookie に access token を置く。
+4. **単体デモ既定は開発モード。** OIDC 無しでも動く。
 
 ## 3. ロール
 
@@ -89,7 +88,7 @@ guest のボード画面は「閲覧のみ」と表示する。UI を隠して�
 - バーンダウン: `GET /v1/sprints/:id/burndown`。単位は `cards`。Done 列（名前 `Done`）へ入った時刻を完了とみなす。現在の割り当てと `createdAt` / `completedAt` から日次 remaining を出す（移動イベントの完全ログではない）。
 - 削除するとカードの `sprintId` を外す（カード version は増やさない）。
 
-## 6. Web（スライス 2）
+## 6. Web（現行）
 
 | 画面 | 仕様 |
 | --- | --- |
@@ -109,7 +108,7 @@ guest のボード画面は「閲覧のみ」と表示する。UI を隠して�
 
 ## 7. Wiki
 
-- 作成: `title` 必須。`parentId` 省略でルート。既定 `status=draft`。`collabDocumentId` は作成時に発行し、スライス 4 で collab 部屋名になる。
+- 作成: `title` 必須。`parentId` 省略でルート。既定 `status=draft`。`collabDocumentId` は作成時に発行し、collab 部屋名になる。
 - ツリー: `GET .../pages/tree`。本文は含めない。guest には published だけ。親が draft の published 子も出さない。
 - 取得: 本文込み（API 上のスナップショット。編集中は CRDT が先）。guest が draft を叩くと 404（存在を漏らさない）。
 - 更新: `version` 必須。不一致 409。`parentId` を自分または子孫にすると 400。collab 稼働時のタイトル・状態保存は `body` を省略してよい。
@@ -122,7 +121,7 @@ guest のボード画面は「閲覧のみ」と表示する。UI を隠して�
 - チケット: `POST /v1/collab-tickets` `{ "collabDocumentId" }`。有効 15 分。guest の draft ページは 404。guest の published / ドキュメントは `readOnly: true`。
 - 部屋名は ULID のみ。`../` のような名前は 400。
 - ブラウザはチケットを Hocuspocus の token として `ws://localhost:8097` に渡す。サーバーは API の内部認可でチケットと部屋の一致を確認する。
-- 空の Y.Doc は API のプレーンテキストで初期化する。debounce 後にスナップショットを API へ戻す（検索用。スライス 6 で使う）。
+- 空の Y.Doc は API のプレーンテキストで初期化する。debounce 後にスナップショットを API へ戻す（検索用）。
 - 独立ドキュメント: `POST/GET /v1/workspaces/:id/documents`、`GET/PATCH /v1/documents/:id`（PATCH は title）。画面 `/docs/:workspaceId`。
 - 2 ウィンドウ手順と IME 制限は製品 README。IME は composition 中に Yjs へ送らない。
 
@@ -150,7 +149,7 @@ guest のボード画面は「閲覧のみ」と表示する。UI を隠して�
 
 - チャット: 投稿の任意 `attachmentFileId`。purpose=chat のファイルだけ。
 - Wiki: `POST /v1/pages/:id/attachments` `{ "fileId" }`。Markdown に画像 URL を貼る。プレビューは既存どおり raw HTML / `javascript:` 禁止。
-- `MEDIA_API_URL` があるとき: P03 `presign`（`purpose=wiki|chat`）→ `complete` → workspace に fileId だけ保存。
+- `MEDIA_API_URL` があるとき: メディア基盤 [pf-media](https://github.com/maeplego/pf-media) の `presign`（`purpose=wiki|chat`）→ `complete` → workspace に fileId だけ保存。
 - 未設定時: `POST /v1/uploads` でメモリ + 一時ファイル。`GET /v1/files/:id/content?t=` が署名 URL 相当（20MB を超えない）。
 - ファイルバイトを Yjs に載せない。guest は追加 403。参照は親リソースと同じ ACL（トークン付き GET は親に貼られた URL を開く）。
 - 単体 Compose に media は含めない。

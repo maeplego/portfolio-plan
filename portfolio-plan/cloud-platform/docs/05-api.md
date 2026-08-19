@@ -1,14 +1,13 @@
-# P02 API 仕様書
+# API 仕様書
 
 | 項目 | 値 |
 | --- | --- |
-| プロジェクト | P02 cloud-platform |
-| 対象スライス | demo-api と全 `pf-*` が守る health / OTLP。K8s Ingress はランブック |
+| プロダクト | クラウド基盤（観測 [pf-cloud-o11y](https://github.com/maeplego/pf-cloud-o11y) / Kubernetes [pf-cloud-k8s](https://github.com/maeplego/pf-cloud-k8s) / Terraform [pf-cloud-aws](https://github.com/maeplego/pf-cloud-aws)） |
 | 最終更新 | 2026-08-19 |
-| 矛盾時の正 | 自動テストと製品コード、次に `DESIGN.md` |
+| 実装との関係 | この文書と実装が違うときは、製品リポジトリのコードとテストを優先する |
 | 基準 | demo-api `http://localhost:8080`（o11y Compose） |
 
-OpenAPI ファイルは無い。本ファイルが人間向け契約。製品 API のパスは各 Pxx の `05-api.md`。
+OpenAPI ファイルは無い。本ファイルが人間向けの契約要約。製品 API のパスは各製品の `05-api.md`。
 
 ## 1. 全アプリ共通
 
@@ -33,6 +32,6 @@ OTLP: HTTP `:4318` または gRPC `:4317`。環境変数 `OTEL_EXPORTER_OTLP_END
 
 HTTP API ではない。`terraform validate` と `kubectl` smoke は [04-test-spec.md](04-test-spec.md)。
 
-## 4. 計画
+## 4. 未配線
 
-P12 へ送るアラート JSON（DESIGN の例）は **未配線**。P12 の受信 API は P12 の `05-api.md`。
+信頼性基盤 [pf-reliability](https://github.com/maeplego/pf-reliability) へ送るアラート JSON（DESIGN の例）は **未配線**。受信 API は信頼性基盤の `05-api.md`。

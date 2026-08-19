@@ -1,21 +1,20 @@
-# P09 テスト仕様書
+# テスト仕様書
 
 | 項目 | 値 |
 | --- | --- |
-| プロジェクト | P09 attendance |
-| 対象スライス | 1。自動化は `mvn test`（apps/api） |
+| プロダクト | attendance（GitHub: [pf-attendance](https://github.com/maeplego/pf-attendance)） |
 | 最終更新 | 2026-08-19 |
-| 矛盾時の正 | 製品リポジトリの JUnit。本表と食い違ったらテストを直すか本表を追随 |
+| 実装との関係 | 自動化は `apps/api` の `mvn test`。この表と食い違ったらテストかこの文書を直す |
 
 ## 1. 方針
 
 | 層 | やり方 | 目的 |
 | --- | --- | --- |
 | WorkDates / Minutes / DailyHours / PunchRules | DB なし | 日境界と整数分 |
-| AttendanceService | メモリ店舗 + 差し替え Clock | 打刻と他人隔離 |
-| HTTP | MockMvc + メモリ | 401、無視する punchedAt、480 分 |
+| AttendanceService | メモリ店舗 + 差し替え Clock | 打刻・他人隔離・月次の全日 |
+| HTTP | MockMvc + メモリ | 401、無視する punchedAt、480 分、月次 31 日 |
 
-exploit / PoC は書かない。実在個人を fixture に置かない。
+攻撃手順や脆弱性の再現コードは書かない。実在個人を fixture に置かない。
 
 ## 2. 日境界
 
@@ -37,18 +36,20 @@ exploit / PoC は書かない。実在個人を fixture に置かない。
 
 ## 4. 打刻 HTTP
 
-| ID | 観点 | 期待 | 要件 |
-| --- | --- | --- | --- |
-| TS-P01 | `/health` `/ready` | 認証なし 200 | |
-| TS-P02 | ヘッダなし POST | 401 | |
-| TS-P03 | punchedAt=1999 を付ける | サーバーの 2026-08-19T00:00:00Z | FR-01 |
-| TS-P04 | 休憩込み 4 打刻のち GET daily-summary | 480 / 60 | FR-03 |
-| TS-P05 | sato.mei の同日 | punches 空 | FR-05 |
-| TS-P06 | type=teleport | 400 | |
-| TS-P07 | 同日二重出勤 | 409（サービス層） | FR-04 |
+| ID | 観点 | 期待 |
+| --- | --- | --- |
+| TS-P01 | `/health` `/ready` | 認証なし 200 |
+| TS-P02 | ヘッダなし POST | 401 |
+| TS-P03 | punchedAt=1999 を付ける | サーバーの 2026-08-19T00:00:00Z |
+| TS-P04 | 休憩込み 4 打刻のち GET daily-summary | 480 / 60 |
+| TS-P05 | sato.mei の同日 | punches 空 |
+| TS-P06 | type=teleport | 400 |
+| TS-P07 | 同日二重出勤 | 409（サービス層） |
+| TS-P08 | GET month-summary?month=2026-08 | days は 31。他人は 0 |
+| TS-P09 | month=2026-13 | 400 |
 
 ## 5. 未自動化
 
-- Compose 実機の画面操作
+- Compose 実機の画面操作（打刻ホームと月次カレンダー）
 - Postgres / Testcontainers（store=jpa）
-- 締め後 409
+- 締め後の拒否

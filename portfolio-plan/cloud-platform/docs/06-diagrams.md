@@ -1,14 +1,13 @@
-# P02 図表
+# 図表
 
 | 項目 | 値 |
 | --- | --- |
-| プロジェクト | P02 cloud-platform |
-| 対象スライス | 実装済みのローカル 2 モード。AWS 図はモジュール説明（未 apply） |
+| プロダクト | クラウド基盤（観測 [pf-cloud-o11y](https://github.com/maeplego/pf-cloud-o11y) / Kubernetes [pf-cloud-k8s](https://github.com/maeplego/pf-cloud-k8s) / Terraform [pf-cloud-aws](https://github.com/maeplego/pf-cloud-aws)） |
 | 最終更新 | 2026-08-19 |
-| 矛盾時の正 | 自動テストと製品コード、次に `DESIGN.md` |
+| 実装との関係 | この文書と実装が違うときは、製品リポジトリのコードとテストを優先する |
 | 記法 | Mermaid。ユースケースは UML 楕円の代替としてフロー |
 
-詳細な文章は仕様・設計を正とする。図は構造の索引。
+詳細な文章は仕様・設計を参照する。図は構造の索引。
 
 ## 1. ユースケース
 
@@ -18,7 +17,7 @@ flowchart LR
     Rev[レビュア]
     App[製品アプリ]
   end
-  subgraph uc [P02]
+  subgraph uc [クラウド基盤]
     UC1[Compose で観測を見る]
     UC2[障害を注入して RED を見る]
     UC3[連携 overlay を起動する]
@@ -55,18 +54,18 @@ sequenceDiagram
 flowchart TB
   DD[Docker Desktop Kubernetes]
   DD --> A[overlay A foundation]
-  DD --> B[overlay B collab サブセット]
+  DD --> B[overlay B collab]
   DD --> C[overlay C scheduling-talent]
-  DD --> D[overlay D commerce サブセット]
+  DD --> D[overlay D commerce フル]
   DD --> E[overlay E content]
   DD --> F[overlay F ops]
 ```
 
-同時に A–F を載せない。
+同時に A–F を載せない。D は EC フルと推薦。F に Expo アプリは載せない。
 
 ## 4. AWS 3-tier（モジュール。未 apply）
 
-学習用。マルチリージョン・WAF・Blue/Green は非目標。
+学習用。マルチリージョン・WAF・Blue/Green は非目標。この図を apply 済み環境と読まない。
 
 ```mermaid
 flowchart LR
@@ -89,4 +88,4 @@ flowchart LR
   ssm -.-> web
 ```
 
-NAT Gateway は 1。プライベートサブネットの egress（ECR pull、SSM）用。この図を apply 済み環境と読まない。
+NAT Gateway は 1。プライベートサブネットの egress（ECR pull、SSM）用。

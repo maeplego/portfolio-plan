@@ -1,19 +1,21 @@
-# P03 図表
+# 図表
 
 | 項目 | 値 |
 | --- | --- |
-| プロジェクト | P03 media-platform |
-| 対象スライス | アップロード〜派生。Lambda は計画 |
+| プロダクト | メディア基盤 [pf-media](https://github.com/maeplego/pf-media) |
 | 最終更新 | 2026-08-19 |
-| 矛盾時の正 | 自動テストと製品コード、次に `DESIGN.md` |
+| 実装との関係 | この文書と実装が違うときは、製品リポジトリのコードとテストを優先する |
 | 記法 | Mermaid |
+
+マイドライブ UI は実装済み。AWS Lambda 本番経路は未実装のため図に含めない。
 
 ```mermaid
 flowchart LR
   U[所有者] --> UC1[presign して置く]
   U --> UC2[共有リンクを切る]
-  G[ゲスト] --> UC3[トークンで取る]
-  P[processor] --> UC4[派生を書く]
+  U --> UC3[ドライブ UI]
+  G[ゲスト] --> UC4[トークンで取る]
+  P[processor] --> UC5[派生を書く]
 ```
 
 ```mermaid
