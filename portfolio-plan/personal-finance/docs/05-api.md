@@ -3,7 +3,7 @@
 | 項目 | 値 |
 | --- | --- |
 | プロダクト | personal-finance（GitHub: [pf-finance](https://github.com/maeplego/pf-finance)） |
-| 最終更新 | 2026-08-19 |
+| 最終更新 | 2026-08-20 |
 | 実装との関係 | この文書と実装が違うときは、製品リポジトリのコードとテストを優先する |
 | 基準 | `http://localhost:8014`（Compose。起動の正） |
 
@@ -48,7 +48,42 @@
 { "categoryId": "...", "occurredOn": "2026-08-10", "amountYen": 1500, "kind": "expense", "memo": "" }
 ```
 
-201。`amountYen` は正の整数のみ。カテゴリの kind と不一致は 400。PATCH は同じ全項目。DELETE は 204（ハードデリート）。
+PATCH は同じ全項目。DELETE は 204（tombstone。一覧と GET からは 404）。
+
+### POST `/v1/sync`
+
+認証必須。変更セットを LWW で載せる。1 リクエスト最大 100 件。
+
+```json
+{
+  "since": "2026-08-20T00:00:00.000Z",
+  "changes": [
+    {
+      "id": "01…",
+      "updatedAt": "2026-08-20T04:00:00.000Z",
+      "deletedAt": null,
+      "categoryId": "…",
+      "occurredOn": "2026-08-20",
+      "amountYen": 1500,
+      "kind": "expense",
+      "memo": ""
+    }
+  ]
+}
+```
+
+`since` は省略または `null` 可。200:
+
+```json
+{
+  "applied": ["01…"],
+  "rejected": [{ "id": "01…", "reason": "server_newer", "server": { } }],
+  "serverChanges": [],
+  "cursor": "2026-08-20T04:00:00.000Z"
+}
+```
+
+`reason` は `server_newer`（新しい方がサーバー。`server` 付き）または `rejected`（他人の id・不正。`server` 無し）。`serverChanges` は `updatedAt > since` の自分の行（tombstone 含む）。クライアントが新しい方が勝つ。同じ時刻はサーバー。削除は `deletedAt` に instant。
 
 ### GET `/v1/export.csv?month=YYYY-MM`
 

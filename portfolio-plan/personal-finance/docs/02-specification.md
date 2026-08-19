@@ -16,7 +16,7 @@
 
 金額欄は数字のみ。`12.5` や `1e2` はクライアントでも API でも拒否する。CSV も整数円。カテゴリは名前と kind で突合する。
 
-Chrome（localhost）ではインストール可能。オフラインの新規入力と削除は IndexedDB キューに残り、オンライン復帰で API へ送る。サーバーが正。LWW 同期は無い。
+Chrome（localhost）ではインストール可能。オフラインの新規入力と削除は IndexedDB キューに残り、オンライン復帰で `POST /v1/sync` する。同じ id は `updatedAt` の新しい方が残る。削除は tombstone（一覧と GET からは見えない）。
 
 ## 2. 金額
 
@@ -43,7 +43,7 @@ Chrome（localhost）ではインストール可能。オフラインの新規�
 
 ## 5. 削除と CSV
 
-DELETE は即時ハードデリート。tombstone は未実装。エクスポートは自分のその月だけ。取り込みは別ユーザーへコピーしても元の id は漏らさない。
+DELETE と sync の削除は tombstone（`deletedAt`）。一覧・GET・レポート・CSV には出ない。同じ id に新しい `updatedAt` と `deletedAt: null` を送ると復活する。エクスポートは自分のその月の生きている行だけ。取り込みは別ユーザーへコピーしても元の id は漏らさない。
 
 ## 6. シード
 

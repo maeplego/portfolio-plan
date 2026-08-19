@@ -26,9 +26,10 @@ PWA と同期 API は同じ同期プロトコル（tombstone, updated_at）を�
 
 ```
 pf-finance/
-  apps/web       # Next.js PWA, Dexie
-  apps/api       # Hono または NestJS
-  packages/sync-protocol
+  apps/web       # Next.js PWA, IndexedDB キュー
+  apps/api       # Hono
+  packages/money
+  packages/sync-protocol  # LWW の純関数
   deploy/
 ```
 
@@ -38,16 +39,17 @@ pf-finance/
 
 | 層 | 採用 |
 | --- | --- |
-| Web | Next.js または Vite + React。Workbox/Serwist、Dexie、Recharts |
-| API | TypeScript（Hono 推奨。軽い） |
+| Web | Next.js PWA。Workbox 相当の `/sw.js`、IndexedDB キュー、Recharts |
+| API | TypeScript（Hono） |
 | DB | PostgreSQL |
+| 同期 | `packages/sync-protocol` の LWW。行に `updated_at` と `deleted_at` |
 | 認証 | P01。public クライアント + PKCE |
 | テスト | Playwright で Offline 模擬 |
 
 ## 設計思想
 
 - **入力の速さのためローカルが正。** サーバーは同期とバックアップ
-- **コンフリクトは LWW + tombstone。** 制限を README に書く
+- **コンフリクトは LWW + tombstone。** 同時刻はサーバーを残す。クライアント時計の未来時刻は制限として README に書く
 - **金額は整数円。** 浮動小数点禁止
 - **実家計を入れない。** シードは架空
 - **アカウント削除でサーバーデータも消す**
@@ -56,8 +58,8 @@ pf-finance/
 
 1. オンライン CRUD と月次グラフ、予算
 2. PWA インストール
-3. ✅ IndexedDB とオフラインキュー（create/delete。オンライン復帰で POST/DELETE）
-4. 同期 API（LWW / tombstone は未）
+3. ✅ IndexedDB とオフラインキュー（create/delete。オンライン復帰で POST /sync）
+4. ✅ 同期 API（LWW + tombstone。`POST /v1/sync`）
 5. ✅ CSV 入出力（整数円。カテゴリは名前突合）
 6. P01、ダークモード、削除
 

@@ -9,13 +9,14 @@
 ## 1. 構成
 
 ```
-apps/web   Next.js PWA。ブラウザから API を直接呼ぶ
-apps/api   Hono。認可と永続化の正
+apps/web   Next.js PWA。ブラウザから API を直接呼ぶ。オフラインキューは IndexedDB
+apps/api   Hono。認可と永続化
 packages/money  整数円パーサ
+packages/sync-protocol  decideLww（同時刻はサーバー）
 deploy     Compose が主。deploy/k8s は ops overlay 用
 ```
 
-サーバーが正。オフライン中の create/delete だけ IndexedDB キューに残し、オンラインで HTTP を再送する。Service Worker は installability 用の GET シェルだけ。LWW / tombstone の差分同期は未作成。
+サーバーが正の一覧・レポートに加え、オフラインの変更セットは `POST /v1/sync` で載せる。各取引は `updatedAt` の新しい方が勝つ（LWW）。同じ時刻はサーバーを残す。削除は `deletedAt` を置く tombstone で、一覧からは消える。新しい `updatedAt` で `deletedAt: null` なら復活する。
 
 起動の正は **Compose**（Postgres）。Kubernetes は [pf-cloud-k8s](https://github.com/maeplego/pf-cloud-k8s) の ops overlay から参照するマニフェストがある（`finance.localhost` / `finance-api.localhost`、DB 名 `finance`）。このフォルダだけを apply しない。
 
@@ -37,4 +38,10 @@ CORS 既定は `http://localhost:3014`（PWA）。`*` は明示設定だけ。Co
 
 ## 5. シード
 
-起動時 `seedDemoIfEmpty`。`demo` に取引があれば再投入しない。Compose ボリュームを消すと戻る。
+起動時 `seedDemoIfEmpty`。`demo` に生きている取引があれば再投入しない。Compose ボリュームを消すと戻る。
+
+## 6. LWW
+
+比較は `packages/sync-protocol` の `decideLww`。クライアントの `updatedAt` がサーバーより新しいときだけ書く。同じ時刻はサーバーを残す（再送が上書きしない）。他人の id は `rejected` とし、サーバー本文は返さない。
+
+`GET /v1/transactions` とレポートは `deleted_at IS NULL` だけ。HTTP DELETE も tombstone。tombstone の GC はしない。カテゴリと予算は同期セットに入らない。クライアントが未来の `updatedAt` を付けると常に勝てる。これは LWW の既知の制限で、時計の証明はしない。

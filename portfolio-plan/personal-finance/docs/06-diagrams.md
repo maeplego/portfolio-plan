@@ -3,7 +3,7 @@
 | 項目 | 値 |
 | --- | --- |
 | プロダクト | personal-finance（GitHub: [pf-finance](https://github.com/maeplego/pf-finance)） |
-| 最終更新 | 2026-08-19 |
+| 最終更新 | 2026-08-20 |
 | 実装との関係 | この文書と実装が違うときは、製品リポジトリのコードとテストを優先する |
 | 記法 | Mermaid |
 
@@ -18,6 +18,7 @@ flowchart LR
   User --> UC4[グラフを見る]
   User --> UC5[CSV入出力]
   User --> UC6[PWAを入れる]
+  User --> UC7[オフライン入力を同期する]
 ```
 
 ## 2. 画面遷移
@@ -64,7 +65,35 @@ sequenceDiagram
   API-->>Web: 201 imported
 ```
 
-## 5. 認可
+## 5. LWW 同期
+
+成功:
+
+```mermaid
+sequenceDiagram
+  actor U
+  participant Web
+  participant API
+  U->>Web: オフラインで入力
+  Web->>Web: IndexedDB キュー
+  U->>Web: オンライン復帰
+  Web->>API: POST /v1/sync changes
+  API->>API: decideLww
+  API-->>Web: applied
+```
+
+競合（同時刻またはサーバーが新しい）:
+
+```mermaid
+sequenceDiagram
+  participant Web
+  participant API
+  Web->>API: POST /v1/sync 古い updatedAt
+  API->>API: keep_server
+  API-->>Web: rejected server_newer
+```
+
+## 6. 認可
 
 ```mermaid
 sequenceDiagram
@@ -78,7 +107,7 @@ sequenceDiagram
   API-->>Bob: transactions []
 ```
 
-## 6. ER（論理）
+## 7. ER（論理）
 
 ```mermaid
 erDiagram
@@ -94,6 +123,8 @@ erDiagram
     int amount_yen
     date occurred_on
     text kind
+    timestamptz updated_at
+    timestamptz deleted_at
   }
   budgets {
     char month

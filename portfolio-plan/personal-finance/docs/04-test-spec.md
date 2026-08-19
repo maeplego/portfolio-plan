@@ -4,7 +4,7 @@
 | --- | --- |
 | プロダクト | personal-finance（GitHub: [pf-finance](https://github.com/maeplego/pf-finance)） |
 | 最終更新 | 2026-08-20 |
-| 実装との関係 | 自動化は `npm test`（`packages/money`、`apps/api`、`apps/web` のキュー純関数）。この表と食い違ったらテストかこの文書を直す |
+| 実装との関係 | 自動化は `npm test`（`packages/money`、`packages/sync-protocol`、`apps/api`、`apps/web` のキュー純関数）。この表と食い違ったらテストかこの文書を直す |
 
 ## 1. 方針
 
@@ -12,9 +12,10 @@
 | --- | --- | --- |
 | money | DB なし | 整数円だけ通す |
 | report | 純関数 | 予算残りと日次 |
-| HTTP | Hono `app.request` + メモリ Store | CRUD、401、隔離、float 400、シード、CSV |
+| HTTP | Hono `app.request` + メモリ Store | CRUD、401、隔離、float 400、シード、CSV、`POST /v1/sync` の LWW |
 | Playwright | `apps/web` の `test:e2e`。メモリ API。既定 CI では動かない | 2026-08 サマリーと other 隔離 |
-| offline queue | `apps/web/lib/offline-queue.test.ts` | オフライン表示、ネットワーク失敗で残す、400 は捨てる |
+| offline queue | `apps/web/lib/offline-queue.test.ts` | オフライン表示、変更セット、ネットワーク失敗で残す、400 は捨てる |
+| LWW | `packages/sync-protocol` | 新規 apply、新しい方が勝つ、同時刻はサーバー |
 
 実家計を fixture に置かない。
 
@@ -43,6 +44,10 @@
 | TS-H10 | export 後に他ユーザーへ import | 件数は増える。元 id は混ざらない |
 | TS-H11 | import の小数円 | 400 |
 | TS-H12 | CORS | PWA オリジンは ACAO。他 Origin は `*` を付けない |
+| TS-H13 | `POST /v1/sync` 新規 | クライアント id のまま 200。一覧に出る |
+| TS-H14 | 古い / 同じ `updatedAt` | `rejected: server_newer`。金額はサーバー |
+| TS-H15 | tombstone のあと新しい write | 一覧から消え、復活する |
+| TS-H16 | bob が alice の id を sync | `rejected`。alice の行は変わらない。bob にサーバー本文を返さない |
 
 ## 4. 未自動化
 

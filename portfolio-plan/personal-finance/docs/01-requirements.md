@@ -21,7 +21,7 @@
 - 架空 3 ヶ月シード（2026-06〜08）
 - 他ユーザーの取引が API で取れないこと
 - PWA としてインストールできること（manifest + Service Worker）
-- オフラインの新規入力と削除を IndexedDB キューに残し、オンライン復帰で API へ送ること
+- オフラインの新規入力と削除を IndexedDB キューに残し、オンライン復帰で `POST /v1/sync`（LWW + tombstone）すること
 - 単体 Compose（Postgres + API + Web）が通常のデモ経路
 - Kubernetes 用マニフェストは ops overlay から参照できるが、起動の正は Compose
 
@@ -29,8 +29,7 @@
 
 | 項目 | 理由 |
 | --- | --- |
-| IndexedDB を正とする / LWW | サーバーが正。キューは HTTP 再送だけ |
-| `POST /sync`、LWW、tombstone | 未実装。DELETE は即時ハードデリート。キューは POST/DELETE の再送だけ |
+| IndexedDB を正とする CRDT | 同期は LWW。同時刻はサーバー。カテゴリ・予算は同期セット外 |
 | 繰り返し取引、複数ウォレット | 未実装 |
 | 認証基盤の OIDC、アカウント削除、ダークモード | 未実装 |
 | 銀行 API、確定申告、世帯権限、E2E 暗号化 | 範囲外 |
@@ -61,7 +60,8 @@
 | FR-05 | `demo` に架空 3 ヶ月が入る。実データではない | デモとプライバシー |
 | FR-06 | Web はインストール可能な PWA | クライアント品質 |
 | FR-07 | 自分の選択月だけ CSV を書き出せ、取り込める。取り込みは元 id を漏らさない | バックアップと移行 |
-| FR-08 | オフラインの create/delete は IndexedDB キューに残り、オンラインで API へ送る | 入力の速さ |
+| FR-08 | オフラインの create/delete は IndexedDB キューに残り、オンラインで `POST /v1/sync` する | 入力の速さ |
+| FR-09 | 同期は `updatedAt` の LWW。削除は tombstone。他人の id は適用しない | 他デバイスとコンフリクト |
 
 ## 7. 非機能
 
@@ -80,5 +80,6 @@
 3. ユーザー A の取引を B が list / get / delete できない（404 または空）
 4. Web で月を切り替え、取引追加、グラフ表示、CSV 入出力ができる
 5. `manifest.webmanifest` と Service Worker があり、localhost でインストールできる
-6. API が落ちているとき取引追加がキューに入り、復帰後に一覧へ載る
-7. `docker compose up` で上記が動く
+6. API が落ちているとき取引追加がキューに入り、復帰後に `POST /v1/sync` で一覧へ載る
+7. 古い `updatedAt` の同期はサーバー値を残し、tombstone は一覧から消える
+8. `docker compose up` で上記が動く
