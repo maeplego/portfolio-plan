@@ -3,7 +3,7 @@
 | 項目 | 値 |
 | --- | --- |
 | プロジェクト | P06 commerce-platform |
-| 対象スライス | 1。自動化は `apps/api` の `go test ./...` |
+| 対象スライス | 2。自動化はリポジトリルートの `go test ./...` |
 | 最終更新 | 2026-08-19 |
 | 矛盾時の正 | 製品リポジトリの Go テスト。本表と食い違ったらテストを直すか本表を追随 |
 
@@ -13,11 +13,11 @@
 | --- | --- | --- |
 | money | DB なし | 負数・通貨・overflow |
 | inventory / order | メモリ Store + 固定 Clock | 不足、補償、TTL、同時引当 |
-| HTTP | httptest + シード | 契約、401/403、冪等 200、float 価格 |
+| HTTP | httptest。gateway は catalog/inventory/order を別サーバとして接続 | 公開契約、401/403、冪等 200、float 価格、同時 409 |
 
 exploit / PoC は書かない。カード番号を fixture に置かない。
 
-メモリの同時 checkout は mutex 下の `TryReserve` を検証する。Postgres の `UPDATE ... WHERE available >= n` と同じ**契約**（足りない側は shortage）。ロック実装は別物。
+メモリの同時 checkout は inventory の mutex 下 `ReserveHeld`（Postgres では 1 TX の UPDATE）と同じ**契約**。gateway の TS-H06 はプロセス間 HTTP でも 201 と 409 が 1 ずつ。
 
 ## 2. 金額
 

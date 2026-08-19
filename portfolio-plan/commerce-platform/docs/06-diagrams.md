@@ -3,7 +3,7 @@
 | 項目 | 値 |
 | --- | --- |
 | プロジェクト | P06 commerce-platform |
-| 対象スライス | シーケンス・状態・ER はスライス 1。画面は実装済み。抽出後は計画 |
+| 対象スライス | シーケンス・状態・ER はスライス 2。画面は実装済み。overlay D は計画 |
 | 最終更新 | 2026-08-19 |
 | 矛盾時の正 | 自動テストと製品コード、次に `DESIGN.md` |
 | 記法 | Mermaid。ユースケースは UML 楕円の代替としてフロー |
@@ -16,7 +16,7 @@ flowchart LR
     Buyer[購入者]
     Ops[ops]
   end
-  subgraph uc [P06 スライス1]
+  subgraph uc [P06 スライス2]
     UC1[商品を見る]
     UC2[カートに入れる]
     UC3[チェックアウトする]
@@ -51,16 +51,19 @@ flowchart TB
 ```mermaid
 sequenceDiagram
   actor Buyer
-  participant API as order module
+  participant GW as gateway
+  participant Ord as order
   participant Inv as inventory
   participant Pay as payment mock
-  Buyer->>API: POST /v1/checkout + Idempotency-Key
-  API->>Inv: Reserve
-  Inv-->>API: held
-  API->>Pay: Charge(no PAN)
-  Pay-->>API: paymentId
-  API->>Inv: Consume
-  API-->>Buyer: 201 paid
+  Buyer->>GW: POST /v1/checkout + Idempotency-Key
+  GW->>Ord: POST /v1/checkout
+  Ord->>Inv: Reserve (1 TX)
+  Inv-->>Ord: held
+  Ord->>Pay: Charge(no PAN)
+  Pay-->>Ord: paymentId
+  Ord->>Inv: Consume
+  Ord-->>GW: 201 paid
+  GW-->>Buyer: 201 paid
 ```
 
 ## 4. 在庫不足（同時 2 人）
@@ -69,16 +72,21 @@ sequenceDiagram
 sequenceDiagram
   actor A
   actor B
-  participant API
-  participant Inv
-  A->>API: checkout qty 1
-  B->>API: checkout qty 1
-  API->>Inv: TryReserve A
-  Inv-->>API: ok reserved=1
-  API->>Inv: TryReserve B
-  Inv-->>API: shortage
-  API-->>A: 201 paid
-  API-->>B: 409 inventory_shortage
+  participant GW as gateway
+  participant Ord as order
+  participant Inv as inventory
+  A->>GW: checkout qty 1
+  B->>GW: checkout qty 1
+  GW->>Ord: checkout A
+  GW->>Ord: checkout B
+  Ord->>Inv: ReserveHeld A
+  Inv-->>Ord: ok reserved=1
+  Ord->>Inv: ReserveHeld B
+  Inv-->>Ord: shortage
+  Ord-->>GW: 201 paid
+  Ord-->>GW: 409 inventory_shortage
+  GW-->>A: 201 paid
+  GW-->>B: 409 inventory_shortage
   Note over Inv: B の補償は held が無いので no-op
 ```
 
@@ -109,4 +117,4 @@ erDiagram
   cart_items }o--|| catalog_products : product_id 論理
 ```
 
-物理 FK は張っていない。列は `schema.sql` を正とする。
+物理 FK は張っていない。プロセスごとに別 DB。列は各 `schema.sql` を正とする。

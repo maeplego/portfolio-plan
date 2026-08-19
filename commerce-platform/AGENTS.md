@@ -15,6 +15,6 @@
 
 K8s は P02、画像は P03、推薦は P07。K8s / overlay D は Compose の購入〜在庫不足が安定してから。
 
-製品コードはワークスペースの兄弟 `../pf-commerce`（`apps/api` モジュラモノリス、`apps/storefront`、`deploy`）。このフォルダは設計・指示・チャット記録用。
+製品コードはワークスペースの兄弟 `../pf-commerce`（`apps/catalog` / `apps/inventory` / `apps/order` / `apps/api` gateway、`apps/storefront`、`deploy`）。このフォルダは設計・指示・チャット記録用。
 
 チャット記録の次ファイルは `chat-context/P06_XXXXX_要約.md`（既存最大連番 + 1）。

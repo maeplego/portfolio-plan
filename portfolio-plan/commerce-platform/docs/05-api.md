@@ -3,10 +3,10 @@
 | 項目 | 値 |
 | --- | --- |
 | プロジェクト | P06 commerce-platform |
-| 対象スライス | スライス 1 の HTTP。OpenAPI は未作成 |
+| 対象スライス | スライス 2 の公開 HTTP。OpenAPI は未作成 |
 | 最終更新 | 2026-08-19 |
 | 矛盾時の正 | 自動テストと製品コード、次に `DESIGN.md` |
-| 基準 | `http://localhost:8099`（Compose） |
+| 基準 | `http://localhost:8099`（Compose の gateway。catalog/inventory/order は内部） |
 
 エラー本文:
 
