@@ -36,6 +36,8 @@ exploit / PoC は書かない。障害注入はローカル debug フラグだ�
 | TS-K02 | foundation smoke | A overlay の Pod Ready（手動・実機） |
 | TS-K03 | scheduling-talent smoke | C overlay（手動） |
 | TS-K04 | collab smoke | B サブセット（手動）。P11 は無い |
+| TS-K05 | e-content smoke | E overlay（手動）。P08 blog + shortener |
+| TS-K06 | f-ops smoke | F overlay（手動）。P15 は API のみ |
 
 ## 4. Terraform
 

@@ -26,3 +26,4 @@
 | 2 IndexedDB とオフラインキュー | 計画 | DESIGN 実装順 3。Service Worker はシェルのみ |
 | 3 同期 API / LWW + tombstone | 計画 | 実装順 4。削除はいまハードデリート |
 | 4 CSV / P01 / ダークモード / アカウント削除 | 計画 | 実装順 5–6 |
+| overlay F | 実装済み | `pf-finance/deploy/k8s/`。Compose が正 |

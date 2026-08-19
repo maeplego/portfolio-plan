@@ -19,7 +19,7 @@
 
 - Compose で Collector / Prometheus / Loki / Tempo / Grafana を起動し、サンプルアプリの RED とトレースを相関できる
 - アプリは OTLP を Collector に送り、ベンダー SDK を Grafana / Tempo に直接繋がない
-- Docker Desktop Kubernetes 上の用途別 overlay（A foundation、B collab サブセット、C scheduling-talent）
+- Docker Desktop Kubernetes 上の用途別 overlay（A foundation、B collab サブセット、C scheduling-talent、E content、F ops）
 - `GET /health` と `GET /ready`、JSON ログの最低キー
 - P09 向け 3-tier モジュール（VPC / ALB / ECS / RDS / GitHub OIDC / 請求アラーム）と `terraform fmt` / `validate`
 
@@ -28,8 +28,8 @@
 | 項目 | 理由 |
 | --- | --- |
 | AWS への `terraform apply` / 本番相当の常時稼働 | 非目標。課金と秘密の正本を個人アカウントに置かない |
-| overlay D/E/F の完成 | 計画。matrix に「未来」と書く |
-| overlay B への P11 portal | 計画 |
+| overlay D の完成 | 計画。matrix に「未来」と書く |
+| overlay B / E への P11 portal | 計画 |
 | サービスメッシュ、マルチリージョン、長期保持の課金最適化 | 非目標 |
 | 15 Pxx を 1 クラスタで同時フル起動 | 非目標 |
 
@@ -78,6 +78,6 @@
 
 1. `pf-cloud-o11y` Compose で Grafana が開き、demo-api の `/work` がトレースにつながる
 2. debug slow / fail で p95 または 5xx がダッシュボードに出る
-3. Docker Desktop Kubernetes で foundation または scheduling-talent overlay の smoke が通る（手順は `integration-demo.md`）
+3. Docker Desktop Kubernetes で foundation / scheduling-talent / collab / e-content / f-ops いずれかの smoke が通る（手順は `integration-demo.md`）
 4. `terraform -chdir=envs/dev-p09-attendance init -backend=false` のあと `validate` が成功する
 5. README に「本番 apply しない」「destroy / コスト」がある

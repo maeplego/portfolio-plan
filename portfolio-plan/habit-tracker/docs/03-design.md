@@ -12,7 +12,7 @@
 | リポジトリ | 役割 | K8s |
 | --- | --- | --- |
 | `pf-habit-mobile` | Expo、expo-sqlite、domain 純関数 | 載せない |
-| `pf-habit-api` | Hono、Postgres、Compose | このスライスでは未着手 |
+| `pf-habit-api` | Hono、Postgres、Compose | overlay F に API のみ |
 
 共有は契約（暦日文字列と JSON 形）だけ。ストリーク実装はモバイル側が正。API は保存だけ。
 

@@ -26,4 +26,4 @@
 | 2 OG / Draft Mode / Tailwind+MDX | 計画 | DESIGN 実装順 3 |
 | 3 記事に紐づく短縮の日次グラフ UI | 計画 | DESIGN 実装順 5。API の `/v1/links/{id}/stats` はスライス 1 にある |
 | 4 P03 / P01 / レート制限 / k6 | 計画 | |
-| overlay E | 禁止（本スライス） | Compose のみ |
+| overlay E | 実装済み（P08。P11 なし） | `pf-cloud-k8s` `e-content` |

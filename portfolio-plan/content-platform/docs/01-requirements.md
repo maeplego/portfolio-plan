@@ -30,7 +30,7 @@ P08 は **公開コンテンツ基盤** として、ブログ CMS と短縮を�
 
 | 項目 | 理由 |
 | --- | --- |
-| overlay E / K8s | ユーザー指示。Compose のあと |
+| overlay E / K8s | 任意の連携デモ。Compose が正。P11 は未搭載 |
 | P01 OIDC | 開発ヘッダ / cookie で開始 |
 | P03 実パイプライン | ソフト依存。ローカル画像で足りる |
 | MDX、OG 画像、Draft Mode、全文検索 | DESIGN 実装順 3 以降 |
@@ -74,7 +74,7 @@ P08 は **公開コンテンツ基盤** として、ブログ CMS と短縮を�
 | NFR-01 | 短縮の純論理と httptest は DB なしで緑 | CI |
 | NFR-02 | 生 IP をテーブルに残さない | idea 09 |
 | NFR-03 | README に学習用である旨 | 本番誤用 |
-| NFR-04 | Compose 必須。overlay E はこのスライスに出さない | 計画 |
+| NFR-04 | Compose 必須。overlay E は任意の連携デモ（P08 のみ。P11 なし） | 12 GB |
 
 ## 7. 受け入れ（スライス 1）
 

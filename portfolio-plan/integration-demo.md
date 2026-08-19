@@ -23,8 +23,8 @@
 | `portfolio-integration-b-collab` | P01, P02, P03, P04（P11 は後続） | workspace の連携（P04 サブセット） |
 | `portfolio-integration-c-scheduling-talent` | P01, P02, P05, P07, P10 | 採用ドメイン |
 | `portfolio-integration-d-commerce` | P01, P02, P03, P06, P07, P11, P12, P13 | commerce 本線 |
-| `portfolio-integration-e-content` | P01, P02, P03, P08, P11 | content / media / portal |
-| `portfolio-integration-f-ops` | P01, P02, P09, P12, P14, P15 | 業務 / 個人向け軽量群 |
+| `portfolio-integration-e-content` | P01, P02, P03, P08（P11 は後続） | content / media |
+| `portfolio-integration-f-ops` | P01, P02, P09, P12, P14, P15 API | 業務 / 個人向け軽量群 |
 
 現時点の実装済み K8s overlay:
 
@@ -32,6 +32,8 @@
 - `portfolio-integration` + `docker-desktop`（上記と同じ。後方互換）
 - `portfolio-integration-c-scheduling-talent` + `docker-desktop-c-scheduling-talent`
 - `portfolio-integration-b-collab` + `docker-desktop-b-collab`（P04 サブセット。P11 portal は未搭載）
+- `portfolio-integration-e-content` + `docker-desktop-e-content`（P08。P11 portal は未搭載）
+- `portfolio-integration-f-ops` + `docker-desktop-f-ops`（P09 / P12 / P14 / P15 API。Expo は非搭載）
 
 ## overlay の切り替え（12 GB 制約）
 
@@ -41,7 +43,9 @@
 | --- | --- |
 | foundation → scheduling-talent | `.\scripts\down.ps1`（または `down-a-foundation.ps1`）→ `.\scripts\cluster-smoke-c-scheduling-talent.ps1` |
 | scheduling-talent → foundation | `.\scripts\down-c-scheduling-talent.ps1` → `.\scripts\cluster-smoke.ps1` |
-| いずれか → collab（P04） | `.\scripts\down-c-scheduling-talent.ps1` と `.\scripts\down-a-foundation.ps1` → `.\scripts\cluster-smoke-b-collab.ps1`（`up-b-collab.ps1` が A/C を down する） |
+| いずれか → collab（P04） | `.\scripts\down-c-scheduling-talent.ps1` と `.\scripts\down-a-foundation.ps1` → `.\scripts\cluster-smoke-b-collab.ps1`（`up-b-collab.ps1` が他 overlay を down する） |
+| いずれか → content（P08） | `.\scripts\cluster-smoke-e-content.ps1`（`up-e-content.ps1` が他 overlay を down する） |
+| いずれか → ops（P09/P12/P14/P15 API） | `.\scripts\cluster-smoke-f-ops.ps1`（`up-f-ops.ps1` が他 overlay を down する） |
 
 platform（Postgres / Redis / Garage / o11y）は両 overlay で共有する。`ensure-platform-databases.ps1` は apply 時に DB/user を足す。
 
@@ -92,7 +96,7 @@ docker compose -f compose.yaml --env-file .env up --build
 
 ## 連携デモ（Kubernetes）
 
-> **ステータス**: foundation overlay は IdP ログイン → media ホームまで `oidc-smoke.ps1` / `demo-smoke.ps1` が通る。scheduling-talent overlay は Docker Desktop Kubernetes（context `docker-desktop`）上で `cluster-smoke-c-scheduling-talent.ps1` が予約確定 → `interview` まで通り、`http://talent.localhost` と `http://talent-api.localhost/health` を Ingress 確認済み（2026-08-19）。b-collab overlay は P04 サブセット（P01+P02+P03+P04。P11 なし）。standalone kind では検証しない。
+> **ステータス**: foundation overlay は IdP ログイン → media ホームまで `oidc-smoke.ps1` / `demo-smoke.ps1` が通る。scheduling-talent overlay は Docker Desktop Kubernetes（context `docker-desktop`）上で `cluster-smoke-c-scheduling-talent.ps1` が予約確定 → `interview` まで通り、`http://talent.localhost` と `http://talent-api.localhost/health` を Ingress 確認済み（2026-08-19）。b-collab overlay は P04 サブセット（P01+P02+P03+P04。P11 なし）。e-content は P08（blog + shortener。P11 なし）。f-ops は P09 / P12 / P14 / P15 API（Expo なし）。standalone kind では検証しない。 overlay D は未着手。
 
 ### 0. kubectl context（必須）
 
@@ -116,7 +120,7 @@ kubectl get nodes
 
 ### 2. イメージをビルドしてノードへ載せる
 
-Docker Desktop Kubernetes（kind モード）は **ホストの Docker イメージを自動では見ない**。`desktop-control-plane` の containerd へ import する。`build-images.ps1` は foundation に加え P04 / P05 / P10 イメージも build する。
+Docker Desktop Kubernetes（kind モード）は **ホストの Docker イメージを自動では見ない**。`desktop-control-plane` の containerd へ import する。`build-images.ps1` は foundation に加え P04 / P05 / P08 / P09 / P10 / P12 / P14 / P15 API イメージも build する。overlay 指定: `-Overlay e-content` / `-Overlay f-ops`。
 
 ```powershell
 cd pf-cloud-k8s
@@ -152,6 +156,22 @@ cd pf-cloud-k8s
 .\scripts\expose-ingress.ps1
 ```
 
+#### content（P08。P11 portal なし）
+
+```powershell
+cd pf-cloud-k8s
+.\scripts\cluster-smoke-e-content.ps1
+.\scripts\expose-ingress.ps1
+```
+
+#### ops（P09 / P12 / P14 / P15 API。Expo なし）
+
+```powershell
+cd pf-cloud-k8s
+.\scripts\cluster-smoke-f-ops.ps1
+.\scripts\expose-ingress.ps1
+```
+
 ### 4. 起動待ち
 
 ```powershell
@@ -175,6 +195,12 @@ kubectl wait --for=condition=ready pod -l app=platform-postgres -n platform --ti
 | P05 calendar API | http://calendar-api.localhost | public / internal API |
 | P10 talent web | http://talent.localhost | OIDC 必須。ログイン後の acting user は `?user=candidate-1` |
 | P10 talent API | http://talent-api.localhost | talent API。overlay では Bearer または `X-Dev-User-Sub`（`TALENT_DEV_AUTH=true`、cluster-smoke 用） |
+| P08 blog | http://blog.localhost | overlay E。管理は `CONTENT_DEV_AUTH` |
+| P08 shortener | http://shortener.localhost | overlay E。`SHORTENER_DEV_AUTH` + `X-Dev-User-Sub` |
+| P09 attendance | http://attendance.localhost | overlay F。API は `attendance-api.localhost` |
+| P12 reliability | http://reliability.localhost | overlay F。メモリストア |
+| P14 finance | http://finance.localhost | overlay F。API は `finance-api.localhost` |
+| P15 habit API | http://habit-api.localhost | overlay F。Expo はクラスタに載せない |
 | Grafana | http://grafana.localhost | 学習用 admin/admin。Tempo を既定 datasource |
 | Garage S3 | http://garage.localhost | 署名付き GET/PUT（ブラウザと media-web） |
 
@@ -220,6 +246,28 @@ kubectl wait --for=condition=ready pod -l app=platform-postgres -n platform --ti
 
 永続化は platform Postgres の `workspace` DB。Y.Doc は collab メモリ。
 
+#### content（P08）
+
+`cluster-smoke-e-content.ps1` は blog / shortener の health、短縮作成、302、Ingress を確認する。管理は開発認証。学習用デモ記事は架空の Harbor Press。
+
+目視確認するときの URL:
+
+- [http://blog.localhost](http://blog.localhost)
+- [http://blog.localhost/demo](http://blog.localhost/demo)
+- [http://shortener.localhost/health](http://shortener.localhost/health)
+- [http://media.localhost](http://media.localhost)（OIDC。foundation と同じ）
+
+#### ops（P09 / P12 / P14 / P15 API）
+
+`cluster-smoke-f-ops.ps1` は attendance 打刻、reliability インシデント、finance 月次、habit シード一覧、各 API Ingress `/health` を確認する。Expo / habit-mobile はホスト側。
+
+目視確認するときの URL:
+
+- [http://attendance.localhost](http://attendance.localhost)（シード `aoki.haru`）
+- [http://reliability.localhost](http://reliability.localhost)
+- [http://finance.localhost](http://finance.localhost)（シード `demo`）
+- [http://habit-api.localhost/health](http://habit-api.localhost/health)
+
 ### 7. 片付け
 
 ```powershell
@@ -227,6 +275,8 @@ cd pf-cloud-k8s
 .\scripts\down.ps1
 .\scripts\down-c-scheduling-talent.ps1
 .\scripts\down-b-collab.ps1
+.\scripts\down-e-content.ps1
+.\scripts\down-f-ops.ps1
 ```
 
 Docker Desktop Kubernetes を無効化してもよい。単体 Compose デモには影響しない。
@@ -236,18 +286,23 @@ Docker Desktop Kubernetes を無効化してもよい。単体 Compose デモに
 ```
 Docker Desktop Kubernetes
 ┌──────────────────────────────────────────────────────────┐
-│ Ingress (nginx)  idp / media / workspace / calendar / talent / grafana / garage.localhost
+│ Ingress (nginx)  idp / media / workspace / calendar / talent / blog / shortener /
+│                  attendance / reliability / finance / habit-api / grafana / garage.localhost
 ├──────────────────────────────────────────────────────────┤
 │ namespace: platform                                       │
-│   postgres (DB: identity, media, calendar, talent, workspace, ...)   │
+│   postgres (DB: identity, media, calendar, talent, workspace, content, ...)   │
 │   redis, garage (S3 互換), otel-collector                 │
 ├──────────────────────────────────────────────────────────┤
 │ namespace: p01        │ namespace: p03                     │
 │   idp, admin          │   api, web, processor              │
 │ namespace: p04        │ namespace: p05                     │
 │   api, collab, web    │   api, web, worker                 │
-│ namespace: p10                                             │
-│   api, web                                                 │
+│ namespace: p08        │ namespace: p09                     │
+│   blog, shortener     │   api, web                         │
+│ namespace: p10        │ namespace: p12                     │
+│   api, web            │   api, web（メモリ）                 │
+│ namespace: p14        │ namespace: p15                     │
+│   api, web            │   api のみ（Expo なし）              │
 └──────────────────────────────────────────────────────────┘
 ```
 
@@ -293,6 +348,8 @@ Docker Desktop Kubernetes
 7. foundation smoke (`cluster-smoke.ps1` + `oidc-smoke.ps1` + `demo-smoke.ps1`）
 8. scheduling-talent smoke (`cluster-smoke-c-scheduling-talent.ps1`）
 9. b-collab smoke（P04 サブセット。`cluster-smoke-b-collab.ps1`）。P11 portal は後続
+10. e-content smoke（P08。`cluster-smoke-e-content.ps1`）。P11 portal は後続
+11. f-ops smoke（P09 / P12 / P14 / P15 API。`cluster-smoke-f-ops.ps1`）
 
 ## 単体 Compose 連携デモ: P05 ↔ P10（予約確定 → 面接ステータス）
 

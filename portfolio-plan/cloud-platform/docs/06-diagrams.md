@@ -47,7 +47,7 @@ sequenceDiagram
   G->>Tmp: trace
 ```
 
-## 3. 連携デモ（計画 overlay は載せない）
+## 3. 連携デモ（同時に全部載せない）
 
 ```mermaid
 flowchart TB
@@ -55,10 +55,12 @@ flowchart TB
   DD --> A[overlay A foundation]
   DD --> B[overlay B collab サブセット]
   DD --> C[overlay C scheduling-talent]
-  DD -.-> D[D/E/F 計画]
+  DD --> E[overlay E content]
+  DD --> F[overlay F ops]
+  DD -.-> D[D 計画]
 ```
 
-同時に A/B/C を載せない。
+同時に A–F を載せない。
 
 ## 4. AWS 3-tier（モジュール。未 apply）
 
