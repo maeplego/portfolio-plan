@@ -28,8 +28,20 @@
 
 現時点の実装済み K8s overlay:
 
-- `portfolio-integration` + `docker-desktop`（foundation 相当）
+- `portfolio-integration-a-foundation` + `docker-desktop-a-foundation`（`portfolio-integration` の別名）
+- `portfolio-integration` + `docker-desktop`（上記と同じ。後方互換）
 - `portfolio-integration-c-scheduling-talent` + `docker-desktop-c-scheduling-talent`
+
+## overlay の切り替え（12 GB 制約）
+
+用途別 overlay は **同時に全部載せない**。切り替え時は前の overlay を down してから apply する。
+
+| 切り替え | 手順 |
+| --- | --- |
+| foundation → scheduling-talent | `.\scripts\down.ps1`（または `down-a-foundation.ps1`）→ `.\scripts\cluster-smoke-c-scheduling-talent.ps1` |
+| scheduling-talent → foundation | `.\scripts\down-c-scheduling-talent.ps1` → `.\scripts\cluster-smoke.ps1` |
+
+platform（Postgres / Redis / Garage / o11y）は両 overlay で共有する。`ensure-platform-databases.ps1` は apply 時に DB/user を足す。
 
 ## 前提（レビュア環境）
 
@@ -147,7 +159,8 @@ kubectl wait --for=condition=ready pod -l app=platform-postgres -n platform --ti
 | P03 media web | http://media.localhost | OIDC 必須。未ログインは `/login` |
 | P05 calendar web | http://calendar.localhost | 公開予約 UI |
 | P05 calendar API | http://calendar-api.localhost | public / internal API |
-| P10 talent API | http://talent.localhost | talent API |
+| P10 talent web | http://talent.localhost | 検索 UI。`?user=candidate-1` |
+| P10 talent API | http://talent-api.localhost | talent API |
 | Grafana | http://grafana.localhost | 学習用 admin/admin。Tempo を既定 datasource |
 | Garage S3 | http://garage.localhost | 署名付き GET/PUT（ブラウザと media-web） |
 
@@ -177,7 +190,8 @@ kubectl wait --for=condition=ready pod -l app=platform-postgres -n platform --ti
 目視確認するときの URL:
 
 - [http://calendar.localhost](http://calendar.localhost)
-- [http://talent.localhost/health](http://talent.localhost/health)
+- [http://talent.localhost/?user=candidate-1](http://talent.localhost/?user=candidate-1)（web）
+- [http://talent-api.localhost/health](http://talent-api.localhost/health)
 
 ### 7. 片付け
 

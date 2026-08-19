@@ -11,7 +11,8 @@
 
 - `pf-talent-api`：Hono で API と webhook を同一サービス内に持つ。
 - `pf-talent-web`：Next.js（ポート 3010）。`TALENT_API_URL` と `X-Dev-User-Sub`。
-- 永続化は MVP では `MemoryStore`。検索は API 内部分一致。
+- overlay C では Ingress で `talent.localhost` を web、`talent-api.localhost` を API に分ける。
+- 永続化は MVP では `MemoryStore`。検索は API 内部分一致。platform Postgres へは移行しない。
 
 ## データモデル（MVP）
 

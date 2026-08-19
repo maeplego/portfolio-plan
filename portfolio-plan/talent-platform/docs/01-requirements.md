@@ -71,6 +71,9 @@
    - 保存検索の作成 / 一覧 / run（新着件数）
    - `document_passed` で P05 スロット。未接続は「カレンダー未接続」
    - 予約は `http://localhost:3005/book/<slug>` へのリンク（カレンダー UI はコピーしない）
+18. ✅ overlay C に web
+   - `talent.localhost` → web、`talent-api.localhost` → API
+   - メモリのまま。platform Postgres へは移行しない
 
 ## 非機能要件
 

@@ -3,7 +3,7 @@
 | 項目 | 値 |
 | --- | --- |
 | プロジェクト | P10 talent-platform |
-| 対象スライス | 現在：API + 検索 / 応募 / 保存検索 / 面接枠リンク |
+| 対象スライス | 現在：Compose 検索 UI + overlay C の web |
 | 最終更新 | 2026-08-19 |
 | 矛盾時の正 | `../DESIGN.md` と `../pf-talent-api` / `../pf-talent-web` のテスト・コード、次に本索引 |
 
