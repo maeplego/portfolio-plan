@@ -50,7 +50,7 @@
 | --- | --- |
 | CLI / scanner | Go。単一バイナリ、GitHub Releases |
 | テンプレート | 実ファイル + `template.json`。生成後に `go test` / `npm test` が通ること |
-| Portal / CI / Review | Go + 埋め込み HTML（portal / ci-dash / review）。`pf-developer-web` は未着手 |
+| Portal / CI / Review | Go + 埋め込み HTML（portal / ci-dash / review）。横断シェルは portal ホーム（step 7 ✅）。独立 `pf-developer-web` は未着手 |
 | 脆弱性 DB | OSV API。キャッシュ |
 | 仕様差分 | oasdiff Action + `oasdiff-gate` |
 | 認証 | 公開 repo はトークンなし可。任意 `GITHUB_TOKEN` は環境変数のみ。暗号化保存と P01 ログインは未着手 |

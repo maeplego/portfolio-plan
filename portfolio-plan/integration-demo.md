@@ -484,6 +484,26 @@ cd pf-calendar/deploy; docker compose down -v
 cd pf-talent-api/deploy; docker compose down -v
 ```
 
+## 非目標（意図的にやらないこと）
+
+面接・レビューで「なぜ無いか」を説明できるよう、ここに集約する。`REVIEW.md` の Compose パックだけ見れば足りるものも多い。
+
+| 非目標 | 理由 |
+| --- | --- |
+| 全 overlay（A–F）の同時常駐 | 12 GB RAM 前提でも Pod 数が合わない。用途別 overlay に分割済み |
+| platform 常駐のままアプリ NS だけ kustomize 入替 | 未実装。切替時は `down` → 次 overlay の `up` / smoke |
+| P13 Dagster を K8s に載せる | データ取り込みは Compose + 架空 CSV。K8s はアプリ連携デモ向け |
+| P15 Expo アプリを K8s に載せる | モバイルは実機 / Expo Go。クラスタには habit-api のみ |
+| P11 CI dash / review / scanner を K8s に載せる | GitHub API 連携ツール。portal から URL リンクで十分 |
+| 独立 `pf-developer-web` | portal ホームが横断シェル（`PORTAL_*_URL`）で要件を満たす |
+| portal の OpenAPI 管理アップロード | 手置き YAML + oasdiff Action が正本 |
+| Alertmanager → P12 の本番自動修復 | 破壊的操作をポートフォリオに入れない。webhook 受信デモまで |
+| RabbitMQ / Kafka / NATS の本線化 | P06 も初期は HTTP + outbox。メッセージ基盤は学習外 |
+| `terraform apply` / AWS 本番デプロイ | モジュールと `validate` / `plan` まで。資格情報のないレビュアでも再現可 |
+| GHCR 公開イメージ必須 | `review-up.ps1 -UseLocalImages` で代替。公開 GHCR は初回を速くする任意改善 |
+| Playwright を既定 CI ジョブ化 | Compose 前提で重い。`ci.md` のローカル / dispatch 経路を正とする |
+| 全 Pxx の Playwright E2E | P01 / P05 / P06 / P08 / P14 の主要旅程のみ。残りは単体テスト + Compose smoke |
+
 ## 関連ドキュメント
 
 - `portfolio-plan/REVIEW.md` — 採用担当者（ブラウザ / Compose パック。K8s は任意）

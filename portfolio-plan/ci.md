@@ -33,7 +33,7 @@
 | Playwright | `npx playwright install --with-deps` が遅く、画面は Compose 前提のものが多い | 下表。P01 の `apps/e2e` はメモリ IdP で完結するので dispatch 可 |
 | `docker compose up` | イメージビルドが PR 毎には重い。GitHub-hosted に Docker Desktop Kubernetes は無い | 各 `deploy/compose.yaml` のあと `node scripts/compose-smoke.mjs …`（置いてある製品） |
 | クラスタ smoke | overlay 切替と 10 GB 超 RAM | `pf-cloud-k8s/scripts/review-up.ps1` と `cluster-smoke-*.ps1` |
-| イメージをレジストリへ push | 秘密と GHCR 権限がこのメタ作業には無い | `pf-cloud-k8s/docs/example-github-push-ghcr.yml` はコピー用の例 |
+| イメージをレジストリへ push | PR 毎のビルドは重い。`GITHUB_TOKEN` の packages 権限は各 `pf-*` の Actions | `pf-identity` / `pf-commerce` の `push-ghcr.yml`（dispatch + main/master push）。他製品は `pf-cloud-k8s/docs/example-github-push-ghcr.yml` をコピー |
 
 ## Playwright（実装済みの旅程）
 

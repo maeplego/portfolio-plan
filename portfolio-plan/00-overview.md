@@ -180,7 +180,7 @@ flowchart TB
 5. **P12 reliability-platform** — 仮想シナリオで独立完成 → 任意で P06 のアラートを受信
 6. **P10 talent-platform** — P05 連携で面接予約、P07 で求人推薦
 7. **P13 data-platform** — P06 / P10 のエクスポートをソースにする。最初の DAG は架空 CSV でよい
-8. **P02 の残り** — Terraform 3-tier を P08 か P09 に適用。K8s を P06 に適用。ここで「アプリを先に作り、基盤に載せた」と説明できる
+8. **P02 の残り** — Terraform 3-tier は P09 向けモジュール（`pf-cloud-aws`、`apply` 非目標）✅。P06 の K8s は overlay D（`portfolio-integration-d-commerce`）✅。残りは overlay 切替の platform 常駐分割など任意改善
 
 ### 同時並行してよい組み合わせ
 
