@@ -142,10 +142,17 @@ Wiki ページ作成: API が `page` 行と collab document id を作る。編�
 - ✅ org 切替 UI（IdP `PUT /v1/active-org` + refresh / 開発モード `dev_org`）
 - ✅ workspace メンバー role 変更・除名・leave（監査付き）
 
-### Phase 4（進行中: 製品ギャップ）
+### Phase 4（完了: 製品ギャップ）
 
 - ✅ チャット未読（`channel_reads` / `POST .../read` / 一覧バッジ）
 - ✅ 列カスタム（追加・改名・削除・並べ替え）
+
+### Phase 5（横断）
+
+- ✅ `pf-workspace` / `pf-identity` / `project` を `github/master` へ push
+- ✅ Compose レビューパック `review-up.ps1 -Pack p04 -UseLocalImages`（OIDC 経路）。health 200: IdP `:8080` / api `:8096` / web `:3006` / collab `:8097`
+- ✅ migrate 修正: `splitSQL` が `$$` 関数本文を切断していた問題を修正して再 push（`02ca704`）
+- K8s overlay B フル smoke は任意（採用担当者の既定経路は Compose。`cluster-smoke-b-collab.ps1`）
 
 ### Postgres RLS（実装済み）
 
