@@ -12,8 +12,9 @@
 | --- | --- | --- |
 | money | DB なし | 整数円だけ通す |
 | report | 純関数 | 予算残りと日次 |
-| HTTP | Hono `app.request` + メモリ Store | CRUD、401、隔離、float 400、シード、CSV、`POST /v1/sync` の LWW |
-| Playwright | `apps/web` の `test:e2e`。メモリ API。既定 CI では動かない | 2026-08 サマリーと other 隔離 |
+| HTTP | Hono `app.request` + メモリ Store | CRUD、401、隔離、float 400、シード、CSV、`POST /v1/sync` の LWW、ウォレット、繰り返し、`DELETE /v1/me`、未来時刻拒否 |
+| Playwright | `apps/web` の `test:e2e`。メモリ API。既定 CI では動かない | 2026-08 サマリーと other 隔離、DevTools Offline、manifest / SW |
+| Postgres | `FINANCE_DATABASE_URL` が届くときだけ。届かなければ skip | ウォレット・tombstone・purge・アカウント削除 |
 | offline queue | `apps/web/lib/offline-queue.test.ts` | オフライン表示、変更セット、ネットワーク失敗で残す、400 は捨てる |
 | LWW | `packages/sync-protocol` | 新規 apply、新しい方が勝つ、同時刻はサーバー |
 
@@ -48,9 +49,16 @@
 | TS-H14 | 古い / 同じ `updatedAt` | `rejected: server_newer`。金額はサーバー |
 | TS-H15 | tombstone のあと新しい write | 一覧から消え、復活する |
 | TS-H16 | bob が alice の id を sync | `rejected`。alice の行は変わらない。bob にサーバー本文を返さない |
+| TS-H17 | 120 秒超の未来 `updatedAt` | `rejected` |
+| TS-H18 | sync の categories / budgets | 新しい方が載る |
+| TS-H19 | 既定ウォレット | 「現金」。空名は 400 |
+| TS-H20 | 繰り返し day=1 を 2026-08 に生成 | `2026-08-01`。再生成は `created: null`。day=29 は 400 |
+| TS-H21 | `DELETE /v1/me` | 204 のち同じ sub の一覧は空 |
+| TS-H22 | tombstone purge | 古い削除行を物理削除 |
+| TS-H23 | Bearer userinfo | OIDC 設定時に `/v1/me` 200 |
 
 ## 4. 未自動化
 
-- Compose 実機の画面操作と Chrome インストール（Playwright の今月サマリーはメモリ API で自動化。DevTools Offline のブラウザ確認は未実施）
-- Postgres integration タグ
-- Kubernetes overlay の apply（マニフェストは存在する）
+- Compose 実機の Chrome インストール（Playwright は manifest と Service Worker の配信まで。実インストール UI は手動）
+- Kubernetes overlay の apply（マニフェストの `kustomize` のみ CI。hosted runner に Desktop クラスタは無い）
+- P01 実 IdP を立てた PKCE 往復（userinfo スタブの HTTP テストはある）

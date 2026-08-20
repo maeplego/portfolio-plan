@@ -1,6 +1,6 @@
 # 家計簿の書類
 
-実装は [pf-finance](https://github.com/maeplego/pf-finance) です。整数円の取引、月次、CSV、PWA、LWW 同期の説明です。実家計と実カード番号は使いません。文書と実装が違うときは、コードとテストを優先してください。
+実装は [pf-finance](https://github.com/maeplego/pf-finance) です。整数円の取引、月次、CSV、PWA、LWW 同期、ウォレット、繰り返し、OIDC 任意接続の説明です。実家計と実カード番号は使いません。文書と実装が違うときは、コードとテストを優先してください。
 
 | ファイル | 内容 |
 | --- | --- |

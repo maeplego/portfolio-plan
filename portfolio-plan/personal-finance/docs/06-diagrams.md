@@ -19,6 +19,8 @@ flowchart LR
   User --> UC5[CSV入出力]
   User --> UC6[PWAを入れる]
   User --> UC7[オフライン入力を同期する]
+  User --> UC8[ウォレットと繰り返し]
+  User --> UC9[アカウントを消す]
 ```
 
 ## 2. 画面遷移
@@ -27,8 +29,10 @@ flowchart LR
 flowchart TB
   H[今月 /]
   R[グラフ /reports]
+  L[ログイン /login]
   H --> R
   R --> H
+  H --> L
 ```
 
 CSV 操作はホーム上。起動の正は Compose。Kubernetes は ops overlay 経由。
@@ -42,7 +46,7 @@ sequenceDiagram
   participant API
   participant DB
   U->>Web: 整数円を入力
-  Web->>API: POST /v1/transactions + X-Dev-User-Sub
+  Web->>API: POST /v1/transactions + X-Dev-User-Sub（BFF 経由）
   API->>API: parsePositiveYen
   API->>DB: INSERT user_id 付き
   API-->>Web: 201
@@ -112,12 +116,19 @@ sequenceDiagram
 ```mermaid
 erDiagram
   users ||--o{ categories : owns
+  users ||--o{ wallets : owns
   users ||--o{ transactions : owns
   users ||--o{ budgets : owns
+  users ||--o{ recurring_rules : owns
+  wallets ||--o{ transactions : holds
   categories ||--o{ transactions : classifies
+  recurring_rules ||--o{ recurring_generations : logs
   users {
     text id
     text sub
+  }
+  wallets {
+    text name
   }
   transactions {
     int amount_yen
@@ -125,6 +136,9 @@ erDiagram
     text kind
     timestamptz updated_at
     timestamptz deleted_at
+  }
+  recurring_rules {
+    int day_of_month
   }
   budgets {
     char month

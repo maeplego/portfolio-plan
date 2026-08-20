@@ -13,7 +13,7 @@
 { "error": { "code": "validation_error", "message": "amount must be a safe integer yen" } }
 ```
 
-開発認証: `X-Dev-User-Sub`。`Content-Type: application/json`。
+開発認証: `X-Dev-User-Sub`（`FINANCE_DEV_AUTH=true`）。OIDC 時は `Authorization: Bearer`。`Content-Type: application/json`。
 
 ## 運用
 
@@ -22,15 +22,27 @@
 | GET | `/health` | なし | 200 `{ "ok": true }` | liveness |
 | GET | `/ready` | なし | 200 / 503 | store ping |
 
-## ユーザーとカテゴリ
+## ユーザー・ウォレット・カテゴリ
 
 ### GET `/v1/me`
 
 200 `{ "id", "sub" }`。
 
+### DELETE `/v1/me`
+
+204。そのユーザーのサーバーデータを消す。
+
+### GET `/v1/wallets`
+
+200 `{ "wallets": [{ "id", "userId", "name" }] }`。初回は「現金」。
+
+### POST `/v1/wallets`
+
+`{ "name": "カード" }` → 201。空名は 400。
+
 ### GET `/v1/categories`
 
-200 `{ "categories": [{ "id", "userId", "name", "kind" }] }`。初回はデフォルト 5 件。
+200 `{ "categories": [{ "id", "userId", "name", "kind", "updatedAt", "deletedAt" }] }`。初回はデフォルト 5 件。生きている行だけ。
 
 ## 取引
 
@@ -48,7 +60,27 @@
 { "categoryId": "...", "occurredOn": "2026-08-10", "amountYen": 1500, "kind": "expense", "memo": "" }
 ```
 
-PATCH は同じ全項目。DELETE は 204（tombstone。一覧と GET からは 404）。
+PATCH は同じ全項目。`walletId` は省略可（既定ウォレット）。DELETE は 204（tombstone。一覧と GET からは 404）。
+
+### POST `/v1/recurring-rules`
+
+```json
+{ "categoryId": "...", "amountYen": 80000, "kind": "expense", "memo": "家賃", "dayOfMonth": 1, "walletId": "任意" }
+```
+
+`dayOfMonth` は 1–28。201。
+
+### GET `/v1/recurring-rules`
+
+200 `{ "rules": [...] }`。
+
+### POST `/v1/recurring-rules/{id}/generate`
+
+`{ "month": "2026-08" }`。200 `{ "created": { ... } | null }`。同じ月の再実行は `null`。
+
+### POST `/v1/tombstones/purge`
+
+`{ "before": "2026-08-19T04:00:00.000Z" }`。200 `{ "purged": 1 }`。
 
 ### POST `/v1/sync`
 
@@ -62,6 +94,7 @@ PATCH は同じ全項目。DELETE は 204（tombstone。一覧と GET からは 
       "id": "01…",
       "updatedAt": "2026-08-20T04:00:00.000Z",
       "deletedAt": null,
+      "walletId": "省略可",
       "categoryId": "…",
       "occurredOn": "2026-08-20",
       "amountYen": 1500,
@@ -83,7 +116,7 @@ PATCH は同じ全項目。DELETE は 204（tombstone。一覧と GET からは 
 }
 ```
 
-`reason` は `server_newer`（新しい方がサーバー。`server` 付き）または `rejected`（他人の id・不正。`server` 無し）。`serverChanges` は `updatedAt > since` の自分の行（tombstone 含む）。クライアントが新しい方が勝つ。同じ時刻はサーバー。削除は `deletedAt` に instant。
+`reason` は `server_newer`（新しい方がサーバー。`server` 付き）または `rejected`（他人の id・不正・120 秒超の未来。`server` 無し）。`serverChanges` は `updatedAt > since` の自分の行（tombstone 含む）。クライアントが新しい方が勝つ。同じ時刻はサーバー。削除は `deletedAt` に instant。任意で `categories` と `budgets` 配列も同じ LWW。
 
 ### GET `/v1/export.csv?month=YYYY-MM`
 
