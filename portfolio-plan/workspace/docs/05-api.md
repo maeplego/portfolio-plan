@@ -32,6 +32,12 @@ OpenAPI ファイルは未作成。本ファイルが HTTP 契約の要約。
 
 成功: 200 `{ "workspaces": [ ... ] }`
 
+### `GET /v1/org-members?q=`
+
+アクティブ org（JWT `org_id`）のメンバー候補を返す。owner の招待補助用。  
+成功: 200 `{ "members": [ { "sub", "role", "email?", "displayName?" } ] }`。  
+`q` 指定時は `sub` / `email` / `displayName` の部分一致。Bearer 時は IdP org members を proxy。
+
 ### `GET /v1/workspaces/:id`
 
 成功: 200 Workspace。非所属 403、なし 404。

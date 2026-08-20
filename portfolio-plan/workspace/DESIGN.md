@@ -134,6 +134,13 @@ Wiki ページ作成: API が `page` 行と collab document id を作る。編�
 - ✅ 招待 resend（再発行）を UI/API で管理
 - ✅ Postgres RLS（`SET LOCAL app.tenant_id`）で org 境界を DB 層でも拘束
 - ✅ 招待 policy 変更（role / maxUses / TTL / email をトークン維持のまま更新）
+- ✅ org 内メンバー検索（`GET /v1/org-members`、IdP proxy + 招待フォーム email autocomplete）
+
+### Phase 3（進行中: org 連携 UX）
+
+- ✅ org 内メンバー検索 + 招待 email 自動入力
+- org 切替 UI（未着手）
+- workspace メンバー role 変更・除名・leave（未着手）
 
 ### Postgres RLS（実装済み）
 

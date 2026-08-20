@@ -131,4 +131,5 @@ workspace などの利用側アプリで招待リンクを安全に運用する�
 
 P04 側は workspace 作成時に `org_id` を記録し、招待 accept で検証済み email と `invitedEmail` を照合する。
 
-次フェーズ: org スコープの admin UI、RLS 連携、招待 revoke/resend。
+次フェーズ: org スコープの admin UI、workspace 招待 UX との連携強化。
+P04 は `GET /v1/organizations/{id}/members`（email/name 付き）を招待候補に利用する。
