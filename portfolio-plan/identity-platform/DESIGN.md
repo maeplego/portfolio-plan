@@ -126,10 +126,12 @@ workspace などの利用側アプリで招待リンクを安全に運用する�
 - ✅ `organizations`（tenant）と `organization_memberships`
 - ✅ `sub` はグローバル不変 ID、所属は membership で管理
 - ✅ `org` scope で ID Token / UserInfo に `org_id`, `org_role`, `organizations[]` を発行
-- ✅ `PUT /account/active-org` でセッションのアクティブ org を切替
+- ✅ `PUT /account/active-org` でセッションのアクティブ org を切替（ブラウザ cookie）
+- ✅ `PUT /v1/active-org` で Bearer 経由のアクティブ org 切替（RP 向け。access token に session_sid）
+- ✅ userinfo / ID Token の `org_id` はアクティブ org を反映
 - ✅ デモユーザーに Demo Organization を seed
 
 P04 側は workspace 作成時に `org_id` を記録し、招待 accept で検証済み email と `invitedEmail` を照合する。
+P04 は `GET /v1/organizations/{id}/members`（email/name 付き）を招待候補に利用し、ホームで org 切替できる。
 
-次フェーズ: org スコープの admin UI、workspace 招待 UX との連携強化。
-P04 は `GET /v1/organizations/{id}/members`（email/name 付き）を招待候補に利用する。
+次フェーズ: org スコープの admin UI（メンバー追加・role 管理）。

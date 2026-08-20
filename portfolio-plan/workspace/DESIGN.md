@@ -139,7 +139,7 @@ Wiki ページ作成: API が `page` 行と collab document id を作る。編�
 ### Phase 3（進行中: org 連携 UX）
 
 - ✅ org 内メンバー検索 + 招待 email 自動入力
-- org 切替 UI（未着手）
+- ✅ org 切替 UI（IdP `PUT /v1/active-org` + refresh / 開発モード `dev_org`）
 - workspace メンバー role 変更・除名・leave（未着手）
 
 ### Postgres RLS（実装済み）
