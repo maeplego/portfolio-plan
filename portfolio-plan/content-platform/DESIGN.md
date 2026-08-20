@@ -58,7 +58,7 @@
 3. ✅ OG 画像、Draft Mode（Tailwind+MDX は未）
 4. ✅ 短縮サービス MVP（リダイレクト + 作成 API）
 5. ✅ 管理画面から記事に紐づけ、日次グラフ
-6. P03、P01、レート制限、k6 の簡単な計測を README に
+6. ✅ P03、P01（管理 OIDC + dev-auth）、レート制限、k6 の簡単な計測を README に
 
 ## 実装上の注意点
 

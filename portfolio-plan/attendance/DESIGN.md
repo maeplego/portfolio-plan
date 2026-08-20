@@ -61,7 +61,7 @@ pf-attendance/
 4. ✅ 工数按分（合計 ≤ 勤務）
 5. ✅ 月次締めと CSV
 6. ✅ 未打刻リマインド（一覧。メール送信はしない）
-7. P01 接続（Compose 既定は `X-Dev-User-Sub`。OIDC は任意）
+7. ✅ P01 接続（Compose 既定は `X-Dev-User-Sub`。OIDC は `ATTENDANCE_OIDC_*` + web BFF `/api/attendance`）
 
 ## 実装上の注意点
 
