@@ -65,8 +65,15 @@ owner のみ。有効な招待を無効化（`revoked_at` 設定）。成功 200
 
 ### `POST /v1/workspaces/:id/invitations/:inviteId/resend`
 
-owner のみ。既存招待の `role` / `invitedEmail` / `maxUses` を引き継いだ新しい招待を再発行。  
+owner のみ。既存招待の `role` / `invitedEmail` / `maxUses` を引き継いだ新しい招待を再発行。
 成功 200 `{ "invitation": { ... }, "token": "<新しい平文トークン>" }`。元招待は自動 revoke しない（必要なら別途 revoke）。
+
+### `PATCH /v1/workspaces/:id/invitations/:inviteId`
+
+owner のみ。既存招待の policy を更新（トークンは維持）。入力（いずれも任意、最低 1 つ）:
+`{ "role", "maxUses", "ttlHours", "invitedEmail" }`。
+`ttlHours` 指定時は `expiresAt = now + ttlHours`。`maxUses` は現在の `useCount` 未満にできない。revoked 招待は 403。
+成功 200 Invitation。監査 `workspace.invitation.policy_updated`。
 
 ### `GET /v1/workspaces/:id/invitations`
 
@@ -85,7 +92,7 @@ Web 参加 URL: `/join/{token}`
 ### `GET /v1/workspaces/:id/audit-events`
 
 owner のみ。成功 200 `{ "events": [ { "type", "actorSub", "targetSub", "inviteId", "createdAt" } ] }`  
-種別例: `workspace.invitation.created`, `workspace.invitation.accepted`, `workspace.invitation.revoked`, `workspace.invitation.resent`
+種別例: `workspace.invitation.created`, `workspace.invitation.accepted`, `workspace.invitation.revoked`, `workspace.invitation.resent`, `workspace.invitation.policy_updated`
 
 ### `POST /v1/workspaces/:id/boards`
 

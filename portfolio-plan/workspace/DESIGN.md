@@ -133,7 +133,7 @@ Wiki ページ作成: API が `page` 行と collab document id を作る。編�
 - ✅ 招待の revoke を UI と監査で管理
 - ✅ 招待 resend（再発行）を UI/API で管理
 - ✅ Postgres RLS（`SET LOCAL app.tenant_id`）で org 境界を DB 層でも拘束
-- 招待 policy 変更（未着手）
+- ✅ 招待 policy 変更（role / maxUses / TTL / email をトークン維持のまま更新）
 
 ### Postgres RLS（実装済み）
 
