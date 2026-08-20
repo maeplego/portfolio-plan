@@ -134,4 +134,11 @@ workspace などの利用側アプリで招待リンクを安全に運用する�
 P04 側は workspace 作成時に `org_id` を記録し、招待 accept で検証済み email と `invitedEmail` を照合する。
 P04 は `GET /v1/organizations/{id}/members`（email/name 付き）を招待候補に利用し、ホームで org 切替できる。
 
-次フェーズ: org スコープの admin UI（メンバー追加・role 管理）。
+次フェーズ: org スコープの admin UI（メンバー追加・role 管理）→ ✅ 実装済み（`/admin/api/organizations*` + admin `/orgs`）。
+
+## 組織 admin（オペレーター UI）
+
+- 管理者トークン（`IDENTITY_ADMIN_TOKEN`）で `/admin/api/organizations` を操作
+- 組織作成時は既存ユーザーを owner に指定（email または user_id）
+- メンバー追加・role 変更（owner/member）・除名。唯一の owner は demote / 除名不可
+- admin Next.js: `/orgs` 一覧、`/orgs/[id]` メンバー管理
