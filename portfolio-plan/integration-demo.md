@@ -10,12 +10,30 @@
 
 | モード | 目的 | 起動方法 | 必須？ |
 | --- | --- | --- | --- |
-| **単体デモ** | 各 Pxx の機能をその製品だけで確認 | 各 `pf-*/deploy/compose.yaml` | **はい**（デフォルト） |
+| **単体デモ** | 各 Pxx の機能をその製品だけで確認 | 各 `pf-*/deploy/compose.yaml` または `pf-cloud-k8s` の **`demo.ps1`** | **はい**（デフォルト） |
 | **連携デモ** | IdP → アプリ → 観測 などエコシステム連携 | Docker Desktop Kubernetes + `pf-cloud-k8s` overlay | 任意（深掘り用） |
 
 - **全 Pxx を同時フル起動するのは非目標**（Pod 数・メモリの都合）。
 - 単体デモでは dev 認証・stub で **他 Pxx なしでも完結** する（`00-overview.md` の単独起動規約）。
 - 連携デモでは **本物の OIDC・共有 Postgres・Ingress** で横断フローを見せる。
+
+### Compose 対話ランチャー（`demo.ps1`）
+
+ポート競合を避けつつ、Pxx 選択だけで Compose を起動する CLI。**セッション中は 1 組だけ** 起動し、新しい選択で前のスタックを止める。
+
+```powershell
+cd pf-cloud-k8s
+.\scripts\demo.ps1
+# 非対話: .\scripts\demo.ps1 -Key p05 -OpenBrowser
+# 連携を強制: -Integrate / 単体を強制: -NoIntegrate
+```
+
+- **パターン 1（単体）**: Pxx 選択 → 起動 → URL 表示（ブラウザ起動可）→ Ctrl+C または Q で **当セッションのコンテナをすべて down**
+- **パターン 2（連携）**: P05↔P10、P08+P03、P03+P01、P15+P01 などはメニュー内で連携オプションを選択
+- レビューパック（P01+P03 / P04 / P06）は `review-up.ps1` に委譲
+- ホストポート: P10 API **8091**、P10 web **3011**、P02 demo-api **8088**（他 Pxx との競合回避済み）
+
+詳細は `pf-cloud-k8s/README.md`。
 
 ## 連携デモの overlay 群
 
@@ -414,7 +432,7 @@ copy .env.example .env
 docker compose up -d --build
 ```
 
-`http://localhost:8090/health` → `{ "ok": true }`
+`http://localhost:8091/health` → `{ "ok": true }`
 
 #### 2. pf-calendar を起動（webhook URL を talent-api に向ける）
 
@@ -426,7 +444,7 @@ copy .env.example .env
 `.env` に以下を追記（talent-api の webhook エンドポイント）:
 
 ```
-CALENDAR_WEBHOOK_URL=http://host.docker.internal:8090/webhooks/calendar
+CALENDAR_WEBHOOK_URL=http://host.docker.internal:8091/webhooks/calendar
 ```
 
 ```powershell
@@ -437,13 +455,13 @@ docker compose up -d --build
 | --- | --- |
 | http://localhost:3005 | P05 Web UI |
 | http://localhost:8095/health | P05 API |
-| http://localhost:8090/health | P10 API |
+| http://localhost:8091/health | P10 API |
 
 #### 3. P10 で求人と応募を作成
 
 ```powershell
 # 求人作成
-$job = Invoke-RestMethod -Method POST -Uri http://localhost:8090/v1/jobs `
+$job = Invoke-RestMethod -Method POST -Uri http://localhost:8091/v1/jobs `
   -ContentType 'application/json' `
   -Body '{"employerSub":"employer-1","title":"Backend Engineer","status":"published"}'
 $job.id
@@ -451,11 +469,11 @@ $job.id
 # P05 にイベントタイプをプロビジョン（externalRef = job.id）
 # .env に CALENDAR_INTERNAL_TOKEN を設定しておくこと
 Invoke-RestMethod -Method POST `
-  -Uri "http://localhost:8090/v1/jobs/$($job.id)/provision-interview-event-type"
+  -Uri "http://localhost:8091/v1/jobs/$($job.id)/provision-interview-event-type"
 
 # 応募作成（calendarExternalRef = job.id で自動紐付け）
 $app = Invoke-RestMethod -Method POST `
-  -Uri "http://localhost:8090/v1/jobs/$($job.id)/applications" `
+  -Uri "http://localhost:8091/v1/jobs/$($job.id)/applications" `
   -ContentType 'application/json' `
   -Body '{"candidateSub":"candidate-1","resumeSnapshot":"3 years Go experience"}'
 $app.id
@@ -472,7 +490,7 @@ worker が outbox を拾い webhook を POST する（デフォルト 60 秒ポ�
 
 ```powershell
 # 応募ステータスが interview に変わったか確認
-Invoke-RestMethod -Uri "http://localhost:8090/v1/applications/$($app.id)"
+Invoke-RestMethod -Uri "http://localhost:8091/v1/applications/$($app.id)"
 ```
 
 期待: `status` が `"interview"`、`interviewBookingId` がセットされている。

@@ -3,7 +3,7 @@
 | 項目 | 値 |
 | --- | --- |
 | プロダクト | チーム作業場所 [pf-workspace](https://github.com/maeplego/pf-workspace) |
-| 最終更新 | 2026-08-19 |
+| 最終更新 | 2026-08-20 |
 | 実装との関係 | `apps/api` のハンドラとテストを優先する |
 
 OpenAPI ファイルは未作成。本ファイルが HTTP 契約の要約。
@@ -13,7 +13,7 @@ OpenAPI ファイルは未作成。本ファイルが HTTP 契約の要約。
 - Base: `http://localhost:8096`
 - Collab WS: `ws://localhost:8097`（HTTP `/health` 同じポート）
 - Chat WS: `ws://localhost:8096/chat/ws?ticket=&channelId=`（Yjs ではない）
-- 認証: `Authorization: Bearer` または開発時 `X-Dev-User-Sub`
+- 認証: `Authorization: Bearer` または開発時 `X-Dev-User-Sub`（任意 `X-Dev-User-Email`, `X-Dev-User-Org`）
 - エラー形は [02-specification.md](02-specification.md) §12
 
 ## ヘルス
@@ -26,7 +26,7 @@ OpenAPI ファイルは未作成。本ファイルが HTTP 契約の要約。
 ### `POST /v1/workspaces`
 
 入力: `{ "name": "Demo Team" }`  
-成功: 201、Workspace（`id`, `name`, `createdAt`）
+成功: 201、Workspace（`id`, `name`, `orgId`, `createdAt`）。`orgId` は IdP の `org_id` claim（`org` scope）から自動設定。未所属時は空文字。
 
 ### `GET /v1/workspaces`
 
@@ -38,26 +38,73 @@ OpenAPI ファイルは未作成。本ファイルが HTTP 契約の要約。
 
 ### `GET /v1/workspaces/:id/members`
 
-成功: 200 `{ "members": [ { "workspaceId", "sub", "role", "joinedAt" } ] }`
+成功: 200 `{ "members": [ { "workspaceId", "sub", "displayName", "role", "joinedAt" } ] }`
 
-### `POST /v1/workspaces/:id/members`
+### `GET /v1/workspaces/:id/members/:sub`
+
+所属 member 以上。成功 200 Member。非所属 403、なし 404。
+
+### `PUT /v1/workspaces/:id/members/me`
+
+入力: `{ "displayName": "表示名" }`。ログイン中ユーザーの当 WS メンバー行を更新。成功 200 Member。
+
+### `POST /v1/workspaces/:id/members`（レガシー / 開発用）
 
 入力: `{ "sub": "guest-1", "role": "guest" }`  
-`role` 省略時は `member`。成功 201。owner 指定 403。重複 409。
+UI からは非推奨。**通常は招待リンクで参加**。owner のみ。成功 201。owner 指定 403。重複 409。
+
+### `POST /v1/workspaces/:id/invitations`
+
+owner のみ。入力: `{ "role": "member", "maxUses": 1, "ttlHours": 72, "invitedEmail": "guest@example.com" }`  
+`invitedEmail` は任意。指定時は accept 側の検証済み email claim と一致必須（不一致 403）。
+成功 201 `{ "invitation": { ... }, "token": "<一度だけ返る平文トークン>" }`。DB には `sha256(token)` のみ保存。
+
+### `GET /v1/workspaces/:id/invitations`
+
+owner のみ。成功 200 `{ "invitations": [ ... ] }`（トークン平文は含まない）。
+
+### `GET /v1/invitations/:token`
+
+認証必須。副作用なし preview。成功 200 `{ "workspace", "invitation" }`。無効・期限切れ 404。
+
+### `POST /v1/invitations/:token/accept`
+
+認証必須。成功 200 `{ "member", "workspace" }`。既参加 409。上限・期限 404。email 不一致 403。
+
+Web 参加 URL: `/join/{token}`
+
+### `GET /v1/workspaces/:id/audit-events`
+
+owner のみ。成功 200 `{ "events": [ { "type", "actorSub", "targetSub", "inviteId", "createdAt" } ] }`  
+種別例: `workspace.invitation.created`, `workspace.invitation.accepted`
 
 ### `POST /v1/workspaces/:id/boards`
 
-入力: `{ "name": "Sprint 1" }`（空なら `Main board`）  
+入力: `{ "name": "Sprint 1" }`（空は 400）  
 成功: 201、BoardDetail（board + columns。各 column に `cards: []`）
 
 ### `GET /v1/workspaces/:id/boards`
 
-成功: 200 `{ "boards": [ { "id", "workspaceId", "name", "createdAt" } ] }`
+成功: 200 `{ "boards": [ ... ], "archivedBoards": [ ... ] }`
+
+### `POST /v1/boards/:id/archive` / `unarchive`
+
+member 以上。204。カードは消さない。
+
+### `POST /v1/pages/:id/archive` / `unarchive`
+
+子孫も含めて `archivedAt` を付ける／外す。Wiki 版の復元は従来どおり `POST /v1/pages/:id/restore`。
+
+### `POST /v1/documents/:id/trash` / `untrash`
+
+ゴミ箱。本文は残る。ゲストの一覧には出さない。
+
+チャンネル・チャットメッセージ・添付の DELETE は提供しない（やりとりの監査用）。
 
 ### `GET /v1/workspaces/:id/search`
 
 クエリ: `q` 必須。`types` 省略時 `page,document,card,message`。  
-成功 200 `{ "hits": [ { "type", "id", "title", "snippet", "hrefHints" } ] }`  
+成功 200 `{ "hits": [ { "type", "id", "title", "context", "snippet", "hrefHints" } ] }`  
 空 q 400。非所属 403。guest の page は FilterGuestPages。
 
 ## ボード / カード

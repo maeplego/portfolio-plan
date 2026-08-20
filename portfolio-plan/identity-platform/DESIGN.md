@@ -118,3 +118,17 @@
 - エンタープライズ IdP（SAML）
 - パスキー（WebAuthn）は推奨フェーズ。MVP を遅らせない
 - PAR、CIBA
+
+## 組織テナントモデル（Phase 2 実装済み）
+
+workspace などの利用側アプリで招待リンクを安全に運用するため、IdP 側は以下を導入済み。
+
+- ✅ `organizations`（tenant）と `organization_memberships`
+- ✅ `sub` はグローバル不変 ID、所属は membership で管理
+- ✅ `org` scope で ID Token / UserInfo に `org_id`, `org_role`, `organizations[]` を発行
+- ✅ `PUT /account/active-org` でセッションのアクティブ org を切替
+- ✅ デモユーザーに Demo Organization を seed
+
+P04 側は workspace 作成時に `org_id` を記録し、招待 accept で検証済み email と `invitedEmail` を照合する。
+
+次フェーズ: org スコープの admin UI、RLS 連携、招待 revoke/resend。

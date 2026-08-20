@@ -68,7 +68,9 @@ guest のボード画面は「閲覧のみ」と表示する。UI を隠して�
 ### 5.1 ボード
 
 - 作成時の既定列名は `To Do`、`In Progress`、`Done`（この順、`position` 0..2）。
+- 空のボード名は 400。既定名 `Main board` にはしない。
 - 列の追加・削除・改名は未実装。
+- ボードはハード削除しない。`POST .../archive` で一覧から外し、`unarchive` で戻す。カードは残る。
 
 ### 5.2 カード
 
@@ -92,16 +94,16 @@ guest のボード画面は「閲覧のみ」と表示する。UI を隠して�
 
 | 画面 | 仕様 |
 | --- | --- |
-| `/` | ワークスペース一覧。作成フォーム。ボード追加。メンバー追加（owner）。Wiki / Docs / Chat / 検索へのリンク。OIDC 有効かつ未ログインなら `/login` |
-| `/boards/:boardId` | 3 列カンバン。カード追加、DnD 移動、カード詳細モーダル（スプリント割り当て）。guest は DnD 無効 |
+| `/` | ワークスペース一覧。作成フォーム。ボード追加（名前必須）。メンバー一覧と追加（owner）。アーカイブ済みボードの復元。OIDC 有効かつ未ログインなら `/login` |
+| `/boards/:boardId` | 3 列カンバン。カード追加、DnD または詳細の列選択で移動、カード詳細モーダル（スプリント）。ボードのアーカイブ。guest は DnD 無効 |
 | `/boards/:boardId/sprints` | スプリント作成とバーンダウン（未完了カード数） |
-| `/wiki/:workspaceId` | Wiki ツリー |
-| `/wiki/:workspaceId/pages/:pageId` | Wiki エディタ（collab または textarea）と履歴 diff |
-| `/docs/:workspaceId` | 独立ドキュメント一覧 |
-| `/docs/:workspaceId/:documentId` | 共同編集エディタ |
-| `/chat/:workspaceId` | チャンネル一覧 |
+| `/wiki/:workspaceId` | Wiki ツリーとアーカイブからの復元 |
+| `/wiki/:workspaceId/pages/:pageId` | Wiki エディタと履歴。アーカイブ（子ページ含む）。履歴は編集者と状態付き。「この版に戻す」で復元 |
+| `/docs/:workspaceId` | ドキュメント一覧とゴミ箱からの復元 |
+| `/docs/:workspaceId/:documentId` | 共同編集エディタ。最終同期した人と時刻。ゴミ箱へ移せる |
+| `/chat/:workspaceId` | チャンネル一覧。チャンネル・メッセージは監査のため削除しない |
 | `/chat/:workspaceId/:channelId` | タイムライン。guest は投稿フォームなし。自分宛メンションは強調 |
-| `/search/:workspaceId` | 横断検索結果。種別バッジ。`?user=` を維持 |
+| `/search/:workspaceId` | 横断検索。種別とボード名・チャンネル名などの context |
 | `/login` `/callback` `/logout` | OIDC。開発モードでは使わない |
 
 開発モードのユーザー切替は `/?user=demo-user-a` と `demo-user-b`。A のワークスペースは B の一覧に出ない。
@@ -114,7 +116,8 @@ guest のボード画面は「閲覧のみ」と表示する。UI を隠して�
 - 更新: `version` 必須。不一致 409。`parentId` を自分または子孫にすると 400。collab 稼働時のタイトル・状態保存は `body` を省略してよい。
 - 表示: collab 接続時は CodeMirror + Yjs。未接続は textarea + プレビュー。`react-markdown` は raw HTML を出さず、`javascript:` はリンクにしない。
 - 画面: `/wiki/:workspaceId` と `/wiki/:workspaceId/pages/:pageId`
-- 履歴: 作成時と title/body 変更時（collab スナップショットで本文が変わったときも含む）に API スナップショットを足す。Y.Doc バイトは保存しない。`GET .../versions` は本文なし。`GET .../versions/:n` は本文あり。`GET .../diff?from=&to=` は行単位 LCS。`POST .../restore` `{ number, version }` でその版の title+body を戻し、新しい版を足す。guest は GET page と同じ可視性（draft は 404）。restore は member 以上。
+- 履歴: 作成時と title / status / body 変更時（collab スナップショットで本文が変わったときも含む）に API スナップショットを足す。版には `sub` と `status` を含める。Y.Doc バイトは保存しない。
+- ページのアーカイブ: `POST .../archive` で自分と子孫を一覧から外す。`unarchive` で戻す。ゲストには出さない。
 
 ## 8. 共同編集（collab）
 

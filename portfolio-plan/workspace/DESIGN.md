@@ -115,3 +115,28 @@ Wiki ページ作成: API が `page` 行と collab document id を作る。編�
 - 音声・ビデオ
 - E2EE チャット
 - GitHub 双方向同期（カンバンの発展。P11 の code-review と混ぜない）
+
+## マルチテナント基盤の段階化（2026-08）
+
+### Phase 1（今回実装）
+
+- メンバー追加の `sub` 手入力フローを廃止し、**招待リンク経由の参加**に統一
+- owner が招待を発行（`role`, `expires_at`, `max_uses`）
+- 参加は「認証済みユーザー」が `accept` して membership を作成
+- 招待作成/受諾を監査イベントとして保存（アプリケーション層）
+- 招待トークンは平文保存せず、`sha256(token)` のみ DB に保存
+
+### Phase 2（実装済み: IdP 連携強化）
+
+- ✅ 招待受諾で IdP の検証済み email claim と招待先 email を照合（forwarded-link 耐性）
+- ✅ 組織/テナント境界を IdP 側の `org_id` で workspace に記録（`org` scope）
+- 招待の revoke / resend / policy 変更を UI と監査で管理（未着手）
+
+### RLS 導入の準備（今は過剰導入しない）
+
+- すべてのテーブルで `workspace_id` を境界キーとして維持
+- API レイヤーでは引き続き `workspace_id + member role` を必須チェック
+- Postgres RLS は、IdP 側 tenant context を安定供給できる段階で導入する
+  - `SET LOCAL app.tenant_id` をトランザクション境界で設定
+  - `USING` / `WITH CHECK` を対称に定義して read/write 両方を拘束
+  - 接続ロールで `BYPASSRLS` を持たせない
