@@ -59,6 +59,10 @@ owner のみ。入力: `{ "role": "member", "maxUses": 1, "ttlHours": 72, "invit
 `invitedEmail` は任意。指定時は accept 側の検証済み email claim と一致必須（不一致 403）。
 成功 201 `{ "invitation": { ... }, "token": "<一度だけ返る平文トークン>" }`。DB には `sha256(token)` のみ保存。
 
+### `POST /v1/workspaces/:id/invitations/:inviteId/revoke`
+
+owner のみ。有効な招待を無効化（`revoked_at` 設定）。成功 200 Invitation。既に revoke 済みは冪等 200。存在しない 404。
+
 ### `GET /v1/workspaces/:id/invitations`
 
 owner のみ。成功 200 `{ "invitations": [ ... ] }`（トークン平文は含まない）。
@@ -76,7 +80,7 @@ Web 参加 URL: `/join/{token}`
 ### `GET /v1/workspaces/:id/audit-events`
 
 owner のみ。成功 200 `{ "events": [ { "type", "actorSub", "targetSub", "inviteId", "createdAt" } ] }`  
-種別例: `workspace.invitation.created`, `workspace.invitation.accepted`
+種別例: `workspace.invitation.created`, `workspace.invitation.accepted`, `workspace.invitation.revoked`
 
 ### `POST /v1/workspaces/:id/boards`
 
