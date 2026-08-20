@@ -54,6 +54,19 @@ OpenAPI ファイルは未作成。本ファイルが HTTP 契約の要約。
 
 入力: `{ "displayName": "表示名" }`。ログイン中ユーザーの当 WS メンバー行を更新。成功 200 Member。
 
+### `PATCH /v1/workspaces/:id/members/:sub`
+
+owner のみ。入力: `{ "role": "member" | "guest" }`（`owner` への昇格は不可 → 400）。  
+対象が唯一の owner のとき demote は 403。成功 200 Member。監査 `workspace.member.role_updated`。
+
+### `DELETE /v1/workspaces/:id/members/:sub`
+
+owner のみ。他メンバーを除名。自分自身は不可（400）。唯一の owner の除名は 403。成功 204。監査 `workspace.member.removed`。
+
+### `POST /v1/workspaces/:id/leave`
+
+所属メンバーが自分で退出。唯一の owner は 403。成功 204。監査 `workspace.member.left`。
+
 ### `POST /v1/workspaces/:id/members`（レガシー / 開発用）
 
 入力: `{ "sub": "guest-1", "role": "guest" }`  
@@ -98,7 +111,7 @@ Web 参加 URL: `/join/{token}`
 ### `GET /v1/workspaces/:id/audit-events`
 
 owner のみ。成功 200 `{ "events": [ { "type", "actorSub", "targetSub", "inviteId", "createdAt" } ] }`  
-種別例: `workspace.invitation.created`, `workspace.invitation.accepted`, `workspace.invitation.revoked`, `workspace.invitation.resent`, `workspace.invitation.policy_updated`
+種別例: `workspace.invitation.created`, `workspace.invitation.accepted`, `workspace.invitation.revoked`, `workspace.invitation.resent`, `workspace.invitation.policy_updated`, `workspace.member.role_updated`, `workspace.member.removed`, `workspace.member.left`
 
 ### `POST /v1/workspaces/:id/boards`
 
