@@ -72,7 +72,7 @@ pf-recommend/
 3. ✅ コールドスタートフォールバック（未知ユーザーは popularity、`fallback: true`）
 4. ✅ モデル registry とホットスワップ（`manifest.json` を最後に書くファイル registry。学習中の HTTP train は置かない。Postgres / MinIO は未接続）
 5. ✅ P06 アダプタ（BFF `Product.similar` / `recommended` が namespace=commerce の SKU を呼ぶ。失敗時はカタログ順。gateway が paid checkout で events POST 任意配線）
-6. ✅ P10 アダプタ（類似求人 API + skill overlap フォールバック。events POST は任意・未配線）
+6. ✅ P10 アダプタ（類似求人 API + skill overlap フォールバック。求人 GET / 応募 POST で events POST 任意配線）
 
 ## 実装上の注意点
 

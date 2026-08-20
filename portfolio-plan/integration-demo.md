@@ -26,8 +26,8 @@
 | `portfolio-integration-a-foundation` | P01, P02, P03 | OIDC + media + o11y の最小 smoke |
 | `portfolio-integration-b-collab` | P01, P02, P03, P04, P11 portal | workspace の連携 + OpenAPI ポータル |
 | `portfolio-integration-c-scheduling-talent` | P01, P02, P05, P07, P10 | 採用ドメイン |
-| `portfolio-integration-d-commerce` | P01, P02, P03, P06, P07（P11 / P12 / P13 は後続） | commerce 本線 |
-| `portfolio-integration-e-content` | P01, P02, P03, P08（P11 は後続） | content / media |
+| `portfolio-integration-d-commerce` | P01, P02, P03, P06, P07, P11 portal, P12（P13 は Compose） | commerce 本線 |
+| `portfolio-integration-e-content` | P01, P02, P03, P08, P11 portal | content / media |
 | `portfolio-integration-f-ops` | P01, P02, P09, P12, P14, P15 API | 業務 / 個人向け軽量群 |
 
 現時点の実装済み K8s overlay:
@@ -387,9 +387,9 @@ Docker Desktop Kubernetes
 7. foundation smoke (`cluster-smoke.ps1` + `oidc-smoke.ps1` + `demo-smoke.ps1`）
 8. scheduling-talent smoke (`cluster-smoke-c-scheduling-talent.ps1`）
 9. b-collab smoke（P04 + P11 portal。`cluster-smoke-b-collab.ps1`）。scanner / CI dash は非搭載
-10. e-content smoke（P08。`cluster-smoke-e-content.ps1`）。P11 portal は後続
+10. e-content smoke（P08 + P11 portal。`cluster-smoke-e-content.ps1`）
 11. f-ops smoke（P09 / P12 / P14 / P15 API。`cluster-smoke-f-ops.ps1`）
-12. d-commerce smoke（P06 フル + P07。`cluster-smoke-d-commerce.ps1`）。P11 / P12 / P13 は後続
+12. d-commerce smoke（P06 フル + P07 + P11 portal + P12 + demo 画像 Job。P13 は Compose）
 
 ## 単体 Compose 連携デモ: P05 ↔ P10（予約確定 → 面接ステータス）
 
