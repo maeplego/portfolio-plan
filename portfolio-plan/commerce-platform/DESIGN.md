@@ -93,9 +93,10 @@ K8s 化では `cloud-platform/DESIGN.md`。商品画像は `media-platform/DESIG
 5. ✅ payment と notify を抽出。outbox
 6. ✅ ops-web のグリッドとライブ更新
 7. ✅ BFF + storefront。DataLoader なしのトレースを残してから導入
-8. ✅ P07 推薦スロット（BFF fail-closed to popularity。P03 画像は未接続）
+8. ✅ P07 推薦スロット（BFF fail-closed to popularity）。P03 画像は `MEDIA_PUBLIC_BASE` + `deploy/seed-demo-images.*`（任意）
 9. ✅ storefront P01（dev-auth + OIDC BFF `/api/commerce`）
 10. ✅ overlay D: P11 portal + P12 reliability + `MEDIA_PUBLIC_BASE`（P13 は Compose）
+11. ✅ gateway が paid checkout で P07 `POST /v1/events`（`RECOMMEND_API_URL` 任意）
 
 ## 実装上の注意点
 

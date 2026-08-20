@@ -26,7 +26,7 @@
 
 内部開発者プラットフォーム（Internal Developer Platform）のミニ版。新しいサービスの **作り方・正しさの見方・壊し方の防ぎ方** を一箇所に揃える。5 アイデアは別製品に見えるが、価値は「標準で作 → 仕様がポータルに出る → CI が見える → PR をレビュー → 依存をスキャン」という一本の流れ。
 
-**scanner は MVP（K8s overlay 非搭載）。** CLI は P04 / P06 実ファイルテンプレで完成扱い。portal MVP は overlay B（`portal.localhost`）。oasdiff Action、CI dashboard、review BFF は 2026-08-19 に追加。横断 web シェルは未着手。
+**scanner は MVP（K8s overlay 非搭載）。** CLI は P04 / P06 実ファイルテンプレで完成扱い。portal MVP は overlay B（`portal.localhost`）。oasdiff Action、CI dashboard、review BFF は 2026-08-19 に追加。横断 web シェルは portal ホーム（`PORTAL_*_URL`）で配線済み。
 
 ## リポジトリ構成（ポリレポ）
 
