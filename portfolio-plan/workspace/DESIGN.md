@@ -131,7 +131,8 @@ Wiki ページ作成: API が `page` 行と collab document id を作る。編�
 - ✅ 招待受諾で IdP の検証済み email claim と招待先 email を照合（forwarded-link 耐性）
 - ✅ 組織/テナント境界を IdP 側の `org_id` で workspace に記録（`org` scope）
 - ✅ 招待の revoke を UI と監査で管理
-- 招待 resend / policy 変更（未着手）
+- ✅ 招待 resend（再発行）を UI/API で管理
+- 招待 policy 変更（未着手）
 
 ### RLS 導入の準備（今は過剰導入しない）
 
