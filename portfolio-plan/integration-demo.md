@@ -382,7 +382,7 @@ Docker Desktop Kubernetes
 2. `pf-cloud-k8s` リポジトリ作成、`product-repos.json` 登録（**完了**）
 3. overlay 骨組み（namespace / ingress / placeholder）（**完了**）
 4. platform（postgres + redis + garage）（**完了**）
-5. P01 + P03 manifest 接続、OIDC クライアント seed（**完了**）
+5. P01 + P03 manifest 接続、OIDC クライアント seed（**完了**。`idp-env.yaml` の `IDENTITY_SEED_EXTRA_CLIENTS` で commerce / blog / attendance / habit-mobile 等）
 6. P02 o11y 最小を platform に載せる（**完了**）。media-api は OTLP、Grafana に Tempo
 7. foundation smoke (`cluster-smoke.ps1` + `oidc-smoke.ps1` + `demo-smoke.ps1`）
 8. scheduling-talent smoke (`cluster-smoke-c-scheduling-talent.ps1`）

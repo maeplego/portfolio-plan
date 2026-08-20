@@ -88,7 +88,7 @@ K8s 化では `cloud-platform/DESIGN.md`。商品画像は `media-platform/DESIG
 
 1. **モジュラモノリス**（1 リポジトリ一時でも可）で購入〜在庫不足までテスト
 2. catalog / inventory / order を抽出。決済はまだ order 内モックでも可（同一リポジトリの `apps/`。8 git リポジトリにはしない）
-3. overlay D（P01+P02+P03+P06 フルスライス + P07）。P11/P12/P13 は後続
+3. ✅ overlay D（P01+P02+P03+P06 フルスライス + P07 + P11 portal + P12。P13 は Compose）
 4. ✅ 注文をイベントストア化（テスト: Given/When/Then）。checkout はプロセスマネージャ。決済は order 内モック
 5. ✅ payment と notify を抽出。outbox
 6. ✅ ops-web のグリッドとライブ更新
