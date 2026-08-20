@@ -145,7 +145,7 @@ Wiki ページ作成: API が `page` 行と collab document id を作る。編�
 ### Phase 4（進行中: 製品ギャップ）
 
 - ✅ チャット未読（`channel_reads` / `POST .../read` / 一覧バッジ）
-- 列カスタム（未着手）
+- ✅ 列カスタム（追加・改名・削除・並べ替え）
 
 ### Postgres RLS（実装済み）
 

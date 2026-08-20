@@ -126,6 +126,22 @@ owner のみ。成功 200 `{ "events": [ { "type", "actorSub", "targetSub", "inv
 
 member 以上。204。カードは消さない。
 
+### `POST /v1/boards/:id/columns`
+
+member 以上。入力 `{ "name" }`。末尾に列追加。成功 201 Column。空名 / 80 超は 400。
+
+### `PATCH /v1/boards/:id/columns/reorder`
+
+member 以上。入力 `{ "columnIds": ["..."] }`（既存列の全順列）。成功 204。不完全・余分な ID は 400。
+
+### `PATCH /v1/columns/:id`
+
+member 以上。入力 `{ "name" }`。改名。成功 200 Column。`Done` 名は `completedAt` 判定に使う（名前ベース）。
+
+### `DELETE /v1/columns/:id`
+
+member 以上。空の列のみ。カードあり 400。最後の 1 列 403。成功 204。
+
 ### `POST /v1/pages/:id/archive` / `unarchive`
 
 子孫も含めて `archivedAt` を付ける／外す。Wiki 版の復元は従来どおり `POST /v1/pages/:id/restore`。

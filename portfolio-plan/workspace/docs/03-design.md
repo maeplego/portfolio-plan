@@ -113,7 +113,7 @@ IME: `yCollabIME` は `view.composing` 中に CM→Yjs も remote→CM もしな
 
 - API の永続化は Postgres（Compose 専用 DB / overlay の platform `workspace`）。Y.Doc とチャット Hub はプロセスメモリ。複数 collab レプリカは sticky 前提
 - カード移動のリアルタイム他ブラウザ同期なし
-- 列カスタム・ストーリーポイント未実装
+- 列カスタム実装済み。ストーリーポイント未実装
 - バーンダウンは現在の割り当てと Done 時刻。過去の割り当て変更は遡及しない
 - 日本語 IME は composition 確定まで Yjs に送らない。変換中の同時編集は稀に食い違う
 - チケット 15 分。長期編集は再読込が必要
