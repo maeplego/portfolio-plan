@@ -117,6 +117,6 @@ IME: `yCollabIME` は `view.composing` 中に CM→Yjs も remote→CM もしな
 - バーンダウンは現在の割り当てと Done 時刻。過去の割り当て変更は遡及しない
 - 日本語 IME は composition 確定まで Yjs に送らない。変換中の同時編集は稀に食い違う
 - チケット 15 分。長期編集は再読込が必要
-- チャット未読バッジ・既読ウォーターマークは未実装（last_read_seq は後続）
+- チャット未読バッジは実装済み（`channel_reads.last_read_seq`）。既読ウォーターマーク（誰がどこまで読んだか表示）は未実装。
 - 検索はストア走査の部分一致。Postgres FTS ではない
 - メディア結合は `MEDIA_API_URL` 任意。単体 Compose はローカル添付

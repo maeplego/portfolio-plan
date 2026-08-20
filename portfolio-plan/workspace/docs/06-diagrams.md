@@ -46,7 +46,7 @@ flowchart LR
   guest --> wikiDiff[Wiki diff published]
 ```
 
-未読バッジは未実装。
+未読バッジはチャンネル一覧に件数表示（開いているチャンネルは 0 扱い）。
 
 ## 画面遷移（実装済み）
 

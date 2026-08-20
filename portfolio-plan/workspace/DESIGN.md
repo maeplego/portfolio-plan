@@ -136,11 +136,16 @@ Wiki ページ作成: API が `page` 行と collab document id を作る。編�
 - ✅ 招待 policy 変更（role / maxUses / TTL / email をトークン維持のまま更新）
 - ✅ org 内メンバー検索（`GET /v1/org-members`、IdP proxy + 招待フォーム email autocomplete）
 
-### Phase 3（進行中: org 連携 UX）
+### Phase 3（完了: org 連携 UX）
 
 - ✅ org 内メンバー検索 + 招待 email 自動入力
 - ✅ org 切替 UI（IdP `PUT /v1/active-org` + refresh / 開発モード `dev_org`）
 - ✅ workspace メンバー role 変更・除名・leave（監査付き）
+
+### Phase 4（進行中: 製品ギャップ）
+
+- ✅ チャット未読（`channel_reads` / `POST .../read` / 一覧バッジ）
+- 列カスタム（未着手）
 
 ### Postgres RLS（実装済み）
 

@@ -259,13 +259,17 @@ member 以上。204。カードは消さない。
 
 ### `GET /v1/workspaces/:id/channels`
 
-成功 200 `{ "channels": [ { "id", "workspaceId", "name", "createdAt" } ] }`  
-ワークスペース作成時に `name=general` が 1 件ある。
+成功 200 `{ "channels": [ { "id", "workspaceId", "name", "createdAt", "lastReadSeq", "unreadCount" } ] }`  
+ワークスペース作成時に `name=general` が 1 件ある。`lastReadSeq` / `unreadCount` は呼び出しユーザー基準。
 
 ### `POST /v1/workspaces/:id/channels`
 
 入力: `{ "name": "random" }`  
 成功 201。guest 403。
+
+### `POST /v1/channels/:id/read`
+
+入力: `{ "lastSeq": N }`。所属者が既読カーソルを単調更新。成功 200 ChannelView。
 
 ### `POST /v1/channels/:id/messages`
 

@@ -142,7 +142,8 @@ guest のボード画面は「閲覧のみ」と表示する。UI を隠して�
 - 配信: 永続化したあと `/chat/ws?ticket=&channelId=` で `{ type: "message", message }`（`mentions` を含む）。Yjs ソケットとは別。
 - typing: WS で `{ type: "typing" }`。サーバーは永続化せず `{ type: "typing", sub }` を配る。クライアントは 400ms debounce。
 - 再接続: WS open 時に `afterSeq` で差分 GET。
-- 画面: `/chat/:workspaceId` と `/chat/:workspaceId/:channelId`。既知メンバーの `@` 補完。メール / Push / 未読は出さない。
+- 画面: `/chat/:workspaceId` と `/chat/:workspaceId/:channelId`。既知メンバーの `@` 補完。チャンネル一覧に未読件数。メール / Push は出さない。
+- 既読: `POST /v1/channels/:id/read` `{ "lastSeq" }`。開いているチャンネルは閲覧中にカーソル更新。
 
 ## 10. 横断検索
 
