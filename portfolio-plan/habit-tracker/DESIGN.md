@@ -51,7 +51,7 @@
 
 1. 習慣 CRUD と当日チェック、SQLite
 2. ストリークとカレンダーの純関数テスト（TZ、年末）
-3. ローカル通知
+3. ✅ ローカル通知（expo-notifications。習慣作成時 20:00 リマインド）
 4. ✅ 統計画面（直近 30 日の完了率 + ストリーク）
 5. ✅ 同期 API（`pf-habit-api`。dev-auth / Bearer OIDC）
 6. ✅ モバイル差分同期クライアント（`EXPO_PUBLIC_HABIT_*`。PKCE / 通知は別スライス）

@@ -36,8 +36,8 @@
 - `portfolio-integration` + `docker-desktop`（上記と同じ。後方互換）
 - `portfolio-integration-c-scheduling-talent` + `docker-desktop-c-scheduling-talent`
 - `portfolio-integration-b-collab` + `docker-desktop-b-collab`（P04 + P11 portal。scanner なし）
-- `portfolio-integration-e-content` + `docker-desktop-e-content`（P08。P11 portal は未搭載）
-- `portfolio-integration-d-commerce` + `docker-desktop-d-commerce`（P06 フル + P07。P11/P12/P13 は未搭載）
+- `portfolio-integration-e-content` + `docker-desktop-e-content`（P08 + P11 portal）
+- `portfolio-integration-d-commerce` + `docker-desktop-d-commerce`（P06 フル + P07 + P11 portal + P12。P13 は Compose）
 - `portfolio-integration-f-ops` + `docker-desktop-f-ops`（P09 / P12 / P14 / P15 API。Expo は非搭載）
 
 ## overlay の切り替え（12 GB 制約）
@@ -267,24 +267,27 @@ kubectl wait --for=condition=ready pod -l app=platform-postgres -n platform --ti
 
 永続化は platform Postgres の `workspace` DB。Y.Doc は collab メモリ。
 
-#### content（P08）
+#### content（P08 + P11 portal）
 
 `cluster-smoke-e-content.ps1` は blog / shortener の health、短縮作成、302、Ingress を確認する。管理は開発認証。学習用デモ記事は架空の Harbor Press。
 
 目視確認するときの URL:
 
+- [http://portal.localhost](http://portal.localhost)
 - [http://blog.localhost](http://blog.localhost)
 - [http://blog.localhost/demo](http://blog.localhost/demo)
 - [http://shortener.localhost/health](http://shortener.localhost/health)
 - [http://media.localhost](http://media.localhost)（OIDC。foundation と同じ）
 
-#### commerce（P06）
+#### commerce（P06 + P07 + P11 + P12）
 
 `cluster-smoke-d-commerce.ps1` は gateway health、カート、在庫 1 の同時 checkout（201 と 409 `inventory_shortage`）、BFF `recommended`、Ingress（storefront / api / bff / ops）を確認する。管理は開発認証。決済はモック（カードなし）。学習用シードは `MUG-1` / `TEE-1` / `STK-1`。P07 失敗時はカタログ順。
 
 目視確認するときの URL:
 
 - [http://commerce.localhost](http://commerce.localhost)
+- [http://portal.localhost](http://portal.localhost)
+- [http://reliability.localhost](http://reliability.localhost)
 - [http://commerce.localhost/demo](http://commerce.localhost/demo)
 - [http://commerce-api.localhost/health](http://commerce-api.localhost/health)
 - [http://media.localhost](http://media.localhost)（OIDC。foundation と同じ）

@@ -95,6 +95,7 @@ K8s 化では `cloud-platform/DESIGN.md`。商品画像は `media-platform/DESIG
 7. ✅ BFF + storefront。DataLoader なしのトレースを残してから導入
 8. ✅ P07 推薦スロット（BFF fail-closed to popularity。P03 画像は未接続）
 9. ✅ storefront P01（dev-auth + OIDC BFF `/api/commerce`）
+10. ✅ overlay D: P11 portal + P12 reliability + `MEDIA_PUBLIC_BASE`（P13 は Compose）
 
 ## 実装上の注意点
 

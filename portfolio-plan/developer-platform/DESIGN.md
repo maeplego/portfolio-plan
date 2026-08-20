@@ -70,7 +70,7 @@
 4. ✅ **openapi-diff Action**（`pf-developer-portal/.github/workflows/openapi-breaking.yml` + `testdata/openapi` + `cmd/oasdiff-gate`）。upstream `oasdiff/oasdiff-action` が breaking fixture で fail、compatible で green。2026-08-19
 5. ✅ **CI dashboard**（`../pf-developer-ci-dash`）。公開 Actions の allowlist 読み取り。任意 HMAC webhook。PAT は git に置かない。2026-08-19
 6. ✅ **code review UI**（`../pf-developer-review`）。GitHub API BFF。ローカル path 拒否。巨大 diff は切り詰め。2026-08-19
-7. **web シェル** でつなぐ — 未着手（portal / dash / review は別ポート）
+7. ✅ **web シェル** — portal ホームから CI dash / review / scanner へ（`PORTAL_*_URL` env）
 
 ## 実装上の注意点
 
