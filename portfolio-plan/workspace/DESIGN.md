@@ -132,13 +132,20 @@ Wiki ページ作成: API が `page` 行と collab document id を作る。編�
 - ✅ 組織/テナント境界を IdP 側の `org_id` で workspace に記録（`org` scope）
 - ✅ 招待の revoke を UI と監査で管理
 - ✅ 招待 resend（再発行）を UI/API で管理
+- ✅ Postgres RLS（`SET LOCAL app.tenant_id`）で org 境界を DB 層でも拘束
 - 招待 policy 変更（未着手）
 
-### RLS 導入の準備（今は過剰導入しない）
+### Postgres RLS（実装済み）
+
+- IdP `org_id` → API が `SET LOCAL app.tenant_id` を各トランザクション先頭で設定（`store.WithTenant`）
+- `app.tenant_id` 未設定（NULL）のときは全行可（migration / `Unscoped`）
+- 設定時は `workspaces.org_id` と一致する行のみ read/write（`app_tenant_matches`）
+- 子テーブル（boards, pages, documents, …）は workspace 経由で同じ境界
+- **Unscoped** 例外: 招待トークン lookup/accept、internal collab、view-token ファイル取得
+- 接続ロールに `BYPASSRLS` は付与しない（Compose デフォルトロールのまま）
+- アプリ層の `workspace_id + member role` チェックは従来どおり維持（二重防御）
+
+### RLS 導入前の方針（参考）
 
 - すべてのテーブルで `workspace_id` を境界キーとして維持
 - API レイヤーでは引き続き `workspace_id + member role` を必須チェック
-- Postgres RLS は、IdP 側 tenant context を安定供給できる段階で導入する
-  - `SET LOCAL app.tenant_id` をトランザクション境界で設定
-  - `USING` / `WITH CHECK` を対称に定義して read/write 両方を拘束
-  - 接続ロールで `BYPASSRLS` を持たせない
