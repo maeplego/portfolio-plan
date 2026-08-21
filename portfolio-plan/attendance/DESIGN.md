@@ -68,7 +68,15 @@ pf-attendance/
 | --- | --- |
 | **P0（現状）** | 暦月 period。早期 close は運用で可 |
 | **P1（推奨・近）** | org 設定 `periodAnchorDay`（例: 1=暦月、21=21日起算）。期間 ID と CSV／締めキーをそれに合わせる。既定は 1 で後方互換 | **完了**（2026-08-21） |
-| **P2（任意）** | `closeByDay`（例: 期間終了の N 日後／毎月 25 日）のリマインド表示。自動ロックは慎重（誤ロックが痛い） |
+| **P2（任意）** | `closeByDay`（例: 毎月 25 日）。それ以降の日は **見込み（provisional）** 入力可。実打刻が優先 | **完了**（2026-08-21） |
+
+### 出力カスタム・紙運用
+
+| 機能 | 内容 |
+| --- | --- |
+| CSV プロファイル | `minutes-v1` / `erp-generic-ja`（例示）/ `custom`。列順・見出し有無を org 設定または query で指定。ベンダー認証フォーマットではない |
+| PDF | `GET /v1/months/{month}/timesheet.pdf` — 印刷・上長サイン用のデモ帳票 |
+| 見込み | `closeByDay` 設定後、`PUT /v1/me/provisional-days` で締め日翌日以降を入力 |
 
 P16 連携時は CSV の `month`／期間ラベルが period 定義に従うことを契約に書く。SES の客先締め日と雇用主の給与締め日が違う場合は、handoff 前後で period がずれうる（DESIGN「客先常駐・SES」とセット）。
 
