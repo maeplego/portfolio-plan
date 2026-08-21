@@ -23,11 +23,12 @@
 5. ログイン → workspace ホーム →（可能な範囲で）org 表示を確認
 6. 境界: 別 org のデータが見えないこと
 
-## P01 固有 API への依存（棚卸しメモ）
+## P01 固有 API への依存（棚卸し）
 
-Workspace は org メンバー一覧や active-org 切替で **同梱 IdP の `/v1/...` を呼ぶ経路がある**。BYO 時は:
+| 機能 | 同梱 P01 | BYO |
+| --- | --- | --- |
+| `/v1/active-org` | 使用 | 失敗時は `rp_active_org` Cookie + `X-Workspace-Org`（membership リスト内のみ） |
+| `/v1/organizations/{id}/members` | 使用 | 失敗時は workspace メンバー列挙にフォールバック |
+| 標準 OIDC（authorize/token/userinfo/jwks） | 使用 | 必須 |
 
-- メンバーディレクトリが IdP に無い場合は「切替 UI を制限」または「クレームのみで単一 org」に落とす
-- 汎用化は Phase 1–2 の改修対象（ハードコード増加禁止）
-
-詳細なエンドポイント表は実装追随後に本ファイルへ追記する。
+詳細な接続チェックリストは上記。実装追随は Collab M1。

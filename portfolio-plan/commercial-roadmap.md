@@ -34,10 +34,11 @@ flowchart LR
 - [x] P01 本番プロファイル（`IDENTITY_ENV`、dev keys 拒否）、監査一覧・脅威モデル書類
 - [x] P04 `WORKSPACE_ENV` で DEV_AUTH 拒否
 - [x] BYO 手順ドラフト（`portability-byo-idp.md`）
+- [x] P04 の org 隔離（memory でも tenant filter）+ `org_required` + BYO org 切替フォールバック（`rp_active_org` / `X-Workspace-Org`）
+- [x] Collab staging 手順（`collab-staging.md`）と Collector down アラート骨格
 - [ ] AuthPort: staging で外部 OIDC 1 系統の接続実演
-- [ ] P04 の P01 固有 `/v1` 依存の汎用 OIDC 寄せ
-- [ ] Collab staging（overlay B または Compose）、観測・アラート 1 本
-- [ ] org 契約テスト、境界テスト、最小 E2E（同梱経路）
+- [ ] Collab 最小 E2E（ログイン→workspace→org、Playwright）
+- [ ] overlay B を DEV_AUTH オフの商用 staging に揃える（スモークは別経路維持）
 
 **完了条件**: staging で OIDC+org・dev-auth オフ。BYO 手順が再現可能。
 

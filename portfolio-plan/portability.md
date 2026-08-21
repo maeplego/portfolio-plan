@@ -78,4 +78,5 @@ flowchart TB
 - [package-catalog.md](./package-catalog.md)
 - [production-definition.md](./production-definition.md)
 - [commercial-roadmap.md](./commercial-roadmap.md)
+- [collab-staging.md](./collab-staging.md)
 - [portability-byo-idp.md](./portability-byo-idp.md)
