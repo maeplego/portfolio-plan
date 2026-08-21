@@ -23,6 +23,8 @@
 5. ログイン → workspace ホーム →（可能な範囲で）org 表示を確認
 6. 境界: 別 org のデータが見えないこと
 
+詳細は製品側ラボ: `pf-workspace/deploy/byo-oidc/README.md`（mock OIDC + org_id）。
+
 ## P01 固有 API への依存（棚卸し）
 
 | 機能 | 同梱 P01 | BYO |

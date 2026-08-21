@@ -36,18 +36,20 @@ flowchart LR
 - [x] BYO 手順ドラフト（`portability-byo-idp.md`）
 - [x] P04 の org 隔離（memory でも tenant filter）+ `org_required` + BYO org 切替フォールバック（`rp_active_org` / `X-Workspace-Org`）
 - [x] Collab staging 手順（`collab-staging.md`）と Collector down アラート骨格
-- [ ] AuthPort: staging で外部 OIDC 1 系統の接続実演
-- [ ] Collab 最小 E2E（ログイン→workspace→org、Playwright）
-- [ ] overlay B を DEV_AUTH オフの商用 staging に揃える（スモークは別経路維持）
+- [x] overlay B 商用 staging（`docker-desktop-b-collab-staging`、DEV_AUTH オフ、デモ B と分離）
+- [x] BYO モック OIDC（`pf-workspace/deploy/byo-oidc`）
+- [x] Collab 最小 E2E（`pf-workspace/apps/e2e`、同梱 IdP）
+- [x] P04 運用 runbook / 商用導入（docs 07–08）
+- [ ] AuthPort: 顧客 Entra 等での実接続は顧客環境で（ラボはモックで代替）
 
 **完了条件**: staging で OIDC+org・dev-auth オフ。BYO 手順が再現可能。
 
 ### M2 — Collab 商用品質（Go 判定）
 
-- P04 ± P03: RLS／招待／共同編集／チャットのゲート、runbook
-- AuthPort 経由のみ（新規の P01 URL ハードコード禁止）
-- Blob 顧客バケット手順
-- 導入成果物（同梱 IdP / BYO の 2 プロファイル）
+- [x] 運用 runbook / 導入成果物（workspace docs 07–08）
+- [ ] RLS／招待／共同編集／チャットの追加ゲート（手動 runbook 拡充は継続）
+- [x] AuthPort 経由の BYO フォールバック（Cookie / X-Workspace-Org）
+- [ ] Blob 顧客バケット手順の顧客向け厚み
 - production-definition チェックリストで Go または Risk Accept
 
 **完了条件**: 顧客 PoC に実データを入れる判断ができる。

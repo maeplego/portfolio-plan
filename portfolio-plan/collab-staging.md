@@ -22,14 +22,16 @@
 
 詳細チェックリストは [production-definition.md](./production-definition.md)。BYO は [portability-byo-idp.md](./portability-byo-idp.md)。
 
-## Overlay B（デモ）との関係
+## Overlay
 
-| | Overlay B スモーク | 商用 staging |
-| --- | --- | --- |
-| DEV_AUTH | API true（ヘッダ検証） | false |
-| 用途 | クラスタ配線・health | 本番ゲート |
-| 起動 | `pf-cloud-k8s` の `up-b-collab.ps1` | 上記 Compose または overlay に staging パッチを後から適用 |
+| Overlay | 用途 |
+| --- | --- |
+| `docker-desktop-b-collab` | デモ／採用スモーク（API は DEV_AUTH 可） |
+| `docker-desktop-b-collab-staging` | 商用 staging（`WORKSPACE_ENV=staging`、DEV_AUTH 禁止） |
 
-## 観測
+```powershell
+cd pf-cloud-k8s
+.\scripts\cluster-smoke-b-collab-staging.ps1   # DEV_AUTH 401 と OIDC redirect を確認
+```
 
-P02 Collector へ OTLP。アラート例は `pf-cloud-o11y/deploy/prometheus/alerts.yml`（Collector up）。
+詳細チェックリストは [production-definition.md](./production-definition.md)。BYO は [portability-byo-idp.md](./portability-byo-idp.md) と `pf-workspace/deploy/byo-oidc/`。
