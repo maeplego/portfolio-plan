@@ -34,7 +34,7 @@
 
 - [x] **Yes** — OIDC 利用時 `org_id` 必須（staging/production プロファイル）
 - [x] **Yes** — 同一 sub・別 org でデータ非表示または 403（契約テスト＋ memory tenant filter）
-- [ ] **Risk Accept** — 招待・共有リンクの公開範囲が文書化されている（仕様・テストに分散。runbook 09 節で要約済み。顧客向け一枚絵は継続）— 担当: portfolio / 見直し: M2 完了時
+- [x] **Yes** — 招待・共有リンクの公開範囲が文書化されている（[workspace/docs/10-invite-visibility.md](./workspace/docs/10-invite-visibility.md)）
 
 ### データ保護
 
@@ -47,19 +47,19 @@
 - [x] **Yes** — Collab 依存リポの unit CI 緑（ローカル `go test` / `npm test` 運用。公開 Actions は各リポ CI）
 - [x] **Yes** — 境界テスト（org 隔離、認可コード再利用拒否など）緑
 - [x] **Yes** — 最小 E2E: ログイン → workspace ホーム → org 切替（`pf-workspace/apps/e2e`、同梱 IdP）
-- [ ] **Risk Accept** — 依存の High 以上脆弱性は方針付き（Trivy 等で監視。リリース都度レビュー。固定例外リストは未整備）— 担当: portfolio / 見直し: 初回有償 PoC 前
+- [x] **Yes** — 依存の High 以上脆弱性は方針付き（[collab-slo-security.md](./collab-slo-security.md)。例外表はリリース都度）
 
 ### 可用性・観測（初期）
 
 - [x] **Yes** — `/health` `/ready` が主要プロセスで応答
 - [x] **Yes** — OTLP または同等で staging からメトリクス／トレースが取れる（o11y スタック）
 - [x] **Yes** — アラート最低 1 本（Collector down 等）
-- [ ] **Risk Accept** — 初期 SLO を文書化（数値は運用開始時に確定。現時点は目標未設定）— 担当: 顧客オンボ / 見直し: 初回本番前
+- [x] **Yes** — 初期 SLO を文書化（[collab-slo-security.md](./collab-slo-security.md)。契約で上書き可）
 
 ### 監査
 
 - [x] **Yes** — ログイン成功／失敗、トークン発行、org 切替、招待、権限変更など必須イベントが一覧化され出る（identity docs 08、workspace 監査イベント）
-- [ ] **Risk Accept** — 保持期間方針がある（「顧客契約で確定。既定案 90 日」を導入文書に記載。法務レビュー未）— 担当: 契約 / 見直し: 初回契約時
+- [x] **Yes** — 保持期間方針がある（既定 90 日。[collab-slo-security.md](./collab-slo-security.md)。業種・地域は契約で確定）
 
 ### 名乗らない領域（明示）
 
@@ -79,19 +79,22 @@
 
 ### 自己監査サマリ（2026-08-21）
 
-| 判定 | **Go（Collab ゲート。Risk Accept 付き）** |
+| 判定 | **Go（Collab ゲート）** |
 | --- | --- |
-| ブロッカー | なし（バックアップ実演 Pass） |
-| Risk Accept | 招待公開範囲の顧客向け一枚絵、脆弱性例外リスト、SLO 数値、監査保持の法務確定 |
-| 注意 | 評価 LICENSE のまま実課金運用は引き続き No-Go。本番契約・秘密管理は顧客環境で別途 |
+| ブロッカー | なし |
+| 文書で閉じた項目 | 招待一枚絵、SLO 初期値、監査保持既定、脆弱性例外方針（[collab-slo-security.md](./collab-slo-security.md) / [10-invite-visibility.md](./workspace/docs/10-invite-visibility.md)） |
+| 注意 | 評価 LICENSE のまま実課金運用は引き続き No-Go。顧客法務・例外表の実記入は契約時 |
 
-再監査（同日）: staging `pg_dump`/`pg_restore` 実演後、バックアップ項目を Yes に更新。
+再監査（同日）: staging バックアップ実演 Pass のあと、残 Risk Accept を書類で Yes に更新。
 
 記録テンプレ: 日付、環境、チェック担当、Yes/No/Risk Accept、残課題。`commercial-roadmap.md` のマイルストーンと対応づける。
 
 ## 関連
 
 - [verification.md](./verification.md) — 動作確認の層（L0〜L4）
+- [collab-staging.md](./collab-staging.md)
+- [commerce-staging.md](./commerce-staging.md)
+- [collab-slo-security.md](./collab-slo-security.md)
 - [package-catalog.md](./package-catalog.md)
 - [portability.md](./portability.md)
 - [commercial-roadmap.md](./commercial-roadmap.md)

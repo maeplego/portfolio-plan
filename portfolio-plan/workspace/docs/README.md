@@ -12,5 +12,6 @@
 | [07-operations-runbook.md](07-operations-runbook.md) | Collab 障害・デプロイ・バックアップ・招待／chat |
 | [08-commercial-intro.md](08-commercial-intro.md) | 評価→商用・同梱/BYO 導入 |
 | [09-backup-restore-drill.md](09-backup-restore-drill.md) | バックアップ実演の記録テンプレ |
+| [10-invite-visibility.md](10-invite-visibility.md) | 招待・公開範囲の顧客向け一枚絵 |
 
-ポートフォリオ横断: [production-definition.md](../../production-definition.md) / [collab-staging.md](../../collab-staging.md) / [commercial-roadmap.md](../../commercial-roadmap.md) / [verification.md](../../verification.md)
+ポートフォリオ横断: [production-definition.md](../../production-definition.md) / [collab-staging.md](../../collab-staging.md) / [commerce-staging.md](../../commerce-staging.md) / [commercial-roadmap.md](../../commercial-roadmap.md) / [verification.md](../../verification.md) / [collab-slo-security.md](../../collab-slo-security.md)

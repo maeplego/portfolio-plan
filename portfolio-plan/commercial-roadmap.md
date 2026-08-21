@@ -50,15 +50,21 @@ flowchart LR
 - [x] RLS／招待／共同編集／チャットの手動 runbook 要約（詳細は仕様・テスト。顧客一枚絵は Risk Accept）
 - [x] AuthPort 経由の BYO フォールバック（Cookie / X-Workspace-Org）
 - [x] Blob 顧客バケット手順（[media-platform/docs/07-customer-bucket.md](./media-platform/docs/07-customer-bucket.md)）
-- [x] production-definition チェックリストで **Go**（Risk Accept 記録済み。評価 LICENSE のまま実課金は不可）
+- [x] production-definition チェックリストで **Go**（評価 LICENSE のまま実課金は不可）
 - [x] staging で [09-backup-restore-drill.md](./workspace/docs/09-backup-restore-drill.md) を 1 回記入（2026-08-21 Pass）
+- [x] 招待一枚絵・SLO／監査保持／脆弱性方針（[10-invite-visibility.md](./workspace/docs/10-invite-visibility.md)、[collab-slo-security.md](./collab-slo-security.md)）
 
-**完了条件**: 顧客 PoC に実データを入れる判断ができる（ゲート Go。契約・法務 Risk Accept は顧客オンボで消化）。
+**完了条件**: 顧客 PoC に実データを入れる判断ができる（ゲート Go。契約・法務の個別確定は顧客オンボ）。
 
 ### M3 — 次パッケージ（各々別計画で実装）
 
 順序の既定: **Commerce → Talent → Attendance → その他**。  
 各パッケージで M1 チェックリストを再利用。決済・労基は「名乗るなら専門家レビュー必須」。
+
+- [x] Commerce: `COMMERCE_ENV` staging/production で DEV_AUTH 拒否（gateway + order）
+- [x] Commerce staging 手順・overlay 入口（[commerce-staging.md](./commerce-staging.md)、`docker-desktop-d-commerce-staging`）
+- [ ] Commerce: cluster スモーク（DEV_AUTH 401）とゲート自己監査
+- [ ] Talent / Attendance: 同様の ENV プロファイル
 
 ### MN — 商用第 N 弾（規制ドメイン／バックオフィス）
 
