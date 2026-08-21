@@ -69,10 +69,12 @@ master
 ```powershell
 cd project
 .\scripts\checkout-workspace-ref.ps1 -Status
-.\scripts\checkout-workspace-ref.ps1 -Ref portfolio-snapshot-2026-08-21 -Fetch
-.\scripts\checkout-workspace-ref.ps1 -Ref portfolio-snapshot-2026-08-21 -WorkBranch
+.\scripts\checkout-workspace-ref.ps1 -Ref portfolio-snapshot-2026-08-21-gaps -Fetch
+.\scripts\checkout-workspace-ref.ps1 -Ref portfolio-snapshot-2026-08-21-gaps -WorkBranch
 .\scripts\checkout-workspace-ref.ps1 -Ref master
 ```
+
+最新の横断スナップショットは **`portfolio-snapshot-2026-08-21-gaps`**（P01–P16 A/B ギャップ実装 W0–W6 後）。同日の `portfolio-snapshot-2026-08-21` はその直前の状態。
 
 - 既定のタグ checkout は **detached HEAD**（見るだけ向け）
 - その上で触るなら **`-WorkBranch`**（`at/<Ref>` を作って乗る）
