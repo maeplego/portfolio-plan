@@ -46,13 +46,14 @@ flowchart LR
 
 ### M2 — Collab 商用品質（Go 判定）
 
-- [x] 運用 runbook / 導入成果物（workspace docs 07–08）
-- [ ] RLS／招待／共同編集／チャットの追加ゲート（手動 runbook 拡充は継続）
+- [x] 運用 runbook / 導入成果物（workspace docs 07–08、招待／chat／collab 節）
+- [x] RLS／招待／共同編集／チャットの手動 runbook 要約（詳細は仕様・テスト。顧客一枚絵は Risk Accept）
 - [x] AuthPort 経由の BYO フォールバック（Cookie / X-Workspace-Org）
-- [ ] Blob 顧客バケット手順の顧客向け厚み
-- production-definition チェックリストで Go または Risk Accept
+- [x] Blob 顧客バケット手順（[media-platform/docs/07-customer-bucket.md](./media-platform/docs/07-customer-bucket.md)）
+- [ ] production-definition チェックリストで **Go**（2026-08-21 自己監査は **No-Go**: バックアップ実演記録未。Risk Accept は記録済み）
+- [ ] staging で [09-backup-restore-drill.md](./workspace/docs/09-backup-restore-drill.md) を 1 回記入
 
-**完了条件**: 顧客 PoC に実データを入れる判断ができる。
+**完了条件**: 顧客 PoC に実データを入れる判断ができる（バックアップ実演後に再監査）。
 
 ### M3 — 次パッケージ（各々別計画で実装）
 

@@ -9,7 +9,8 @@
 | [03-design.md](03-design.md) | 権限、楽観ロック、CRDT の境界 |
 | [04-test-spec.md](04-test-spec.md) | テストの観点 |
 | [05-api.md](05-api.md) | HTTP 契約 |
-| [07-operations-runbook.md](07-operations-runbook.md) | Collab 障害・デプロイ・バックアップ |
+| [07-operations-runbook.md](07-operations-runbook.md) | Collab 障害・デプロイ・バックアップ・招待／chat |
 | [08-commercial-intro.md](08-commercial-intro.md) | 評価→商用・同梱/BYO 導入 |
+| [09-backup-restore-drill.md](09-backup-restore-drill.md) | バックアップ実演の記録テンプレ |
 
-ポートフォリオ横断: [production-definition.md](../../production-definition.md) / [collab-staging.md](../../collab-staging.md) / [commercial-roadmap.md](../../commercial-roadmap.md)
+ポートフォリオ横断: [production-definition.md](../../production-definition.md) / [collab-staging.md](../../collab-staging.md) / [commercial-roadmap.md](../../commercial-roadmap.md) / [verification.md](../../verification.md)

@@ -32,6 +32,9 @@
 ```powershell
 cd pf-cloud-k8s
 .\scripts\cluster-smoke-b-collab-staging.ps1   # DEV_AUTH 401 と OIDC redirect を確認
+# イメージがホストにあるとき: -SkipBuild
 ```
+
+L3a 記録（2026-08-21）: DEV_AUTH 401・Ingress health・`workspace.localhost` → `idp.localhost/authorize` を確認して **pass**（初回はイメージ load 後の postgres Ready 待ちが PowerShell Stop で中断。`load-images.ps1` / `up-b-collab-staging.ps1` を修正済み）。
 
 詳細チェックリストは [production-definition.md](./production-definition.md)。BYO は [portability-byo-idp.md](./portability-byo-idp.md) と `pf-workspace/deploy/byo-oidc/`。層の位置づけは [verification.md](./verification.md) の L3a。

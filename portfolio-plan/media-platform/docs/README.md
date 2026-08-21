@@ -12,3 +12,4 @@
 | [04-test-spec.md](04-test-spec.md) | テストの観点 |
 | [05-api.md](05-api.md) | HTTP 契約 |
 | [06-diagrams.md](06-diagrams.md) | 図表 |
+| [07-customer-bucket.md](07-customer-bucket.md) | 顧客 S3 互換バケットへの差し替え |

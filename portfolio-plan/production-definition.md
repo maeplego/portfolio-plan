@@ -22,42 +22,44 @@
 
 ## 必須ゲート（Collab）
 
+凡例: **Yes** / **No** / **Risk Accept**（誰・見直し日を記録）。自己監査日: 2026-08-21。
+
 ### 認証
 
-- [ ] production / staging で **dev-auth・開発バイパスが起動拒否**（同梱 P01）
-- [ ] 認証は **承認済み Auth アダプタ**のみ（同梱 P01 または [portability.md](./portability.md) の BYO OIDC）
-- [ ] 必須クレーム: `sub`、テナント用 `org_id`（またはマッピング設定済みの同等クレーム）
+- [x] **Yes** — production / staging で **dev-auth・開発バイパスが起動拒否**（同梱 P01: `IDENTITY_ENV`、P04: `WORKSPACE_ENV`）
+- [x] **Yes** — 認証は **承認済み Auth アダプタ**のみ（同梱 P01 または [portability.md](./portability.md) の BYO OIDC。Entra/Auth0 実テナントは顧客環境で確認）
+- [x] **Yes** — 必須クレーム: `sub`、テナント用 `org_id`（または `OIDC_ORG_CLAIM` / `OIDC_ORGS_CLAIM` マッピング）
 
 ### テナント隔離
 
-- [ ] OIDC 利用時 `org_id` 必須
-- [ ] 同一 sub・別 org でデータ非表示または 403（契約テスト緑）
-- [ ] 招待・共有リンクの公開範囲が文書化されている
+- [x] **Yes** — OIDC 利用時 `org_id` 必須（staging/production プロファイル）
+- [x] **Yes** — 同一 sub・別 org でデータ非表示または 403（契約テスト＋ memory tenant filter）
+- [ ] **Risk Accept** — 招待・共有リンクの公開範囲が文書化されている（仕様・テストに分散。runbook 09 節で要約済み。顧客向け一枚絵は継続）— 担当: portfolio / 見直し: M2 完了時
 
 ### データ保護
 
-- [ ] 秘密は環境変数／秘密管理のみ（Git に鍵を置かない）
-- [ ] バックアップ／リストア手順があり、staging で一度実演記録がある
-- [ ] オブジェクト格納は S3 互換設定で差し替え可能（顧客バケット可）
+- [x] **Yes** — 秘密は環境変数／秘密管理のみ（Git に鍵を置かない）
+- [ ] **No** — バックアップ／リストア手順があり、staging で一度実演記録がある（手順・テンプレ: [workspace/docs/09-backup-restore-drill.md](./workspace/docs/09-backup-restore-drill.md)。**実演ログ未記入**のため本番 Go 不可）
+- [x] **Yes** — オブジェクト格納は S3 互換設定で差し替え可能（[media-platform/docs/07-customer-bucket.md](./media-platform/docs/07-customer-bucket.md)）
 
 ### 品質
 
-- [ ] Collab 依存リポの unit CI 緑
-- [ ] 境界テスト（org 隔離、認可コード再利用拒否など）緑
-- [ ] 最小 E2E: ログイン → workspace ホーム → org 切替（同梱 IdP 経路）
-- [ ] 依存の High 以上脆弱性は方針付き（修正または文書化した例外）
+- [x] **Yes** — Collab 依存リポの unit CI 緑（ローカル `go test` / `npm test` 運用。公開 Actions は各リポ CI）
+- [x] **Yes** — 境界テスト（org 隔離、認可コード再利用拒否など）緑
+- [x] **Yes** — 最小 E2E: ログイン → workspace ホーム → org 切替（`pf-workspace/apps/e2e`、同梱 IdP）
+- [ ] **Risk Accept** — 依存の High 以上脆弱性は方針付き（Trivy 等で監視。リリース都度レビュー。固定例外リストは未整備）— 担当: portfolio / 見直し: 初回有償 PoC 前
 
 ### 可用性・観測（初期）
 
-- [ ] `/health` `/ready` が主要プロセスで応答
-- [ ] OTLP または同等で staging からメトリクス／トレースが取れる
-- [ ] アラート最低 1 本（例: IdP または workspace API down）
-- [ ] 初期 SLO を文書化（例: 月次稼働目標。数値は運用開始時に確定してよい）
+- [x] **Yes** — `/health` `/ready` が主要プロセスで応答
+- [x] **Yes** — OTLP または同等で staging からメトリクス／トレースが取れる（o11y スタック）
+- [x] **Yes** — アラート最低 1 本（Collector down 等）
+- [ ] **Risk Accept** — 初期 SLO を文書化（数値は運用開始時に確定。現時点は目標未設定）— 担当: 顧客オンボ / 見直し: 初回本番前
 
 ### 監査
 
-- [ ] ログイン成功／失敗、トークン発行、org 切替、招待、権限変更など必須イベントが一覧化され出る
-- [ ] 保持期間方針がある
+- [x] **Yes** — ログイン成功／失敗、トークン発行、org 切替、招待、権限変更など必須イベントが一覧化され出る（identity docs 08、workspace 監査イベント）
+- [ ] **Risk Accept** — 保持期間方針がある（「顧客契約で確定。既定案 90 日」を導入文書に記載。法務レビュー未）— 担当: 契約 / 見直し: 初回契約時
 
 ### 名乗らない領域（明示）
 
@@ -74,6 +76,14 @@
 | --- | --- |
 | **Go** | 上の Collab 必須ゲートがすべて Yes、または未充足項目ごとに Risk Accept（誰が・いつ見直すか）を記録 |
 | **No-Go** | dev-auth が本番相当に残る、org 隔離テストが無い／落ちる、バックアップ未実演、ライセンスが評価のまま実課金運用 |
+
+### 自己監査サマリ（2026-08-21）
+
+| 判定 | **No-Go（本番 Go ではない）** |
+| --- | --- |
+| ブロッカー | バックアップ／リストアの **staging 実演記録が未作成**（手順テンプレのみ） |
+| Risk Accept | 招待公開範囲の顧客向け一枚絵、脆弱性例外リスト、SLO 数値、監査保持の法務確定 |
+| 次アクション | [09-backup-restore-drill.md](./workspace/docs/09-backup-restore-drill.md) を staging で 1 回記入 → 再監査 |
 
 記録テンプレ: 日付、環境、チェック担当、Yes/No/Risk Accept、残課題。`commercial-roadmap.md` のマイルストーンと対応づける。
 
