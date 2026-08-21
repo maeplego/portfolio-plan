@@ -134,6 +134,8 @@ workspace などの利用側アプリで招待リンクを安全に運用する�
 P04 側は workspace 作成時に `org_id` を記録し、招待 accept で検証済み email と `invitedEmail` を照合する。
 P04 は `GET /v1/organizations/{id}/members`（email/name 付き）を招待候補に利用し、ホームで org 切替できる。
 
+利用側の org 消費者（最小テナント）: **P03 Media / P06 Commerce / P09 Attendance / P10 Talent** も `org` scope と `org_id` フィルタを実装する（P04 と同型）。OIDC 時は `org_id` 必須、dev-auth は `X-Dev-User-Org`。
+
 次フェーズ: org スコープの admin UI（メンバー追加・role 管理）→ ✅ 実装済み（`/admin/api/organizations*` + admin `/orgs`）。
 
 ## 組織 admin（オペレーター UI）

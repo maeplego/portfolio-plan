@@ -82,6 +82,13 @@
 - 実在企業名・実在人物をシードに使わない
 - 公開デモは応募メールを実送せず Mailhog
 
+## 組織テナント（IdP org）
+
+- OIDC 時は `org` scope 必須。雇用主側データ（求人）は `jobs.org_id` で境界
+- 候補者プロフィール／保存検索は従来どおり `sub` 単位（個人）
+- Web OrgSwitcher + API が `org_id` を読む。dev-auth は `X-Dev-User-Org`
+- IdP クライアント `pf-talent-web`（redirect `http://localhost:3011/callback`）
+
 ## 他プロジェクトとの契約
 
 - P05: employer の `sub` がホスト。イベントタイプ `interview-30m`

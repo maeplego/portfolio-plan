@@ -257,6 +257,34 @@ flowchart TB
 
 残りのプロジェクトは GitHub ピンと「エコシステム図」で十分。ブログ（P08）に、統合判断と「やらなかったこと」を書く。
 
+## 組織テナント（IdP org）の利用側
+
+P01 が `org` scope と `org_id` を発行する。デモ品質で消費している製品:
+
+| 製品 | テナント境界 |
+| --- | --- |
+| P04 workspace | workspace `org_id` + Postgres RLS |
+| P03 media | ファイル／フォルダの `org_id` |
+| P06 commerce | カート／注文／カタログの `org_id` |
+| P09 attendance | 従業員・締めの `org_id`（会社） |
+| P10 talent | 求人 `jobs.org_id`（雇用主） |
+
+OIDC 時は `org_id` 必須。Compose 既定の dev-auth は `X-Dev-User-Org`（省略時シード org）。個人向け（P14/P15）や namespace 分離（P07/P13）は対象外。
+
+## 受注・再構築の規模感（概算）
+
+詳細表（各 Pxx・各連携）は [`cost-estimate.md`](./cost-estimate.md)。
+
+学習デモ同等を企業がゼロから再構築する感度（単価 80–120 万円/人月想定）:
+
+| 切り口 | 人月 | 費用帯 |
+| --- | --- | --- |
+| デモ同等エコシステム全体（現状スコープ・意図的非目標維持） | 約 25–45 | 約 2,000–5,400 万円 |
+| REVIEW 推奨の薄い 3 点セット | 約 10–18 | 約 800–2,200 万円 |
+| 商用最小（セキュリティレビュー・HA・監査・法令対応を足す） | おおむね ×2–4 → 約 50–150 | 約 0.5–1.5 億円級 |
+
+根拠のシグナル: 15 製品・約 26 `pf-*`・主要ソース概算 ~8 万行・OIDC / RLS / K8s overlay A–F・多言語。本番 SaaS・PCI・労基準拠は別見積行。
+
 ## 実装チャットへの渡し方
 
 詳細な工程は `portfolio-plan/instructions.md` を正とする。「P01 を実装して」のときは `identity-platform/AGENTS.md` と `chat-context/` 一式を先に読む。

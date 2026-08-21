@@ -70,6 +70,13 @@ pf-attendance/
 - 金額は出さない（給与計算しない）。出すと責任範囲が爆発する
 - 36 協定アラートは閾値設定のデモに留め、法解釈しない
 
+## 組織テナント（IdP org）
+
+- OIDC 時は `org` scope 必須。会社＝`org_id`（テナント）
+- `employees` / `closed_months` に `org_id`。打刻・申請等は従業員経由で org 境界
+- Web OrgSwitcher + API の userinfo/`X-Dev-User-Org`。dev-auth 省略時はシード org
+- Compose に `ATTENDANCE_OIDC_*` / web `OIDC_*` を載せる（既定は dev-auth）
+
 ## 他プロジェクトとの契約
 
 P01 の `sub` と従業員 ID の紐付け。P13 が工数を分析したくなっても、P09 から PII を出さない集計エクスポートだけ許可。

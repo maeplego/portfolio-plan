@@ -4,7 +4,7 @@
 | --- | --- |
 | 対象 | 採用担当者・レビュア |
 | 既定の経路 | ブラウザ、必要なら Docker Compose。**Kubernetes は任意** |
-| 最終更新 | 2026-08-20 |
+| 最終更新 | 2026-08-21 |
 
 GitHub でコードを見て、必要なら Docker Compose を 1 パック起動してください。Kubernetes は必須ではありません。
 
@@ -36,9 +36,9 @@ GHCR を使うとき（`GHCR_OWNER` あり）は `docker compose pull` のあと
 
 | パック | 見えるもの | URL |
 | --- | --- | --- |
-| `p01-p03` | IdP、admin、sample RP、media（開発ユーザー） | http://localhost:8080 · http://localhost:3002 · http://localhost:3001 · http://localhost:3004 |
-| `p04` | ワークスペース（カンバン / Wiki / チャット） | http://localhost:3006 |
-| `p06` | ストアフロント、在庫 1 デモ、ops グリッド | http://localhost:3009 · `/demo` · http://localhost:3010 · http://localhost:8099/health · http://localhost:8110/health |
+| `p01-p03` | IdP、admin、sample RP、media（OIDC + org テナント） | http://localhost:8080 · http://localhost:3002 · http://localhost:3001 · http://localhost:3004 |
+| `p04` | IdP + ワークスペース（カンバン / Wiki / チャット、org テナント） | http://localhost:3006 |
+| `p06` | IdP + ストアフロント、在庫 1 デモ、ops（org テナント） | http://localhost:3009 · `/demo` · http://localhost:3010 · http://localhost:8099/health · http://localhost:8110/health |
 
 GHCR が無いとき:
 

@@ -107,6 +107,13 @@ K8s 化では `cloud-platform/DESIGN.md`。商品画像は `media-platform/DESIG
 - 「全部を分割する必要はない」を README に自分の言葉で書く
 - 決済は PCI 対象外（カード番号を受け取らない）
 
+## 組織テナント（IdP org）
+
+- OIDC 時は `org` scope 必須。加盟店／ストア＝`org_id`（デモは 1 ストア＝1 org）
+- カート・注文・カタログ商品に `org_id` をスタンプし、サービス間で同一 org を伝播
+- Storefront OrgSwitcher。dev-auth は `X-Dev-User-Org`（省略時シード org）
+- Review pack `p06` は IdP + commerce（OIDC）でテナントを検証可能にする
+
 ## 他プロジェクトとの契約
 
 - P01: 購入者と ops でロールを分ける。ops は workspace とは別クライアントでも可

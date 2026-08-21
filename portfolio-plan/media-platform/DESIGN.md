@@ -84,6 +84,13 @@
 - ウイルススキャンは発展。デモは種別制限で代替
 - 公開 SaaS として任意 URL を fetch する実装は SSRF になるので禁止（プロセッサは自バケットのみ）
 
+## 組織テナント（IdP org）
+
+- OIDC 時は `org` scope 必須。`org_id` が無いトークンは API が拒否する
+- ファイル／フォルダ／共有リンクに `org_id` をスタンプし、一覧・操作は `owner_sub` + `org_id` で拘束
+- Web は OrgSwitcher（IdP `PUT /v1/active-org` + refresh）。dev-auth は `X-Dev-User-Org`（省略時 `org-demo-a`）
+- `purpose` はアップロード種別のまま（テナントキーにしない）
+
 ## 他プロジェクトとの契約
 
 同期 API（概要）:
