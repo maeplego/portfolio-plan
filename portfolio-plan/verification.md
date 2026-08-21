@@ -91,7 +91,7 @@ flowchart TB
 | `docker-desktop-c-scheduling-talent` | L2 デモ | Talent DEV_AUTH 可 |
 | `docker-desktop-c-scheduling-talent-staging` | L3a（Talent path 入口） | 禁止（[talent-staging.md](./talent-staging.md)）。2026-08-21 cluster smoke **pass**。ゲート [07-talent-gate.md](./talent-platform/docs/07-talent-gate.md) **Go** |
 | `docker-desktop-f-ops` | L2 デモ | Attendance DEV_AUTH 可 |
-| `docker-desktop-f-ops-staging` | L3a（Attendance 入口） | 禁止（[attendance-staging.md](./attendance-staging.md)）。2026-08-21 cluster smoke **pass**（Quick）。ゲート [07-attendance-gate.md](./attendance/docs/07-attendance-gate.md) **Go** |
+| `docker-desktop-f-ops-staging` | L3a（Attendance + Payroll 入口） | 禁止（[attendance-staging.md](./attendance-staging.md)、[payroll-staging.md](./payroll-staging.md)）。Attendance ゲート **Go**。Payroll は MN3 前のため規制名乗りなし |
 
 ### L3b — 外部 IdP／クラウド（BYO）
 

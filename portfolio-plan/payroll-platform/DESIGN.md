@@ -22,8 +22,8 @@
 2. [x] `AccountingPort` モック（分数量の仕訳 DTO。円ではない）
 3. [x] デモ用明細プレビュー UI（常時 disclaimer）
 4. [x] デモ従業員レート（税率表・実賃金表ではない）
-5. [ ] staging overlay 入口
-6. [ ] docs 01–06（デモ塊が揃ってから）
+5. [x] staging overlay 入口（`docker-desktop-f-ops-staging` + `payroll.localhost`）
+6. [ ] docs 01–06（デモ塊が揃ってから。MN3 前は規制名乗りなし）
 
 ## 他 Pxx との契約
 

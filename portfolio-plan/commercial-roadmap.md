@@ -82,16 +82,16 @@ flowchart LR
 
 ### MN — 商用第 N 弾（規制ドメイン／バックオフィス）
 
-**方針の正本**: [mn-payroll-tax.md](./mn-payroll-tax.md)。製品 ID は **P16 payroll-platform**（予約。未実装）。
+**方針の正本**: [mn-payroll-tax.md](./mn-payroll-tax.md)。製品 ID は **P16 payroll-platform**（`../pf-payroll`）。staging: [payroll-staging.md](./payroll-staging.md)。
 
 **やる**: 給与連携 →（任意）薄いドメイン →（ゲート後のみ）源泉・年末調整等を名乗る。フル自前 ERP は非優先。
 
 | 段階 | 内容 | 状態 |
 | --- | --- | --- |
 | MN0 | 方針・Ports・P16 予約、カタログ対象外の維持 | **完了**（2026-08-21） |
-| MN1 | P09 集計エクスポート + `PayrollExportPort` / `AccountingPort` モック | **コード完了**（`pf-payroll`、overlay は未） |
-| MN2 | 薄い明細ドメイン（「法的効力なし」明示） | **完了**（UI + demo rates、2026-08-21） |
-| MN3 | 法令・専門家レビュー後に規制機能を名乗る | 未着手 |
+| MN1 | P09 集計エクスポート + `PayrollExportPort` / `AccountingPort` モック | **完了**（`pf-payroll` + f-ops-staging） |
+| MN2 | 薄いドメイン／明細プレビュー（disclaimer 常時） | **完了**（2026-08-21） |
+| MN3 | 規制名乗り（専門家レビュー後のみ） | **未着手** — 手順は [mn-payroll-tax.md](./mn-payroll-tax.md) |
 
 - 着手条件: M2 Go 済み、M3 主要パッケージ（Commerce / Talent / Attendance）の staging 入口済み
 - ゲート: [mn-payroll-tax.md](./mn-payroll-tax.md) の拡張項目。Collab の production-definition を土台にする

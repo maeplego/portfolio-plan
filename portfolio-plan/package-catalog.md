@@ -74,8 +74,10 @@
 
 ### Backoffice path（将来掲載）
 
-- **含む（予定）**: P16 ± P01、入力ソースとして P09
-- **今**: カタログ対象外。MN0 完了・MN1 未着手
+- **含む（予定）**: P16 ± P01、入力ソースとして **P09**（必須寄り）。添付は任意で P03
+- **含めない**: P14（個人家計）、Collab／Commerce 本体機能としての給与
+- **今**: カタログ対象外。MN0–MN2 実装あり・**MN3（規制名乗り）未**。staging: [payroll-staging.md](./payroll-staging.md)
+- **連携の正本**: [mn-payroll-tax.md](./mn-payroll-tax.md)「パッケージ販売時の連携」
 
 ## 関連
 

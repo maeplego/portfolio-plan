@@ -2,7 +2,7 @@
 
 | 項目 | 値 |
 | --- | --- |
-| 対象 | P09 Attendance（± P01。f-ops 同梱の P12/P14/P15 はデモ用のまま可） |
+| 対象 | P09 Attendance + P16 payroll（± P01。f-ops 同梱の P12/P14/P15 はデモ用のまま可） |
 | 最終更新 | 2026-08-21 |
 
 デモ overlay F（`cluster-smoke-f-ops.ps1`）は `ATTENDANCE_DEV_AUTH=true` のままなので、**採用レビュー用スモーク**と **商用 staging** を分ける。労基・給与計算は名乗らない。
@@ -28,7 +28,7 @@ cd pf-cloud-k8s
 
 高速化: `pf-cloud-k8s/docs/smoke-performance.md`。
 
-確認: attendance `/health` `/ready`、`POST /v1/punches` + `X-Dev-User-Sub` → **401**。
+確認: attendance `/health` `/ready`、`POST /v1/punches` + `X-Dev-User-Sub` → **401**。payroll は [payroll-staging.md](./payroll-staging.md)。
 
 L3a 記録（2026-08-21）: Quick cluster smoke **pass**（DEV_AUTH 401・`attendance-api.localhost/health`。ビルド対象 3 イメージ）。
 
