@@ -104,7 +104,7 @@
 | **必須（Attendance Go）** | 顧客契約・評価 LICENSE からの切替。staging 専用打刻 E2E は Risk Accept |
 | **推奨** | org 隔離の深さ確認、打刻 E2E（OIDC） |
 | **推奨（SES／客先）** | 段階 A: worksite／engagement メタ＋CSV。B: TimesheetHandoffPort。詳細は DESIGN「客先常駐・SES」 |
-| **推奨（締め期間）** | P1: org の `periodAnchorDay`（暦月以外の集計期間）。DESIGN「勤怠期間・締め日」 |
+| **推奨（締め期間）** | P1: org の `periodAnchorDay` — **完了**。P2 closeByDay リマインドは任意 |
 | **推奨** | 打刻改ざん耐性のテスト、カレンダー連携 |
 | **非目標** | 労基準拠を名乗った勤怠、給与連携（→ MN）、派遣法エンジン、他社給与の同一テナント混在 |
 
