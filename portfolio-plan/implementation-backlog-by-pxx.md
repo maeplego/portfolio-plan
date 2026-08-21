@@ -99,9 +99,9 @@
 
 | | |
 | --- | --- |
-| **状態** | Web OIDC あり。API に `ATTENDANCE_ENV` で staging DEV_AUTH 拒否済み。staging overlay `docker-desktop-f-ops-staging` 入口あり |
-| **必須（Attendance 商用・名乗らない前提でも PoC）** | cluster staging スモーク、org、バックアップ、労基非名乗りの維持 |
-| **推奨** | ゲート自己監査、打刻 E2E（OIDC） |
+| **状態** | Web OIDC あり。`ATTENDANCE_ENV`、staging overlay、cluster smoke **Pass**（Quick・DEV_AUTH 401） |
+| **必須（Attendance 商用・名乗らない前提でも PoC）** | ゲート自己監査、バックアップ、労基非名乗りの維持 |
+| **推奨** | 打刻 E2E（OIDC）、org 隔離の深さ確認 |
 | **推奨** | 打刻改ざん耐性のテスト、カレンダー連携 |
 | **非目標** | 労基準拠を名乗った勤怠、給与連携（→ MN） |
 
@@ -165,7 +165,7 @@
 
 ## 推奨の実装順（残り）
 
-1. **P09** Attendance cluster staging スモーク（`cluster-smoke-f-ops-staging.ps1`）← 次
+1. **P09** Attendance ゲート自己監査・バックアップ実演 ← 次
 2. **P03** staging overlay／Compose で `MEDIA_ENV` 適用をデモ経路に載せる
 3. クラスタ smoke は既定 Quick（`pf-cloud-k8s/docs/smoke-performance.md`）
 4. **MN** 給与税務は Collab〜Attendance のあと
