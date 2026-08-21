@@ -33,6 +33,9 @@
 | P13 | data-platform | 19 | モノレポ | ETL。後から commerce / talent をソースにする |
 | P14 | personal-finance | 10 | モノレポ | 家計簿 PWA |
 | P15 | habit-tracker | 22 | ポリレポ | モバイル習慣トラッカー |
+| P16 | payroll-platform | （商用 MN。元アイデア外） | 予定モノレポ `pf-payroll` | 給与連携・将来の薄い給与／税務。**未実装**。P09/P14 とは分離 |
+
+就職活動・カタログ上、P01–P15 が「元 30 アイデアの統合結果」。**P16 は商用ロードマップ MN 由来の追加製品**であり、MN0（方針）まで完了・コード未着手。
 
 ### アイデア → プロジェクト逆引き
 
@@ -273,7 +276,7 @@ OIDC 時は `org_id` 必須。Compose 既定の dev-auth は `X-Dev-User-Org`（
 
 ## 受注・再構築の規模感（概算）
 
-詳細表（各 Pxx・各連携）は [`cost-estimate.md`](./cost-estimate.md)。ブランチ運用は [`git-branching.md`](./git-branching.md)。商用パッケージ・本番ゲートは [`commercial-roadmap.md`](./commercial-roadmap.md) / [`production-definition.md`](./production-definition.md) / [`package-catalog.md`](./package-catalog.md) / [`portability.md`](./portability.md)。各 Pxx の必須／推奨実装は [`implementation-backlog-by-pxx.md`](./implementation-backlog-by-pxx.md)。動作確認の層は [`verification.md`](./verification.md)。
+詳細表（各 Pxx・各連携）は [`cost-estimate.md`](./cost-estimate.md)。ブランチ運用は [`git-branching.md`](./git-branching.md)。商用パッケージ・本番ゲートは [`commercial-roadmap.md`](./commercial-roadmap.md) / [`production-definition.md`](./production-definition.md) / [`package-catalog.md`](./package-catalog.md) / [`portability.md`](./portability.md) / [`mn-payroll-tax.md`](./mn-payroll-tax.md)（給与税務 MN）。各 Pxx の必須／推奨実装は [`implementation-backlog-by-pxx.md`](./implementation-backlog-by-pxx.md)。動作確認の層は [`verification.md`](./verification.md)。
 
 学習デモ同等を企業がゼロから再構築する概算（単価 80–120 万円/人月想定）:
 

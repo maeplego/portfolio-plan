@@ -60,7 +60,7 @@
 | Personal finance（P14） | **個人家計**。法人会計ではない |
 | Habit（P15） | 個人習慣。社内福利厚生ポータルではない |
 
-## 対象外（当面）と第 N 弾
+## 対象外（当面）と第 N 弾（MN / P16）
 
 次は **Collab〜近接パッケージの販売範囲に含めない**。提案時は既存 SaaS（freee、マネーフォワード、給与奉行等）連携を推奨する。
 
@@ -70,7 +70,12 @@
 - 経費精算の会計連動一式
 - 電子契約の本格ライフサイクル
 
-**商用第 N 弾（規制ドメイン／バックオフィス）** で上記を製品化する方針（[commercial-roadmap.md](./commercial-roadmap.md)）。実装はフル自前 ERP よりドメイン＋会計 SaaS ports を優先し、法令レビューをゲートに含める。着手は Collab → Commerce → Talent → Attendance の後を想定。
+**商用第 N 弾** の受け皿は **P16 payroll-platform**（予約）。方針の正本は [mn-payroll-tax.md](./mn-payroll-tax.md)。実装はフル自前 ERP より **PayrollExportPort / AccountingPort** を優先し、法令レビューをゲートに含める。P09・P14 には載せない。
+
+### Backoffice path（将来掲載）
+
+- **含む（予定）**: P16 ± P01、入力ソースとして P09
+- **今**: カタログ対象外。MN0 完了・MN1 未着手
 
 ## 関連
 

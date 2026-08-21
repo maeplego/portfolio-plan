@@ -82,12 +82,21 @@ flowchart LR
 
 ### MN — 商用第 N 弾（規制ドメイン／バックオフィス）
 
-**やる（方針確定）**: 給与計算、税務（源泉・年末調整寄り）、経費精算、会計連携などを製品化または深い連携として提供する。
+**方針の正本**: [mn-payroll-tax.md](./mn-payroll-tax.md)。製品 ID は **P16 payroll-platform**（予約。未実装）。
 
-- 着手時期: M2 完了後、M3 の主要パッケージが進んだあとを想定（番号 N は状況で決定）
-- 実装方針: フル自前 ERP より **ドメインロジック + AccountingPort / PayrollExportPort**（既存 freee 等）
-- ゲート: 法令・税理士／社労士レビュー、監査証跡、テナント隔離、BYO 会計 SaaS
+**やる**: 給与連携 →（任意）薄いドメイン →（ゲート後のみ）源泉・年末調整等を名乗る。フル自前 ERP は非優先。
+
+| 段階 | 内容 | 状態 |
+| --- | --- | --- |
+| MN0 | 方針・Ports・P16 予約、カタログ対象外の維持 | **完了**（2026-08-21） |
+| MN1 | P09 集計エクスポート + `PayrollExportPort` / `AccountingPort` モック | 未着手 |
+| MN2 | 薄い明細ドメイン（「法的効力なし」明示） | 未着手 |
+| MN3 | 法令・専門家レビュー後に規制機能を名乗る | 未着手 |
+
+- 着手条件: M2 Go 済み、M3 主要パッケージ（Commerce / Talent / Attendance）の staging 入口済み
+- ゲート: [mn-payroll-tax.md](./mn-payroll-tax.md) の拡張項目。Collab の production-definition を土台にする
 - それまでの間: カタログ上は対象外。顧客には既存給与／会計 SaaS＋エクスポートを推奨
+- **作らない**: P09/P14 への給与ロジック混入、空の `pf-payroll` だけ先行作成
 
 ## 残課題・意図的非目標（当面）
 
@@ -113,4 +122,5 @@ flowchart LR
 - [talent-staging.md](./talent-staging.md)
 - [attendance-staging.md](./attendance-staging.md)
 - [media-staging.md](./media-staging.md)
+- [mn-payroll-tax.md](./mn-payroll-tax.md)
 - [implementation-backlog-by-pxx.md](./implementation-backlog-by-pxx.md)

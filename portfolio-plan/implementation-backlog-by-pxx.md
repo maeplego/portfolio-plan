@@ -167,10 +167,21 @@
 ## 推奨の実装順（残り）
 
 1. クラスタ smoke は既定 Quick（`pf-cloud-k8s/docs/smoke-performance.md`）
-2. **MN** 給与税務は Collab〜Attendance のあと（任意で Media バックアップを Collab ドリルに追加）
+2. **MN1**（任意の次コード）: P09 集計エクスポート + `PayrollExportPort` モック — 方針は [mn-payroll-tax.md](./mn-payroll-tax.md)、DESIGN は [payroll-platform/DESIGN.md](./payroll-platform/DESIGN.md)
 3. 公開デモでの BYO Auth0/Entra 実機は非目標のまま
 4. **P08 / P12 / P14 / P15** はカタログ後続。ENV パターンをコピーするだけでも価値あり
-5. **MN** 給与税務は Collab〜Attendance のあと
+5. Media DB を Collab バックアップに足すのは任意
+
+---
+
+## P16 payroll-platform（予約）
+
+| 項目 | 内容 |
+| --- | --- |
+| **状態** | MN0 方針完了。製品コード・リポジトリ未作成 |
+| **必須（MN1）** | Export port、staging DEV_AUTH 拒否、P09 非金額エクスポート、法的効力なしの明示 |
+| **推奨** | AccountingPort スタブ、顧客向け一文 |
+| **非目標** | P09/P14 への混入、空 docs 先行、準拠名乗り（MN3 前） |
 
 ## 関連
 

@@ -65,7 +65,7 @@ flowchart TB
 | --- | --- | --- |
 | NotifyPort | メール／Webhook 通知 | Commerce／Collab 拡張 |
 | PaymentPort | 決済 | Commerce 商用化時 |
-| PayrollExportPort / AccountingPort | 給与・仕訳連携 | **商用第 N 弾**（給与税務パッケージ） |
+| PayrollExportPort / AccountingPort | 給与・仕訳連携 | **MN / P16**（[mn-payroll-tax.md](./mn-payroll-tax.md)。当面カタログ対象外） |
 
 ## サポート境界の言い方（提案用）
 
