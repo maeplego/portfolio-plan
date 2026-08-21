@@ -5,7 +5,7 @@
 | 第一弾 | Collab 商用最小 |
 | 最終更新 | 2026-08-21 |
 
-評価ライセンスのまま全製品を「商用フル」と呼ばない。ゲートは [production-definition.md](./production-definition.md)。パッケージ境界は [package-catalog.md](./package-catalog.md)。差し替えは [portability.md](./portability.md)。
+評価ライセンスのまま全製品を「商用フル」と呼ばない。ゲートは [production-definition.md](./production-definition.md)。パッケージ境界は [package-catalog.md](./package-catalog.md)。差し替えは [portability.md](./portability.md)。動作確認の層は [verification.md](./verification.md)。
 
 ## マイルストーン
 

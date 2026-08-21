@@ -2,9 +2,11 @@
 
 採用担当者・レビュアが **複数 Pxx の横断動作** を確認するための手順の正本。製品コードは兄弟 `pf-*` と `pf-cloud-k8s` に置く。
 
+動作確認の層（L0〜L4）の地図は **[verification.md](./verification.md)**。本ファイルは主に **L1 単体**と **L2 連携（任意）** の詳細。
+
 ## 採用担当者の既定経路（K8s ではない）
 
-面接の 3 点セットとブラウザ手順は **[REVIEW.md](REVIEW.md)**。Compose レビューパック（`review-up.ps1 -Pack p01-p03|p04|p06`、`--build` なし）が層 1。本ファイルの overlay A–F はインフラ深掘り用の任意デモである。終わったら `pf-cloud-k8s` で `.\scripts\cleanup.ps1`。
+面接の 3 点セットとブラウザ手順は **[REVIEW.md](REVIEW.md)**。Compose レビューパック（`review-up.ps1 -Pack p01-p03|p04|p06`、`--build` なし）が層 1（verification の L1）。本ファイルの overlay A–F はインフラ深掘り用の任意デモ（L2）である。終わったら `pf-cloud-k8s` で `.\scripts\cleanup.ps1`。
 
 ## 2 つのローカルデモモード
 

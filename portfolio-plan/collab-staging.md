@@ -20,7 +20,7 @@
 3. P04 Web: 通常の OIDC クライアント設定（`OIDC_CLIENT_ID=pf-workspace-web` 等）
 4. 確認: ログイン → ホーム → org 切替。`X-Dev-User-Sub` では API が 401
 
-詳細チェックリストは [production-definition.md](./production-definition.md)。BYO は [portability-byo-idp.md](./portability-byo-idp.md)。
+詳細チェックリストは [production-definition.md](./production-definition.md)。BYO は [portability-byo-idp.md](./portability-byo-idp.md)。層の地図は [verification.md](./verification.md)。
 
 ## Overlay
 
@@ -34,4 +34,4 @@ cd pf-cloud-k8s
 .\scripts\cluster-smoke-b-collab-staging.ps1   # DEV_AUTH 401 と OIDC redirect を確認
 ```
 
-詳細チェックリストは [production-definition.md](./production-definition.md)。BYO は [portability-byo-idp.md](./portability-byo-idp.md) と `pf-workspace/deploy/byo-oidc/`。
+詳細チェックリストは [production-definition.md](./production-definition.md)。BYO は [portability-byo-idp.md](./portability-byo-idp.md) と `pf-workspace/deploy/byo-oidc/`。層の位置づけは [verification.md](./verification.md) の L3a。

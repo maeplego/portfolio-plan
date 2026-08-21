@@ -79,6 +79,7 @@
 
 ## 関連
 
+- [verification.md](./verification.md) — 動作確認の層（L0〜L4）
 - [package-catalog.md](./package-catalog.md)
 - [portability.md](./portability.md)
 - [commercial-roadmap.md](./commercial-roadmap.md)

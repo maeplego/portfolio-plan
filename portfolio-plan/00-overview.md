@@ -12,7 +12,7 @@
 
 就職活動上の見せ方は「15 個のバラバラな習作」ではなく、**1 つのポートフォリオ・エコシステム**である。ただし各プロジェクトは単独デモ可能で、他プロジェクトが落ちていても IdP モックやシードデータで動くことを必須とする。
 
-**ローカルデモは 2 モード。** 各 `pf-*/deploy/compose.yaml` の **単体デモ**（必須）と、Docker Desktop Kubernetes + `pf-cloud-k8s` の **連携デモ**（任意・横断確認用）。連携デモは `portfolio-integration-a` 〜 `f` の **用途別 overlay 群** に分ける。手順の正本は `portfolio-plan/integration-demo.md`。全 Pxx を 1 台で同時フル起動するのは非目標。
+**ローカルデモは 2 モード。** 各 `pf-*/deploy/compose.yaml` の **単体デモ**（必須）と、Docker Desktop Kubernetes + `pf-cloud-k8s` の **連携デモ**（任意・横断確認用）。連携デモは `portfolio-integration-a` 〜 `f` の **用途別 overlay 群** に分ける。手順の正本は `portfolio-plan/integration-demo.md`。動作確認の層全体（CI・staging・本番 Go 含む）は [`verification.md`](./verification.md)。全 Pxx を 1 台で同時フル起動するのは非目標。
 
 ## プロジェクト内訳
 
@@ -273,7 +273,7 @@ OIDC 時は `org_id` 必須。Compose 既定の dev-auth は `X-Dev-User-Org`（
 
 ## 受注・再構築の規模感（概算）
 
-詳細表（各 Pxx・各連携）は [`cost-estimate.md`](./cost-estimate.md)。ブランチ運用は [`git-branching.md`](./git-branching.md)。商用パッケージ・本番ゲートは [`commercial-roadmap.md`](./commercial-roadmap.md) / [`production-definition.md`](./production-definition.md) / [`package-catalog.md`](./package-catalog.md) / [`portability.md`](./portability.md)。
+詳細表（各 Pxx・各連携）は [`cost-estimate.md`](./cost-estimate.md)。ブランチ運用は [`git-branching.md`](./git-branching.md)。商用パッケージ・本番ゲートは [`commercial-roadmap.md`](./commercial-roadmap.md) / [`production-definition.md`](./production-definition.md) / [`package-catalog.md`](./package-catalog.md) / [`portability.md`](./portability.md)。動作確認の層は [`verification.md`](./verification.md)。
 
 学習デモ同等を企業がゼロから再構築する概算（単価 80–120 万円/人月想定）:
 
@@ -297,5 +297,6 @@ OIDC 時は `org_id` 必須。Compose 既定の dev-auth は `X-Dev-User-Org`（
 | 他プロジェクトとの API を実装する | 利用側と提供側、両方の指示と DESIGN.md |
 | インフラに載せる | アプリの DESIGN + `cloud-platform/DESIGN.md` |
 | 複数 Pxx の横断デモ | `portfolio-plan/integration-demo.md` + `cloud-platform/DESIGN.md` |
+| どの確認層を使うか迷う | `portfolio-plan/verification.md` |
 
 `DESIGN.md` は git 管理する。`chat-context/` は管理しない。製品コードは兄弟の製品リポジトリ。

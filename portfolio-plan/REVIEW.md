@@ -8,7 +8,7 @@
 
 GitHub でコードを見て、必要なら Docker Compose を 1 パック起動してください。Kubernetes は必須ではありません。
 
-公開リポジトリは **デモ・学習・社内評価用** です。保証はなく、本番・商用利用は別契約です（[licensing.md](./licensing.md) / 各 `LICENSE`）。本番ゲート・パッケージ境界は [production-definition.md](./production-definition.md) / [package-catalog.md](./package-catalog.md) / [commercial-roadmap.md](./commercial-roadmap.md)。
+公開リポジトリは **デモ・学習・社内評価用** です。保証はなく、本番・商用利用は別契約です（[licensing.md](./licensing.md) / 各 `LICENSE`）。本番ゲート・パッケージ境界は [production-definition.md](./production-definition.md) / [package-catalog.md](./package-catalog.md) / [commercial-roadmap.md](./commercial-roadmap.md)。**どの確認層を使うか**は [verification.md](./verification.md)（採用の既定は L1＝本手順。Kubernetes は L2 任意）。
 
 ## 0. ブラウザだけ（約 5 分）
 
