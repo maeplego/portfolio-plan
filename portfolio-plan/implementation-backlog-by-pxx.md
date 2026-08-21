@@ -63,8 +63,8 @@
 
 | | |
 | --- | --- |
-| **状態** | Compose／OIDC 可。`CALENDAR_DEV_AUTH` 既定オン。**ENV プロファイルなし** |
-| **必須（Talent path 商用時）** | `CALENDAR_ENV` + staging で DEV_AUTH 拒否、org クレーム方針 |
+| **状態** | Compose／OIDC 可。`CALENDAR_ENV` で staging DEV_AUTH 拒否済み |
+| **必須（Talent path 商用時）** | staging overlay への `CALENDAR_ENV` 適用、org クレーム方針 |
 | **推奨** | ホストタイムゾーン／重複予約の境界テスト拡充、E2E |
 | **非目標** | 勤怠との統合 |
 
@@ -72,8 +72,8 @@
 
 | | |
 | --- | --- |
-| **状態** | `COMMERCE_ENV`（gateway/order）、staging overlay、cluster smoke **Pass**（2026-08-21） |
-| **必須（Commerce Go）** | バックアップ実演（Collab 手順流用可）、ゲート自己監査、決済はモックのまま明示 |
+| **状態** | `COMMERCE_ENV`（gateway/order）、staging overlay、cluster smoke **Pass**、バックアップ実演 **Pass**、ゲート **Go**（PCI 非名乗り） |
+| **必須（Commerce Go）** | 顧客契約・評価 LICENSE からの切替。staging 専用購入 E2E は Risk Accept |
 | **推奨** | BFF/storefront の staging 強制ログイン、在庫同時購入の staging 回帰、recommend 障害時フォールバック文書 |
 | **非目標** | PCI 本格決済、実カード |
 
@@ -99,8 +99,8 @@
 
 | | |
 | --- | --- |
-| **状態** | Web OIDC 配線あり。API 側 ENV／DEV_AUTH プロファイルは薄い／未整備 |
-| **必須（Attendance 商用・名乗らない前提でも PoC）** | `ATTENDANCE_ENV`、DEV_AUTH オフ、org、バックアップ |
+| **状態** | Web OIDC あり。API に `ATTENDANCE_ENV` で staging DEV_AUTH 拒否済み |
+| **必須（Attendance 商用・名乗らない前提でも PoC）** | staging overlay 適用、org、バックアップ、労基非名乗りの維持 |
 | **推奨** | 打刻改ざん耐性のテスト、カレンダー連携 |
 | **非目標** | 労基準拠を名乗った勤怠、給与連携（→ MN） |
 

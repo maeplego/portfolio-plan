@@ -10,3 +10,5 @@
 | [04-test-spec.md](04-test-spec.md) | テストの観点 |
 | [05-api.md](05-api.md) | 公開 REST と GraphQL |
 | [06-diagrams.md](06-diagrams.md) | 図表 |
+| [07-commerce-gate.md](07-commerce-gate.md) | 商用ゲート自己監査 |
+| [08-backup-restore-drill.md](08-backup-restore-drill.md) | staging バックアップ実演記録 |

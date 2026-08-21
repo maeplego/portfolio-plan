@@ -65,10 +65,11 @@ flowchart LR
 - [x] Commerce staging 手順・overlay 入口（[commerce-staging.md](./commerce-staging.md)、`docker-desktop-d-commerce-staging`）
 - [x] Commerce: cluster スモーク脚本（`cluster-smoke-d-commerce-staging.ps1`）
 - [x] Commerce: cluster スモーク実行記録（2026-08-21 Pass: DEV_AUTH 401・Ingress health）
-- [ ] Commerce: ゲート自己監査（バックアップ実演は Collab 手順流用可）
+- [x] Commerce: ゲート自己監査（[commerce-platform/docs/07-commerce-gate.md](./commerce-platform/docs/07-commerce-gate.md)、バックアップ [08-backup-restore-drill.md](./commerce-platform/docs/08-backup-restore-drill.md)）
 - [x] Talent: `TALENT_ENV` staging/production で DEV_AUTH 拒否
 - [x] Media: `MEDIA_ENV` staging/production で DEV_AUTH 拒否
-- [ ] Calendar / Attendance: 同様の ENV プロファイル
+- [x] Calendar: `CALENDAR_ENV` staging/production で DEV_AUTH 拒否
+- [x] Attendance: `ATTENDANCE_ENV` staging/production で DEV_AUTH 拒否
 - 棚卸し正本: [implementation-backlog-by-pxx.md](./implementation-backlog-by-pxx.md)
 
 ### MN — 商用第 N 弾（規制ドメイン／バックオフィス）
