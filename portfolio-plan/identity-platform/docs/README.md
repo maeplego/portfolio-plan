@@ -12,3 +12,8 @@
 | [04-test-spec.md](04-test-spec.md) | テストの観点 |
 | [05-api.md](05-api.md) | OpenID Connect のエンドポイント |
 | [06-diagrams.md](06-diagrams.md) | 図表 |
+| [07-production-profile.md](07-production-profile.md) | `IDENTITY_ENV` staging/production |
+| [08-audit-events.md](08-audit-events.md) | 監査必須イベントと保持方針 |
+| [09-threat-model.md](09-threat-model.md) | 脅威モデル 1 枚 |
+
+ポートフォリオ横断: [production-definition.md](../../production-definition.md) / [portability.md](../../portability.md) / [portability-byo-idp.md](../../portability-byo-idp.md)

@@ -47,9 +47,12 @@
 
 ## 関連
 
-- 本番の定義（今後）: 顧客信頼のゲートはライセンスとは別に文書化する
-- 見積: `cost-estimate.md`（概算レンジ。根拠なき水増しは書かない）
-- ブランチ: `git-branching.md`
-- 確認手順: `REVIEW.md`
+- 本番の定義: [production-definition.md](./production-definition.md)
+- パッケージ: [package-catalog.md](./package-catalog.md)
+- ポータビリティ: [portability.md](./portability.md)
+- 商用ロードマップ: [commercial-roadmap.md](./commercial-roadmap.md)
+- 見積: [cost-estimate.md](./cost-estimate.md)（概算レンジ。根拠なき水増しは書かない）
+- ブランチ: [git-branching.md](./git-branching.md)
+- 確認手順: [REVIEW.md](./REVIEW.md)
 
 最終更新: 2026-08-21

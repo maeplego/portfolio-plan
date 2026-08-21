@@ -80,10 +80,16 @@
 | --- | --- | --- | --- |
 | REVIEW 3 点セット | P01＋（P04 または P06）＋深さ 1 | 10–18 | 800–2,160 |
 | Foundation | P01+P02+P03＋Overlay A | 7–12 | 560–1,440 |
+| **Collab 商用最小** | P01（または BYO IdP）+P04±P03＋staging／ゲート（[production-definition.md](./production-definition.md)） | **デモ 5–9 ＋商用上乗せ 8–20** → **13–29** | **約 1,000–3,500**（ブレンド込みの目安） |
 | Commerce path | P06+P07+P01+P03＋Overlay D | 9–15 | 720–1,800 |
 | Talent path | P10+P05+P07+P01＋Overlay C | 7–12 | 560–1,440 |
 | Full demo | P01–P15 現状スコープ | 25–45 | 2,000–5,400 |
-| Commercial minimum | 同上＋本番化の最低限 | 50–150 | 約 4,000–18,000 |
+| Commercial minimum（エコシステム横断） | 同上＋本番化の最低限 | 50–150 | 約 4,000–18,000 |
 | Commercial full | 本番品質・主要連携・運用初期 | 150–280 | 約 18,000–42,000 |
+| 第 N 弾 給与・税務・会計連携 | 規制ドメイン＋既存会計 SaaS ports（[commercial-roadmap.md](./commercial-roadmap.md)） | （別見積） | 法令レビュー込みで別行 |
+
+Collab 商用最小は「15 本すべて」ではなく第一パッケージの本番ゲート充足が対象。給与・税務エンジンは含めない（第 N 弾）。
+
+関連: [package-catalog.md](./package-catalog.md) / [portability.md](./portability.md) / [commercial-roadmap.md](./commercial-roadmap.md)
 
 最終更新: 2026-08-21
