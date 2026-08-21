@@ -68,6 +68,8 @@ flowchart LR
 - [x] Commerce: ゲート自己監査（[commerce-platform/docs/07-commerce-gate.md](./commerce-platform/docs/07-commerce-gate.md)、バックアップ [08-backup-restore-drill.md](./commerce-platform/docs/08-backup-restore-drill.md)）
 - [x] Talent: `TALENT_ENV` staging/production で DEV_AUTH 拒否
 - [x] Media: `MEDIA_ENV` staging/production で DEV_AUTH 拒否
+- [x] Media staging を Collab/Commerce staging overlay に載せる（[media-staging.md](./media-staging.md)）
+- [x] Media: Collab staging cluster で DEV_AUTH 401 記録（2026-08-21 Pass）
 - [x] Calendar: `CALENDAR_ENV` staging/production で DEV_AUTH 拒否
 - [x] Attendance: `ATTENDANCE_ENV` staging/production で DEV_AUTH 拒否
 - [x] Talent path staging overlay／手順（[talent-staging.md](./talent-staging.md)、`docker-desktop-c-scheduling-talent-staging`）
@@ -110,4 +112,5 @@ flowchart LR
 - [commerce-staging.md](./commerce-staging.md)
 - [talent-staging.md](./talent-staging.md)
 - [attendance-staging.md](./attendance-staging.md)
+- [media-staging.md](./media-staging.md)
 - [implementation-backlog-by-pxx.md](./implementation-backlog-by-pxx.md)

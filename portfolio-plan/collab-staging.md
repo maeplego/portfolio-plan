@@ -11,6 +11,7 @@
 
 - `IDENTITY_ENV=staging`（一時鍵・memory 禁止）
 - `WORKSPACE_ENV=staging`（`WORKSPACE_DEV_AUTH=false`、`OIDC_ISSUER` 必須、org 必須）
+- `MEDIA_ENV=staging`（添付経路。手順は [media-staging.md](./media-staging.md)）
 - 秘密は Git に置かない
 
 ## Compose で組む（推奨・再現しやすい）
@@ -36,5 +37,7 @@ cd pf-cloud-k8s
 ```
 
 L3a 記録（2026-08-21）: DEV_AUTH 401・Ingress health・`workspace.localhost` → `idp.localhost/authorize` を確認して **pass**（初回はイメージ load 後の postgres Ready 待ちが PowerShell Stop で中断。`load-images.ps1` / `up-b-collab-staging.ps1` を修正済み）。
+
+Media 同梱: 2026-08-21 に `MEDIA_ENV=staging` と media DEV_AUTH 401 を追加確認（[media-staging.md](./media-staging.md)）。
 
 詳細チェックリストは [production-definition.md](./production-definition.md)。BYO は [portability-byo-idp.md](./portability-byo-idp.md) と `pf-workspace/deploy/byo-oidc/`。層の位置づけは [verification.md](./verification.md) の L3a。

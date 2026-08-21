@@ -45,8 +45,9 @@
 
 | | |
 | --- | --- |
-| **状態** | S3 互換・顧客バケット手順あり。`MEDIA_ENV` で staging DEV_AUTH 拒否済み |
-| **必須（添付付き Collab/Commerce）** | staging で `MEDIA_DEV_AUTH=false` + OIDC、顧客バケット疎通 |
+| **状態** | S3 互換・顧客バケット手順あり。`MEDIA_ENV`、Collab/Commerce staging overlay、cluster smoke **Pass**（media DEV_AUTH 401） |
+| **必須（添付付き Collab/Commerce）** | 顧客バケット疎通。staging 専用アップロード E2E は Risk Accept |
+| **推奨** | Media 単独ゲート／バックアップ（Collab バックアップに media DB を任意追加） |
 | **推奨** | ウイルススキャン／CDN（名乗るなら別ゲート）、派生ジョブの DLQ 運用 |
 | **非目標** | 動画変換フル、クライアント E2E 暗号化 |
 
@@ -165,9 +166,9 @@
 
 ## 推奨の実装順（残り）
 
-1. **P03** staging overlay／Compose で `MEDIA_ENV` 適用をデモ経路に載せる ← 次
-2. クラスタ smoke は既定 Quick（`pf-cloud-k8s/docs/smoke-performance.md`）
-3. **MN** 給与税務は Collab〜Attendance のあと
+1. クラスタ smoke は既定 Quick（`pf-cloud-k8s/docs/smoke-performance.md`）
+2. **MN** 給与税務は Collab〜Attendance のあと（任意で Media バックアップを Collab ドリルに追加）
+3. 公開デモでの BYO Auth0/Entra 実機は非目標のまま
 4. **P08 / P12 / P14 / P15** はカタログ後続。ENV パターンをコピーするだけでも価値あり
 5. **MN** 給与税務は Collab〜Attendance のあと
 
