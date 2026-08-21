@@ -43,7 +43,7 @@
 | --- | --- |
 | [portfolio-plan/00-overview.md](portfolio-plan/00-overview.md) | 15+1 プロダクトの役割と非目標（実装地図） |
 | [portfolio-plan/15-licensing.md](portfolio-plan/15-licensing.md) | デモ／評価・無保証・商用は別契約 |
-| [portfolio-plan/17-git-branching.md](portfolio-plan/17-git-branching.md) | ブランチ戦略 |
+| [portfolio-plan/17-git-branching.md](portfolio-plan/17-git-branching.md) | ブランチ戦略（スナップショット一括 checkout 含む） |
 | [portfolio-plan/16-cost-estimate.md](portfolio-plan/16-cost-estimate.md) | 受託再構築の概算見積 |
 
 ## ライセンスと利用条件

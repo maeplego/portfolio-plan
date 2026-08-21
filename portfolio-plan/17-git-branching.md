@@ -1,6 +1,6 @@
 # Git ブランチ戦略
 
-メタ（`portfolio-plan`）と兄弟 `pf-*`（約 26 リポジトリ）向け。一人開発〜少数を前提に、**シンプルな trunk-based** を正とする。フル GitFlow（常設 `develop` / `release/*`）は当面採用しない。
+メタ（`portfolio-plan`）と兄弟 `pf-*`（27 リポジトリ）向け。一人開発〜少数を前提に、**シンプルな trunk-based** を正とする。フル GitFlow（常設 `develop` / `release/*`）は当面採用しない。
 
 ## 原則
 
@@ -57,9 +57,26 @@ master
 | --- | --- |
 | `v0.x.y` | 評価／デモ互換（破壊的変更あり得る） |
 | `v1.0.0` | 商用契約のベースライン候補（本番ゲート通過後） |
+| `portfolio-snapshot-YYYY-MM-DD` | 全リポ共通の作業スナップショット（横断復元用） |
 
 注釈タグ推奨: `git tag -a v0.3.0 -m "reason"`。  
 メタリポは製品バージョンを持たず、必要なら `portfolio-plan` 側に「対応タグ表」を足す。
+
+### 全リポを同じ ref に揃える
+
+`product-repos.json` 掲載のリポを一括 checkout する:
+
+```powershell
+cd project
+.\scripts\checkout-workspace-ref.ps1 -Status
+.\scripts\checkout-workspace-ref.ps1 -Ref portfolio-snapshot-2026-08-21 -Fetch
+.\scripts\checkout-workspace-ref.ps1 -Ref portfolio-snapshot-2026-08-21 -WorkBranch
+.\scripts\checkout-workspace-ref.ps1 -Ref master
+```
+
+- 既定のタグ checkout は **detached HEAD**（見るだけ向け）
+- その上で触るなら **`-WorkBranch`**（`at/<Ref>` を作って乗る）
+- dirty なリポはスキップ（壊さない）
 
 ## 複数リポジトリをまたぐ変更
 
