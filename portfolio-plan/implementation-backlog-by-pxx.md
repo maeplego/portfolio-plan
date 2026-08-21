@@ -99,8 +99,9 @@
 
 | | |
 | --- | --- |
-| **状態** | Web OIDC あり。API に `ATTENDANCE_ENV` で staging DEV_AUTH 拒否済み |
-| **必須（Attendance 商用・名乗らない前提でも PoC）** | staging overlay 適用、org、バックアップ、労基非名乗りの維持 |
+| **状態** | Web OIDC あり。API に `ATTENDANCE_ENV` で staging DEV_AUTH 拒否済み。staging overlay `docker-desktop-f-ops-staging` 入口あり |
+| **必須（Attendance 商用・名乗らない前提でも PoC）** | cluster staging スモーク、org、バックアップ、労基非名乗りの維持 |
+| **推奨** | ゲート自己監査、打刻 E2E（OIDC） |
 | **推奨** | 打刻改ざん耐性のテスト、カレンダー連携 |
 | **非目標** | 労基準拠を名乗った勤怠、給与連携（→ MN） |
 
@@ -108,7 +109,9 @@
 
 | | |
 | --- | --- |
-| **状態** | `TALENT_ENV`、staging overlay、cluster smoke **Pass**（DEV_AUTH 401） |
+| **状態** | `TALENT_ENV`、staging overlay、cluster smoke **Pass**、バックアップ実演 **Pass**、ゲート **Go**（労基・人事正本非名乗り） |
+| **必須（Talent Go）** | 顧客契約・評価 LICENSE からの切替。staging 専用採用 E2E は Risk Accept |
+| **推奨** | recommend 障害時フォールバック文書、org 隔離の深さ確認 |
 | **必須（Talent path 商用）** | ゲート自己監査、バックアップ実演、org 隔離の深さ確認 |
 | **推奨** | recommend 連携のフォールバック、面接枠の E2E |
 | **非目標** | 社内人事マスタ正本 |
@@ -162,9 +165,10 @@
 
 ## 推奨の実装順（残り）
 
-1. **P10 + P05** Talent path cluster staging スモーク → ゲート自己監査
+1. **P09** Attendance cluster staging スモーク（`cluster-smoke-f-ops-staging.ps1`）← 次
 2. **P03** staging overlay／Compose で `MEDIA_ENV` 適用をデモ経路に載せる
-3. **P09** Attendance staging overlay（労基は名乗らないまま）
+3. クラスタ smoke は既定 Quick（`pf-cloud-k8s/docs/smoke-performance.md`）
+4. **MN** 給与税務は Collab〜Attendance のあと
 4. **P08 / P12 / P14 / P15** はカタログ後続。ENV パターンをコピーするだけでも価値あり
 5. **MN** 給与税務は Collab〜Attendance のあと
 

@@ -72,7 +72,9 @@ flowchart LR
 - [x] Attendance: `ATTENDANCE_ENV` staging/production で DEV_AUTH 拒否
 - [x] Talent path staging overlay／手順（[talent-staging.md](./talent-staging.md)、`docker-desktop-c-scheduling-talent-staging`）
 - [x] Talent path: cluster スモーク（2026-08-21 Pass: DEV_AUTH 401・talent/calendar Ingress health）
-- [ ] Talent path: ゲート自己監査・バックアップ実演
+- [x] Talent path: ゲート自己監査・バックアップ実演（[talent-platform/docs/07-talent-gate.md](./talent-platform/docs/07-talent-gate.md)、[08-backup-restore-drill.md](./talent-platform/docs/08-backup-restore-drill.md)）
+- [x] Attendance: staging overlay／手順（[attendance-staging.md](./attendance-staging.md)、`docker-desktop-f-ops-staging`）
+- [ ] Attendance: cluster スモーク実行記録
 - 棚卸し正本: [implementation-backlog-by-pxx.md](./implementation-backlog-by-pxx.md)
 
 ### MN — 商用第 N 弾（規制ドメイン／バックオフィス）
@@ -106,4 +108,5 @@ flowchart LR
 - [collab-staging.md](./collab-staging.md)
 - [commerce-staging.md](./commerce-staging.md)
 - [talent-staging.md](./talent-staging.md)
+- [attendance-staging.md](./attendance-staging.md)
 - [implementation-backlog-by-pxx.md](./implementation-backlog-by-pxx.md)

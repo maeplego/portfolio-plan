@@ -32,9 +32,12 @@
 ```powershell
 cd pf-cloud-k8s
 .\scripts\smoke-c-scheduling-talent-staging.ps1              # kustomize + dry-run
-.\scripts\cluster-smoke-c-scheduling-talent-staging.ps1      # 任意: DEV_AUTH 401（-SkipBuild 可）
+.\scripts\cluster-smoke-c-scheduling-talent-staging.ps1      # 既定 Quick（数イメージ + SkipUnchanged）
+.\scripts\cluster-smoke-c-scheduling-talent-staging.ps1 -Full # 全イメージ再ビルド
 ```
 
-フル cluster スモークは `cluster-smoke-c-scheduling-talent-staging.ps1`。
+高速化の説明: `pf-cloud-k8s/docs/smoke-performance.md`。
 
 L3a 記録（2026-08-21）: Talent `POST /v1/jobs` が `X-Dev-User-Sub` で **401**、`talent-api` / `calendar-api` Ingress health **pass**（イメージ再ビルド後）。
+
+ゲート: [talent-platform/docs/07-talent-gate.md](./talent-platform/docs/07-talent-gate.md)（**Go**）。バックアップ: [08-backup-restore-drill.md](./talent-platform/docs/08-backup-restore-drill.md)（**Pass**）。
