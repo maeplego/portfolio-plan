@@ -445,9 +445,10 @@ cd pf-calendar/deploy
 copy .env.example .env
 ```
 
-`.env` に以下を追記（talent-api の webhook エンドポイント）:
+`.env` に以下を確認（`.env.example` のデモ既定をコピー済みなら token は入っている）:
 
 ```
+CALENDAR_INTERNAL_TOKEN=dev-internal-token
 CALENDAR_WEBHOOK_URL=http://host.docker.internal:8091/webhooks/calendar
 ```
 

@@ -3,10 +3,10 @@
 | 項目 | 値 |
 | --- | --- |
 | プロダクト | habit-tracker（GitHub: [pf-habit-api](https://github.com/maeplego/pf-habit-api)） |
-| 最終更新 | 2026-08-19 |
+| 最終更新 | 2026-08-21 |
 | 実装との関係 | この文書と実装が違うときは、製品リポジトリのコードとテストを優先する |
 
-ベース URL: `http://localhost:8015`（Compose）。認可: `X-Dev-User-Sub`（`/v1/*`）。OpenAPI ファイルは未着手。[pf-habit-mobile](https://github.com/maeplego/pf-habit-mobile) はいまこの API を呼ばない。Kubernetes 向けマニフェストは置かない。
+ベース URL: `http://localhost:8015`（Compose）。認可: `X-Dev-User-Sub` または任意の OIDC Bearer（`/v1/*`）。OpenAPI ファイルは未着手。[pf-habit-mobile](https://github.com/maeplego/pf-habit-mobile) は任意でこの API と差分同期する。Kubernetes 向けマニフェストは置かない。
 
 ## ヘルス
 
@@ -32,6 +32,18 @@
 ### `GET /v1/habits/:id`
 
 200 Habit / 他人なら 404。
+
+### `PATCH /v1/habits/:id`
+
+部分更新。少なくとも 1 フィールド必須。
+
+```json
+{ "name": "夜のストレッチ", "color": "#16A34A", "scheduleKind": "weekly", "timesPerWeek": 3, "archived": true }
+```
+
+- `name` / `color` / `scheduleKind` / `timesPerWeek` — 任意。スケジュール系を触ると既存値とマージして検証（`weekly` は `timesPerWeek` 1–7）
+- `archived: true` — アーカイブ。以降 `GET /v1/habits` 一覧から外れる（`GET /v1/habits/:id` は取得可）
+- 200 Habit / 他人なら 404
 
 ### `GET /v1/habits/:id/logs?from=YYYY-MM-DD&to=YYYY-MM-DD`
 

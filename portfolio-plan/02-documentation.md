@@ -41,6 +41,7 @@
 | 製品 README | 各 `pf-*/README.md` | 入れる | GitHub 訪問者 |
 | OpenAPI 機械可読 | 各 `pf-*/packages/openapi` または `deploy/` 横 | 入れる | 実装・連携 |
 | チャット記録 | `<project>/chat-context/` | **入れない** | エージェントのみ |
+| **機能再確認** | `portfolio-plan/feature-audit/`（Pxx ごと） | 入れる | 自分・深掘り。採用入口ではない |
 
 `docs/` は製品リポジトリ（`pf-*`）には置かない。設計の正本はメタ（`project`）に集め、製品側 README から必要ならリンクする。
 

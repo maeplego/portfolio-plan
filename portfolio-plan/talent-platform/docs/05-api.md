@@ -94,7 +94,7 @@
 - `POST /v1/saved-searches`、`GET /v1/candidates/:sub/saved-searches`、`POST /v1/saved-searches/:id/run`
 - `PUT` / `GET /v1/profiles/:sub`
 - `POST /v1/reports`、`GET /v1/reports`（open のみ）
-- `POST /v1/dev/seed`（架空デモ求人）
+- `POST /v1/dev/seed`（架空デモ求人・約 10 件。空ストア起動時も同内容）
 
 ## webhook
 

@@ -37,7 +37,7 @@
 | TS-K03 | scheduling-talent smoke | C overlay（手動） |
 | TS-K04 | collab smoke | B overlay（手動）。チーム作業場所 + 開発者ポータル |
 | TS-K05 | e-content smoke | E overlay（手動）。ブログ + 短縮 URL |
-| TS-K07 | d-commerce smoke | D overlay（手動）。EC 同時 checkout 201/409。推薦 BFF recommended。開発者ポータル / 信頼性 / データ基盤は無い |
+| TS-K07 | d-commerce smoke | D overlay（手動）。EC 同時 checkout 201/409。推薦 BFF recommended。開発者ポータルと信頼性あり。データ基盤は無い |
 | TS-K08 | overlay スコープ | `build-images` の a-foundation は 5、c-scheduling-talent は 7（`test-scripts.ps1`） |
 | TS-K09 | スクリプト構文 | `test-scripts.ps1` が *.ps1 を ParseFile |
 

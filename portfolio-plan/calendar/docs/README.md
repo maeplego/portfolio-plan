@@ -4,7 +4,9 @@
 
 実装は [pf-calendar](https://github.com/maeplego/pf-calendar) です。空き枠の計算、公開予約、キャンセル、リマインドの説明です。文書と実装が違うときは、コードとテストを優先してください。
 
-勤怠（[pf-attendance](https://github.com/maeplego/pf-attendance)）とはつなぎません。求人側からの利用は [pf-talent-api](https://github.com/maeplego/pf-talent-api) です。
+勤怠（[pf-attendance](https://github.com/maeplego/pf-attendance)）とはつなぎません。求人側からの利用は [pf-talent-api](https://github.com/maeplego/pf-talent-api) です。`calendar.booking.confirmed` の outbox → webhook 受信は実装済みです。
+
+**レビュー到達**: `review-up.ps1` に p05 パックは無い（不要）。単体は Compose（`pf-cloud-k8s` の `demo.ps1 -Key p05`、または `pf-calendar/deploy`）、P10 結合は同カタログの with-p10 か K8s overlay C（`portfolio-integration-c-scheduling-talent`）。
 
 | ファイル | 内容 |
 | --- | --- |

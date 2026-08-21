@@ -3,7 +3,7 @@
 | 項目 | 値 |
 | --- | --- |
 | プロダクト | クラウド基盤（観測 [pf-cloud-o11y](https://github.com/maeplego/pf-cloud-o11y)、Kubernetes [pf-cloud-k8s](https://github.com/maeplego/pf-cloud-k8s)、Terraform [pf-cloud-aws](https://github.com/maeplego/pf-cloud-aws)） |
-| 最終更新 | 2026-08-19 |
+| 最終更新 | 2026-08-21 |
 | 実装との関係 | この文書と実装が違うときは、製品リポジトリのコードとテストを優先する |
 
 ## 1. 背景と目的
@@ -16,8 +16,8 @@
 
 - Compose で Collector / Prometheus / Loki / Tempo / Grafana を起動し、サンプルアプリの RED とトレースを相関できる
 - アプリは OTLP を Collector に送る。ベンダー SDK を Grafana / Tempo に直接繋がない
-- Docker Desktop Kubernetes 上の用途別 overlay（A foundation、B collab + 開発者ポータル、C scheduling-talent、D commerce、E content、F ops）
-- overlay D は EC [pf-commerce](https://github.com/maeplego/pf-commerce) の payment / notify / BFF / ops-web と推薦 [pf-recommend](https://github.com/maeplego/pf-recommend) を含む
+- Docker Desktop Kubernetes 上の用途別 overlay（A foundation、B collab + 開発者ポータル、C scheduling-talent、D commerce + portal + 信頼性、E content + portal、F ops + payroll）
+- overlay D は EC [pf-commerce](https://github.com/maeplego/pf-commerce) の payment / notify / BFF / ops-web と推薦 [pf-recommend](https://github.com/maeplego/pf-recommend)、開発者ポータルと信頼性を含む
 - `GET /health` と `GET /ready`、JSON ログの最低キー
 - 勤怠 [pf-attendance](https://github.com/maeplego/pf-attendance) 向け 3-tier モジュール（VPC / ALB / ECS / RDS / GitHub OIDC / 請求アラーム）と `terraform fmt` / `validate`
 
@@ -26,8 +26,7 @@
 | 項目 | 理由 |
 | --- | --- |
 | AWS への `terraform apply` と本番相当の常時稼働 | 課金と秘密の正本を個人アカウントに置かない |
-| overlay D への開発者ポータル / 信頼性 / データ基盤 | いまの D は EC フルと推薦まで |
-| overlay E への開発者ポータル | B に portal を載せた |
+| overlay D へのデータ基盤 | データ基盤 [pf-data](https://github.com/maeplego/pf-data) は Compose |
 | サービスメッシュ、マルチリージョン、長期保持の課金最適化 | 範囲外 |
 | 15 製品を 1 クラスタで同時フル起動 | メモリ制約。用途別に切る |
 

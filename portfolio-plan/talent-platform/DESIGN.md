@@ -31,9 +31,9 @@
 | `pf-talent-search` | 作らない。検索は API 内 `tsvector` + `pg_trgm` |
 | `pf-talent-infra` | Compose は各製品 `deploy/` |
 
-初期（求人 200 件）は `pf-talent-search` を作らず Postgres FTS だけ、と DESIGN に書いてある通り段階化してよい。件数が増えたら OpenSearch を足し、リポジトリを追加する。ポリレポ方針は「必要になったら indexer を独立させる」こと。
+現行シードは `pf-talent-api` の架空求人 **約 10 件**（空ストア起動時 / `POST /v1/dev/seed`）。アイデア文の「200 件」は将来スケールの物語であり、現状のデモ件数ではない。`pf-talent-search` は作らず Postgres FTS だけ。件数が増えたら OpenSearch を足し、リポジトリを追加する。ポリレポ方針は「必要になったら indexer を独立させる」こと。
 
-200 件のうちから 3 リポジトリ必須にすると空洞化する。**開始はモノレポ相当の 2 リポジトリ（web + api）でよく、search は api のパッケージ。** 独立デプロイしたくなったらリポジトリを割る。
+少数シードのうちから 3 リポジトリ必須にすると空洞化する。**開始はモノレポ相当の 2 リポジトリ（web + api）でよく、search は api のパッケージ。** 独立デプロイしたくなったらリポジトリを割る。
 
 実装チャットでは次の段階を守れ。
 

@@ -42,4 +42,15 @@ cd pf-cloud-k8s
 
 L3a 記録（2026-08-21）: Talent `POST /v1/jobs` が `X-Dev-User-Sub` で **401**、`talent-api` / `calendar-api` Ingress health **pass**（イメージ再ビルド後）。
 
+## 手動: ログイン → 求人 → 応募（staging）
+
+自動化 E2E は無い（ゲート **Risk Accept**）。次を手で踏めば足りる。
+
+1. staging overlay を上げる（上の `cluster-smoke-c-scheduling-talent-staging.ps1`）
+2. [http://talent.localhost/login](http://talent.localhost/login) → IdP。学習用デモユーザー（foundation と同じ。メール `demo@example.test`。パスワードは overlay の `IDENTITY_SEED_DEMO_PASSWORD`）
+3. 求人一覧から 1 件を開き応募（候補者として。必要なら画面の acting user / ロール表示を確認）
+4. 期待: 応募が作成され、一覧に出る。`X-Dev-User-Sub` だけでは API が 401 のままであること
+
+フル採用ジャーニー（書類通過 → 面接枠 → 予約 webhook）の自動確認はデモ overlay C の `cluster-smoke-c-scheduling-talent.ps1` 側。staging 専用の同経路 Playwright は未。**Risk Accept で Go 可**（[07-talent-gate.md](./talent-platform/docs/07-talent-gate.md)）。
+
 ゲート: [talent-platform/docs/07-talent-gate.md](./talent-platform/docs/07-talent-gate.md)（**Go**）。バックアップ: [08-backup-restore-drill.md](./talent-platform/docs/08-backup-restore-drill.md)（**Pass**）。

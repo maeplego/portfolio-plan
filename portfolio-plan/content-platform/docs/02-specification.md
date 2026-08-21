@@ -16,7 +16,7 @@
 
 含む: Markdown CMS、下書き / 公開、公開 URL の 404、編集者プレビュー、Draft Mode、OG 画像（公開題名）、RSS / sitemap、短縮作成と 302、非同期クリック、日次グラフ、宛先ホスト許可リスト、記事 HTML の `javascript:` 無効化。
 
-含まない: Tailwind + MDX、本番 OIDC（`pf-identity`）、メディア基盤（`pf-media`）の実パイプライン、コメント、全文検索、k6 の数値公表、マルチテナント独自ドメイン。
+含まない: Tailwind + MDX、短縮側の P01 OIDC 実装（staging 向け設計のみ）、メディア基盤（`pf-media`）の実パイプライン、コメント、全文検索、k6 の数値公表、マルチテナント独自ドメイン。
 
 ## 3. 用語
 
@@ -46,7 +46,14 @@ API の時刻は UTC RFC3339。DB は `timestamptz`。表示は ISO 日付で足
 
 ## 6. 編集者
 
-開発: 管理画面の Dev login（cookie `content_dev_sub`）または `X-Dev-User-Sub`。
+開発デモの既定は **DEV_AUTH**:
+
+| 製品 | フラグ | 認証 |
+| --- | --- | --- |
+| ブログ管理 | `CONTENT_DEV_AUTH=true` | Dev login cookie `content_dev_sub`、または `X-Dev-User-Sub` |
+| 短縮作成 API | `SHORTENER_DEV_AUTH=true`（必須スライス） | `X-Dev-User-Sub` のみ |
+
+ブログは任意で `OIDC_ISSUER` + `OIDC_CLIENT_ID`（ほか `OIDC_REDIRECT_URI` 等）を立てると P01 コードパスに切り替わる。Compose 既定は未配線（`pf-content-infra` の `.env.example` にコメント例）。**短縮の OIDC は staging 向け設計のみで、コード未配線。**
 
 | 操作 | 仕様 |
 | --- | --- |

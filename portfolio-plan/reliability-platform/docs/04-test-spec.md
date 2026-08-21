@@ -17,7 +17,7 @@
 | TS-L03 | dedup | 同一キーは未解決 1 件。解決後は新規 |
 | TS-L04 | event_id | 同じ署名付き body の再送は同一 incident |
 | TS-L05 | シナリオ | scale は不合格、rollback は合格。未知 action は 400 |
-| TS-L06 | 認可 | ヘッダ無しの POST は 401。GET 一覧は開ける |
+| TS-L06 | 認可 | ヘッダ無しの POST／一覧 GET は 401。`/health` と仮想メトリクスは開ける |
 | TS-L07 | ready | DB 不通なら `/ready` 503 |
 
 未自動化: Compose 実機の画面操作、オンコール週次、ランブック CRUD。

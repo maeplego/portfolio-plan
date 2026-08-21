@@ -26,7 +26,7 @@
 | 項目 | 理由 |
 | --- | --- |
 | Great Expectations | dbt test で足りる |
-| EC / 求人の本番 JSON コネクタ | 未実装。架空 CSV が正 |
+| EC / 求人の本番 JSON コネクタ | 既定は架空 CSV。`PIPELINE_SOURCE=commerce` で [pf-commerce](https://github.com/maeplego/pf-commerce) の `GET /v1/ops/exports/orders` を任意接続（架空 buyer id、PII なし） |
 | PII マート、履歴書本文 | 禁止 |
 | Spark / CDC / 本番 DWH 移行 | 規模が見合わない |
 

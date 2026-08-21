@@ -3,7 +3,7 @@
 | 項目 | 値 |
 | --- | --- |
 | プロダクト | コンテンツ基盤（GitHub: `pf-content-blog`、`pf-content-shortener`） |
-| 最終更新 | 2026-08-19 |
+| 最終更新 | 2026-08-21 |
 | 実装との関係 | この文書と実装が違うときは、製品リポジトリのコードとテストを優先する |
 
 基準 URL はブログ `http://localhost:3007`、短縮 `http://localhost:8094`。OpenAPI ファイルは未作成。
@@ -14,7 +14,14 @@
 { "error": { "code": "invalid_url", "message": "only http and https are allowed" } }
 ```
 
-開発認証: 短縮は `X-Dev-User-Sub`。ブログ管理は同じヘッダまたは cookie `content_dev_sub`。
+### 開発認証（DEV_AUTH）
+
+| 面 | 環境変数 | ヘッダ / cookie |
+| --- | --- | --- |
+| ブログ管理 | `CONTENT_DEV_AUTH=true` | cookie `content_dev_sub`、または `X-Dev-User-Sub` |
+| 短縮 API | `SHORTENER_DEV_AUTH=true`（必須） | `X-Dev-User-Sub` |
+
+ブログ OIDC（任意）: `OIDC_ISSUER`、`OIDC_CLIENT_ID`、`OIDC_REDIRECT_URI`、任意 `OIDC_INTERNAL_BASE` / `OIDC_POST_LOGOUT_REDIRECT_URI`。Compose 例は `pf-content-infra/deploy/.env.example` のコメント。**短縮の P01 OIDC は staging 向け設計のみ（未実装）。**
 
 ## 運用（両方）
 
@@ -57,7 +64,7 @@ Post:
 
 ### POST `/api/dev-login`
 
-`CONTENT_DEV_AUTH=true` のとき cookie をセット。200 `{ ok, sub:"editor" }`。
+`CONTENT_DEV_AUTH=true` のとき cookie をセット。200 `{ ok, sub:"editor" }`。OIDC 有効時は使わない。
 
 ### GET `/api/posts?all=1`
 
@@ -87,7 +94,7 @@ Post:
 
 ### POST `/v1/links`
 
-`{ "url", "slug?", "expiresAt?" }` → 201。
+`{ "url", "slug?", "expiresAt?" }` → 201。`SHORTENER_DEV_AUTH` + `X-Dev-User-Sub`。
 
 ```json
 {
@@ -108,4 +115,4 @@ Post:
 
 ### GET `/{code}`
 
-302。本文に計測結果を含めない。
+302。本文に計測結果を含めない。クライアント単位のレート制限超過は 429。

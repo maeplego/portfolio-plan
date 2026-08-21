@@ -29,7 +29,7 @@ pf-cloud-aws/      Terraform モジュール + 勤怠向け env。apply しな�
 
 Postgres は platform の 1 Pod、DB 名で分離。Secret 平文を Git に置かない。
 
-overlay D は EC [pf-commerce](https://github.com/maeplego/pf-commerce) フルと推薦 [pf-recommend](https://github.com/maeplego/pf-recommend)。開発者ポータル・信頼性・データ基盤は載せない。
+overlay D は EC [pf-commerce](https://github.com/maeplego/pf-commerce) フルと推薦 [pf-recommend](https://github.com/maeplego/pf-recommend)、開発者ポータルと信頼性基盤も含む。データ基盤は Compose。
 
 ## 3. 計装
 

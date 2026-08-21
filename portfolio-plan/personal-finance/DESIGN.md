@@ -33,7 +33,7 @@ pf-finance/
   deploy/
 ```
 
-インフラは Compose だけでよい。K8s に載せない（P02 の思想に従う）。
+起動の正は **Compose**（単独デモ）。`deploy/k8s` の kustomize は CI／ops overlay 用として置いてよい（「K8s 禁止」ではない。単体 apply はしない）。
 
 ## 技術スタック
 

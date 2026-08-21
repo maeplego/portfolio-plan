@@ -118,13 +118,13 @@ DST: ホスト TZ で存在しない壁時計は枠にしない。秋の重複�
 
 ## 9. 内部 API（求人連携用）
 
-Bearer `CALENDAR_INTERNAL_TOKEN`。求人ごとに `externalRef` 付き event type をプロビジョニングし、予約 id からゲスト・イベントメタデータを取得する。ゲスト向け公開 URL の slug は内部 API 作成時に指定。呼び出し側は求人 API [pf-talent-api](https://github.com/maeplego/pf-talent-api)（受信側の応募ステータス更新は未実装）。
+Bearer `CALENDAR_INTERNAL_TOKEN`。求人ごとに `externalRef` 付き event type をプロビジョニングし、予約 id からゲスト・イベントメタデータを取得する。ゲスト向け公開 URL の slug は内部 API 作成時に指定。呼び出し側は求人 API [pf-talent-api](https://github.com/maeplego/pf-talent-api)。受信は `POST /webhooks/calendar` で応募を `interview` にする。
 
 ## 10. 既知の制限（現状を偽らない）
 
 - Web UI あり（http://localhost:3005）。curl も引き続き可
 - ホスト認証は開発ヘッダまたは OIDC Bearer（`CALENDAR_DEV_AUTH=false`）
-- **`calendar.booking.confirmed` は outbox + webhook 配信済み**（求人側の受信は未実装）
+- **`calendar.booking.confirmed` は outbox + webhook 配信済み**。求人側の受信も実装済み
 - 公開 API のレート制限なし
 - 単体テストの同時 book はメモリ store。Postgres 上の同時 INSERT は Compose 手動または未自動化
 - Google カレンダー同期は未実装

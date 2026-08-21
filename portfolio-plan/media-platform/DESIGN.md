@@ -88,19 +88,20 @@
 
 - OIDC 時は `org` scope 必須。`org_id` が無いトークンは API が拒否する
 - ファイル／フォルダ／共有リンクに `org_id` をスタンプし、一覧・操作は `owner_sub` + `org_id` で拘束
+- クォータはサービス層で org キー（`org:{orgID}`）。DB カラム名は従来のまま
 - Web は OrgSwitcher（IdP `PUT /v1/active-org` + refresh）。dev-auth は `X-Dev-User-Org`（省略時 `org-demo-a`）
-- `purpose` はアップロード種別のまま（テナントキーにしない）
+- `purpose` はアップロード種別のホワイトリスト（テナントキーにしない）
 
 ## 他プロジェクトとの契約
 
 同期 API（概要）:
 
 - `POST /v1/uploads/presign` `{ contentType, size, purpose }`
-- `POST /v1/uploads/complete` `{ key, etag }`
-- `GET /v1/files/:id` メタデータと派生 URL
-- `POST /v1/share-links`
+- `POST /v1/uploads/complete` `{ fileId, etag }`（etag はオブジェクトと照合。引用符は正規化）
+- `GET /v1/files/:id` メタデータと派生 URL（他人の id は 404）
+- `POST /v1/share-links` / `GET /v1/share-links` / `DELETE /v1/share-links/{token}`（パスワード任意）
 
-`purpose`: `wiki`, `product`, `blog`, `chat`, `drive`。クォータと公開可否のポリシーに使う。
+`purpose` ホワイトリスト: `drive`, `wiki`, `chat`, `blog`, `blog-cover`, `product`（空は `drive`）。クォータはサービス層で org キー（`org:{orgID}`、org 無しは `user:{sub}`）。パスワード付き共有は実装済み。
 
 内部利用（P06 カタログ等）はユーザーの drive ではなく `service/{service}/...` プレフィックス。認可は M2M またはユーザーの委任。
 

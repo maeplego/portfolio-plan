@@ -167,4 +167,4 @@ Compose: Web `:3005`、API `:8095`、Postgres `:5434`、Mailhog `:8025`、worker
 | Web + OIDC | book は Route Handler に移さない。BFF は API を呼ぶだけ |
 | cancel | トークン照合はハッシュ比較。status 変更後は exclusion 対象外 |
 | worker | `start_at`（UTC）とサーバー now でリマインド。ゲスト TZ は本文用 |
-| 求人連携 | 同じ Instant 契約。ホストは企業ユーザーの `sub`。`external_ref` で求人と event type を紐付け。受信は [pf-talent-api](https://github.com/maeplego/pf-talent-api) 側が未実装 |
+| 求人連携 | 同じ Instant 契約。ホストは企業ユーザーの `sub`。`external_ref` で求人と event type を紐付け。受信は [pf-talent-api](https://github.com/maeplego/pf-talent-api) の `POST /webhooks/calendar` |

@@ -3,7 +3,7 @@
 | 項目 | 値 |
 | --- | --- |
 | プロダクト | 予約カレンダー [pf-calendar](https://github.com/maeplego/pf-calendar) |
-| 最終更新 | 2026-08-19 |
+| 最終更新 | 2026-08-21 |
 | 実装との関係 | この文書と実装が違うときは、製品リポジトリのコードとテストを優先する |
 | 基準 | `http://localhost:8095`（Compose）。時刻は Instant の ISO-8601 |
 
@@ -11,7 +11,7 @@
 
 ## ドメインイベント
 
-予約 **新規確定**（201、冪等再送 200 ではない）時に `outbox_events` へ enqueue。worker が `CALENDAR_WEBHOOK_URL` へ POST する。求人 API [pf-talent-api](https://github.com/maeplego/pf-talent-api) の受信は未実装。
+予約 **新規確定**（201、冪等再送 200 ではない）時に `outbox_events` へ enqueue。worker が `CALENDAR_WEBHOOK_URL` へ POST する。求人 API [pf-talent-api](https://github.com/maeplego/pf-talent-api) は `POST /webhooks/calendar` で受信し、`externalRef` が一致する応募を `interview` にする。
 
 ```json
 {
@@ -242,8 +242,4 @@ PII フィールドを足さない。
 
 404: id なし。`cancelToken` は返さない。
 
-## 未実装（契約予約）
-
-| 予定 | 備考 |
-| --- | --- |
-| webhook 受信と応募ステータス更新 | [pf-talent-api](https://github.com/maeplego/pf-talent-api) |
+求人側の受信契約は [talent-platform/docs/05-api.md](../../talent-platform/docs/05-api.md) の `POST /webhooks/calendar`。

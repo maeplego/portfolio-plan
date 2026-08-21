@@ -39,7 +39,7 @@ flowchart LR
 
 - [x] 本ファイル + P16 `DESIGN.md`（非目標・Ports・依存を固定）
 - [x] カタログ／roadmap からリンク
-- [ ] 顧客向け一文: 「給与・税務はP16。当面は既存 SaaS＋エクスポート」
+- [x] 顧客向け一文: 「給与・税務はP16。当面は既存 SaaS＋エクスポート」
 
 ### P16-Ports — 連携アダプタ（最初のコード）
 
@@ -48,8 +48,17 @@ flowchart LR
 - [x] `AccountingPort` + モック（分数量 DTO）
 - [x] `PAYROLL_ENV` staging で DEV_AUTH 拒否（単体）
 - [x] staging overlay（f-ops-staging + `payroll.localhost`）
-- [ ] バックアップ手順テンプレ（P16-規制名乗り 前でも任意）
+- [x] バックアップ手順テンプレ（任意・下記）
 - **名乗らない**: 源泉・社保・振込確定、法令準拠
+
+#### バックアップ手順テンプレ（ラボ／デモ）
+
+1. **対象:** インポート済み勤怠バッチとデモレート（現状はプロセスメモリ。永続化したら DB ダンプに置換）
+2. **頻度:** デモ前に一度、または `PAYROLL_ENV=staging` 検証のたびに
+3. **手順（現状）:** 再インポート用に P09 `minutes-v1` CSV を別保存する。レートは `PUT /v1/demo-rates` の JSON を控える
+4. **復元:** プロセス再起動 → CSV を `POST /v1/imports/attendance-csv` → 必要ならデモレートを再投入
+5. **検証:** `GET /v1/statements/preview` が `legalEffect: false` のまま同じ行数になること
+6. **本番相当へ進むとき:** 永続ストアのスナップショット／暗号化保管と保持期間を P16-規制名乗り ゲートで確定する
 
 ### P16-デモ — 薄いドメイン
 

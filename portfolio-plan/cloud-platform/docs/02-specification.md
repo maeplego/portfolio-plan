@@ -42,9 +42,9 @@ Compose が落ちたら Grafana は空になる。アプリは Collector に届�
 | A foundation | 認証基盤 [pf-identity](https://github.com/maeplego/pf-identity)、メディア基盤 [pf-media](https://github.com/maeplego/pf-media)、観測 | — |
 | B collab | チーム作業場所 [pf-workspace](https://github.com/maeplego/pf-workspace)、上記 + 開発者ポータル [pf-developer-portal](https://github.com/maeplego/pf-developer-portal) | — |
 | C scheduling-talent | 予約カレンダー [pf-calendar](https://github.com/maeplego/pf-calendar)、求人 [pf-talent-api](https://github.com/maeplego/pf-talent-api) / [pf-talent-web](https://github.com/maeplego/pf-talent-web) | — |
-| D commerce | EC [pf-commerce](https://github.com/maeplego/pf-commerce) フル、推薦 [pf-recommend](https://github.com/maeplego/pf-recommend) | 開発者ポータル、信頼性基盤 [pf-reliability](https://github.com/maeplego/pf-reliability)、データ基盤 [pf-data](https://github.com/maeplego/pf-data) |
-| E content | ブログ [pf-content-blog](https://github.com/maeplego/pf-content-blog)、短縮 URL [pf-content-shortener](https://github.com/maeplego/pf-content-shortener) | 開発者ポータル |
-| F ops | 勤怠 [pf-attendance](https://github.com/maeplego/pf-attendance)、信頼性、家計 [pf-finance](https://github.com/maeplego/pf-finance)、習慣 API [pf-habit-api](https://github.com/maeplego/pf-habit-api) | Expo アプリ [pf-habit-mobile](https://github.com/maeplego/pf-habit-mobile) |
+| D commerce | EC [pf-commerce](https://github.com/maeplego/pf-commerce) フル、推薦 [pf-recommend](https://github.com/maeplego/pf-recommend)、開発者ポータル、信頼性基盤 [pf-reliability](https://github.com/maeplego/pf-reliability) | データ基盤 [pf-data](https://github.com/maeplego/pf-data)（Compose） |
+| E content | ブログ [pf-content-blog](https://github.com/maeplego/pf-content-blog)、短縮 URL [pf-content-shortener](https://github.com/maeplego/pf-content-shortener)、開発者ポータル | — |
+| F ops | 勤怠 [pf-attendance](https://github.com/maeplego/pf-attendance)、信頼性、家計 [pf-finance](https://github.com/maeplego/pf-finance)、習慣 API [pf-habit-api](https://github.com/maeplego/pf-habit-api)、給与デモ [pf-payroll](https://github.com/maeplego/pf-payroll) | Expo アプリ [pf-habit-mobile](https://github.com/maeplego/pf-habit-mobile) |
 
 ## 4. Terraform（構文チェックまで。AWS へは適用しない）
 

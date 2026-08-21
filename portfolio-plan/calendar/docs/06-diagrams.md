@@ -40,7 +40,7 @@ flowchart LR
   UC4 --> UC3
 ```
 
-求人側の webhook 受信は未実装。カレンダー側の内部 API と outbox 配信は現行。
+求人側の webhook 受信（`POST /webhooks/calendar`）とカレンダー側の内部 API・outbox 配信は現行。
 
 ## 2. 画面遷移（実装済み）
 

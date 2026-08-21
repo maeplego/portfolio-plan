@@ -3,7 +3,7 @@
 | 項目 | 値 |
 | --- | --- |
 | プロダクト | personal-finance（GitHub: [pf-finance](https://github.com/maeplego/pf-finance)） |
-| 最終更新 | 2026-08-20 |
+| 最終更新 | 2026-08-21 |
 | 実装との関係 | この文書と実装が違うときは、製品リポジトリのコードとテストを優先する |
 
 ## 1. 構成
@@ -13,12 +13,12 @@ apps/web   Next.js PWA。ブラウザは同一オリジン /api/finance（BFF）
 apps/api   Hono。認可と永続化
 packages/money  整数円パーサ
 packages/sync-protocol  decideLww（同時刻はサーバー）
-deploy     Compose が主。deploy/k8s は ops overlay 用
+deploy     Compose が起動の正。deploy/k8s は CI／ops overlay 用（単体 apply しない）
 ```
 
 サーバーが正の一覧・レポートに加え、オフラインの変更セットは `POST /v1/sync` で載せる。各取引は `updatedAt` の新しい方が勝つ（LWW）。同じ時刻はサーバーを残す。削除は `deletedAt` を置く tombstone で、一覧からは消える。新しい `updatedAt` で `deletedAt: null` なら復活する。カテゴリと予算も同じ LWW で載せられる。クライアントの `updatedAt` がサーバー時計より 120 秒以上未来なら `rejected`。
 
-起動の正は **Compose**（Postgres）。Kubernetes は [pf-cloud-k8s](https://github.com/maeplego/pf-cloud-k8s) の ops overlay から参照するマニフェストがある（`finance.localhost` / `finance-api.localhost`、DB 名 `finance`）。このフォルダだけを apply しない。
+起動の正は **Compose**（Postgres）。Kubernetes マニフェストは禁止ではなく、[pf-cloud-k8s](https://github.com/maeplego/pf-cloud-k8s) の ops overlay から参照する（`finance.localhost` / `finance-api.localhost`、DB 名 `finance`）。このフォルダだけを apply しない。
 
 ## 2. 認可
 

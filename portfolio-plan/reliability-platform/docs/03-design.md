@@ -28,7 +28,7 @@ deploy          Compose。Postgres。Kubernetes overlay では RELIABILITY_DATAB
 
 ## 4. 認可と秘密
 
-書き込み（起票・ack・resolve・コメント・デモアラート）は `X-Dev-User-Sub`。統合シークレットは一覧でマスク。回転 UI は未実装。
+書き込み（起票・ack・resolve・コメント・デモアラート）と一覧／詳細 GET（services・incidents・runbooks・training history／scenarios・oncall）は `X-Dev-User-Sub`。統合シークレットは一覧でマスク。回転 UI は未実装。OIDC は未配線。
 
 ## 5. 他製品
 
