@@ -1,5 +1,7 @@
 # 本番の定義（Production definition）
 
+> **読者**: 商用準備・運用向け。採用スキムは [HIRING.md](./HIRING.md) → [REVIEW.md](./REVIEW.md)。
+
 | 項目 | 値 |
 | --- | --- |
 | 対象 | パッケージ販売・顧客 PoC／本番判断 |

@@ -2,6 +2,14 @@
 
 実装チャットで「要件定義書を書いて」「仕様を固めて」と言われたときの正本。個別 Pxx の中身ではなく、**どの書類を・どこに・いつ・どの粒度で**残すかを決める。矛盾したら本ファイルを `instructions.md` と同じ扱いで優先する。
 
+## 読者レーン（入口）
+
+| 読者 | 最初に開く | 止めるところ |
+| --- | --- | --- |
+| **採用・レビュア** | [HIRING.md](./HIRING.md) → [REVIEW.md](./REVIEW.md) | 製品 `pf-*/README.md`。商用ゲートや staging はスキム対象外 |
+| 実装エージェント | ルート `AGENTS.md` → 本ファイルの隣 `instructions.md` → 各 Pxx `AGENTS.md` → `DESIGN.md` | `chat-context/` |
+| 商用・運用 | [commercial-roadmap.md](./commercial-roadmap.md) → [verification.md](./verification.md) | 各 `docs/07-*-gate.md` |
+
 ## なぜ書類を分けるか
 
 コードと `DESIGN.md` だけでは、第三者が「なぜその制約があるのか」を辿りにくい。一方で 15 プロジェクトすべてに同じ厚さの文書を先に書くと、実装より先に腐る。
@@ -16,10 +24,12 @@
 
 | 種類 | 場所 | Git | 読む人 |
 | --- | --- | --- | --- |
+| **採用ワンページ** | `portfolio-plan/HIRING.md`（英語要約 `HIRING.en.md`） | 入れる | 採用担当 |
+| **採用手順** | `portfolio-plan/REVIEW.md` | 入れる | 採用担当（動かしたいとき） |
 | 共通方針（本ファイル） | `portfolio-plan/documentation.md` | 入れる | エージェント、自分 |
 | 実装チャット用の短い設計 | `portfolio-plan/<project>/DESIGN.md` | 入れる | エージェント必須 |
-| 人間向け正式書類 | `portfolio-plan/<project>/docs/` | 入れる | 採用担当、クローンした第三者 |
-| 製品 README | 各 `pf-*/README.md` | 入れる | クローンした第三者 |
+| 人間向け正式書類 | `portfolio-plan/<project>/docs/`（01–06） | 入れる | 深掘りレビュア。**07+ 商用／運用は採用スキム対象外** |
+| 製品 README | 各 `pf-*/README.md` | 入れる | GitHub 訪問者 |
 | OpenAPI 機械可読 | 各 `pf-*/packages/openapi` または `deploy/` 横 | 入れる | 実装・連携 |
 | チャット記録 | `<project>/chat-context/` | **入れない** | エージェントのみ |
 

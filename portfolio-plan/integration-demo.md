@@ -1,4 +1,6 @@
-# ポートフォリオ連携デモ（Integration Demo）
+# Kubernetes 連携デモ（L2・オペレータ向け）
+
+> **読者**: 商用準備・運用向け。採用スキムは [HIRING.md](./HIRING.md) → [REVIEW.md](./REVIEW.md)。
 
 採用担当者・レビュアが **複数 Pxx の横断動作** を確認するための手順の正本。製品コードは兄弟 `pf-*` と `pf-cloud-k8s` に置く。
 

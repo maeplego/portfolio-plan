@@ -1,5 +1,7 @@
 # Commerce staging 手順
 
+> **読者**: 商用準備・運用向け。採用スキムは [HIRING.md](./HIRING.md) → [REVIEW.md](./REVIEW.md)。
+
 | 項目 | 値 |
 | --- | --- |
 | 対象 | P06 Commerce（± P01 / P03 / P07）商用ゲート検証の入口 |

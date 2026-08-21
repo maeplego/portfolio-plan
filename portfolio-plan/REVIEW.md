@@ -6,9 +6,10 @@
 | 既定の経路 | ブラウザ、必要なら Docker Compose。**Kubernetes は任意** |
 | 最終更新 | 2026-08-21 |
 
-GitHub でコードを見て、必要なら Docker Compose を 1 パック起動してください。Kubernetes は必須ではありません。
+先に位置づけを読む → **[HIRING.md](./HIRING.md)**。  
+ここでは **動かし方**だけを書きます。GitHub でコードを見て、必要なら Docker Compose を 1 パック起動してください。Kubernetes は必須ではありません。
 
-公開リポジトリは **デモ・学習・社内評価用** です。保証はなく、本番・商用利用は別契約です（[licensing.md](./licensing.md) / 各 `LICENSE`）。本番ゲート・パッケージ境界は [production-definition.md](./production-definition.md) / [package-catalog.md](./package-catalog.md) / [commercial-roadmap.md](./commercial-roadmap.md)。**どの確認層を使うか**は [verification.md](./verification.md)（採用の既定は L1＝本手順。Kubernetes は L2 任意）。
+公開リポジトリは **デモ・学習・社内評価用** です（無保証。[licensing.md](./licensing.md)）。
 
 ## 0. ブラウザだけ（約 5 分）
 
@@ -18,7 +19,7 @@ GitHub の `pf-*` と、このメタリポジトリを見る。
 2. **P04 workspace または P06 commerce** — 画面のある本線（`pf-workspace` または `pf-commerce`）
 3. **深さ 1 本** — P02 観測、P11 開発者ポータル、P12 インシデントのいずれか
 
-構成と「やらなかったこと」は `portfolio-plan/00-overview.md` と各 `portfolio-plan/<project>/DESIGN.md`。
+「やらなかったこと」の要約は [HIRING.md](./HIRING.md)。詳細地図は `00-overview.md`。
 
 常時公開の IdP は無い。AWS への `terraform apply` は **対象外**。
 
@@ -71,31 +72,33 @@ GHCR が無いとき:
 ## 既知の制限
 
 - Compose パックの media / workspace / commerce は **開発認証**。アプリ横断の本格 OIDC は **任意** の K8s foundation overlay
-- GHCR の tag は、各 `pf-*` が `pf-cloud-k8s/docs/example-github-push-ghcr.yml` の例ワークフローを動かしたあとに存在する。それまでは `-UseLocalImages`（ローカルビルド）
-- Docker Desktop Kubernetes 12 GB、約 28 イメージの import、overlay 切替は **採用担当者の既定経路ではない**
+- GHCR の tag は、各 `pf-*` が公開イメージを出したあとに存在する。それまでは `-UseLocalImages`
+- Docker Desktop Kubernetes は **採用担当者の既定経路ではない**
 - 実カード番号、実家計、本番 AWS は使わない
-
-テストと GitHub Actions の層（何が CI で、何が手元か）は [`portfolio-plan/ci.md`](ci.md) です。
 
 ## 片付け
 
-終わったら `pf-cloud-k8s` で `.\scripts\cleanup.ps1`（既定は K8s overlay だけ止める）。Compose のボリュームは `.\scripts\review-down.ps1 -Pack p04` または `-Pack p06`。まとめて消すときは `.\scripts\cleanup.ps1 -Level full`（`-Yes` が無いと確認する）。
+終わったら `pf-cloud-k8s` で `.\scripts\cleanup.ps1`（既定は K8s overlay だけ止める）。Compose のボリュームは `.\scripts\review-down.ps1 -Pack p04` など。
 
 ## GitHub ピン（3 点）
 
-プロフィールに載せるのは次だけ。15 個全部はピンしない。
-
-1. このメタリポジトリ（本ファイルと `00-overview.md`）
-2. **P01** `pf-identity`、または本線の **P04** `pf-workspace` / **P06** `pf-commerce` のどちらか
-3. 深さ 1 本: `pf-cloud-o11y`（観測）、`pf-developer-portal`（oasdiff）、`pf-reliability`（訓練採点）、`pf-recommend`（fail-closed）のいずれか
+1. このメタリポジトリ（[HIRING.md](./HIRING.md) と本ファイル）
+2. **P01** `pf-identity`、または本線の **P04** / **P06**
+3. 深さ 1 本: `pf-cloud-o11y` / `pf-developer-portal` / `pf-reliability` / `pf-recommend` のいずれか
 
 ## 口頭での説明例（約 5 分）
 
-15 個全部は扱いません。
+15 個全部は扱いません。[HIRING.md](./HIRING.md) の「口頭 3 点」と同じです。
 
-- **認証（pf-identity）**: PKCE、redirect URI の完全一致、refresh の回転（再利用で family 無効化）
-- **本線どちらか**: ワークスペース（pf-workspace）ならワークスペース作成。EC（pf-commerce）なら `/demo` で在庫 1 の同時購入（片方 201、片方 409）
-- **深さ 1 つ**: トレースが Grafana に出ること、OpenAPI の破壊的変更で CI が落ちること、訓練で scale が減点になること、推薦失敗時に人気へ戻ること、のいずれか
+- **認証（pf-identity）**: PKCE、redirect URI の完全一致、refresh の回転
+- **本線どちらか**: ワークスペース作成、または EC `/demo` の在庫 1 同時購入
+- **深さ 1 つ**: トレース、OpenAPI 破壊検知、訓練採点、推薦 fail-closed のいずれか
 
-やらなかったこと（Terraform apply、習慣アプリの K8s、全 Pxx 同時起動）はブログ記事 `why-fifteen-products` と `00-overview.md` に書いてある。
+## さらに知る（採用スキムの後）
 
+| 資料 | 内容 |
+| --- | --- |
+| [verification.md](./verification.md) | 確認の層 L0–L4（オペレータ向け） |
+| [production-definition.md](./production-definition.md) / [package-catalog.md](./package-catalog.md) / [commercial-roadmap.md](./commercial-roadmap.md) | 商用ゲート・パッケージ境界 |
+| [ci.md](./ci.md) | テストと GitHub Actions |
+| [integration-demo.md](./integration-demo.md) | Kubernetes 連携デモ（L2・任意） |

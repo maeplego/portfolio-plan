@@ -1,5 +1,7 @@
 # Talent path staging 手順
 
+> **読者**: 商用準備・運用向け。採用スキムは [HIRING.md](./HIRING.md) → [REVIEW.md](./REVIEW.md)。
+
 | 項目 | 値 |
 | --- | --- |
 | 対象 | P10 Talent + P05 Calendar（± P01 / P07）商用ゲート検証の入口 |

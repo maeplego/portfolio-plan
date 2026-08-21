@@ -1,5 +1,7 @@
 # 求人マッチングの書類
 
+> **採用スキム**: 製品 README と DESIGN の「非目標」まで。詳細仕様・ゲート（07+）は深掘り用。
+
 実装は [pf-talent-api](https://github.com/maeplego/pf-talent-api) と [pf-talent-web](https://github.com/maeplego/pf-talent-web) です。求人、応募、予約確定後のステータス更新の説明です。OpenSearch は使いません。文書と実装が違うときは、コードとテストを優先してください。
 
 カレンダーは [pf-calendar](https://github.com/maeplego/pf-calendar)、類似求人は [pf-recommend](https://github.com/maeplego/pf-recommend)（失敗時はスキルの重なり）です。

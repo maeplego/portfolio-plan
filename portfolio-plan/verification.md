@@ -1,5 +1,7 @@
 # 動作確認の地図（Verification）
 
+> **読者**: 商用準備・運用向け。採用スキムは [HIRING.md](./HIRING.md) → [REVIEW.md](./REVIEW.md)。
+
 | 項目 | 値 |
 | --- | --- |
 | 対象 | 開発者・採用レビュア・商用準備 |

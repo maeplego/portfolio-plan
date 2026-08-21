@@ -1,5 +1,7 @@
 # Media staging 手順
 
+> **読者**: 商用準備・運用向け。採用スキムは [HIRING.md](./HIRING.md) → [REVIEW.md](./REVIEW.md)。
+
 | 項目 | 値 |
 | --- | --- |
 | 対象 | P03 Media（Collab / Commerce 添付経路） |
