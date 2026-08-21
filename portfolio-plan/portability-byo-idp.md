@@ -5,32 +5,31 @@
 | 最終更新 | 2026-08-21 |
 | 契約の正本 | [portability.md](../portability.md) |
 
-同梱 P01 の代わりに、顧客またはラボの OIDC IdP（Entra、Auth0、Keycloak 等）を使う手順の骨子。
+同梱 P01 の代わりに、顧客またはラボの OIDC IdP（Entra、Auth0、Keycloak 等）を使う。  
+**ポートフォリオデモでは Auth0 / Entra への実接続確認はしない。** 実装と設定例のみ用意（製品側 `pf-workspace/deploy/byo-oidc/AUTH0-ENTRA.md`）。
 
 ## 前提
 
 - Authorization Code + PKCE
-- 公開クライアント（workspace web）または機密クライアントの方針を決める
-- アクセストークン／ID トークンに `sub`
-- テナント: クレーム `org_id`、またはカスタムクレームを RP 側でマッピング（実装は Phase 1–2 で寄せる）
+- discovery 対応（jwks / userinfo / 任意で end_session）
+- `sub` 必須
+- テナント: `OIDC_ORG_CLAIM`（既定 `org_id`、フォールバックに `tid` 等）
 
-## チェックリスト
+## チェックリスト（顧客環境向け・未実施可）
 
 1. IdP にアプリ登録: redirect `…/callback`、logout redirect
-2. issuer・JWKS・client_id を staging の `OIDC_*` に設定
-3. `WORKSPACE_ENV=staging`、`WORKSPACE_DEV_AUTH=false`
-4. 同梱 P01 を止めるか、issuer を顧客 IdP のみにする（混在しない）
-5. ログイン → workspace ホーム →（可能な範囲で）org 表示を確認
-6. 境界: 別 org のデータが見えないこと
+2. `OIDC_ISSUER` / `OIDC_CLIENT_ID` / 必要なら `OIDC_CLIENT_SECRET`・`OIDC_AUDIENCE`
+3. カスタムクレームを `OIDC_ORG_CLAIM` / `OIDC_ORGS_CLAIM` に合わせる
+4. Auth0/Entra では `OIDC_SCOPES` から独自 `org` scope を外す
+5. `WORKSPACE_ENV=staging`、`WORKSPACE_DEV_AUTH=false`
+6. （任意）ログイン → org 切替 → 境界確認
 
-詳細は製品側ラボ: `pf-workspace/deploy/byo-oidc/README.md`（mock OIDC + org_id）。
+ラボ代替: `pf-workspace/deploy/byo-oidc` の mock OIDC。
 
-## P01 固有 API への依存（棚卸し）
+## P01 固有 API への依存
 
 | 機能 | 同梱 P01 | BYO |
 | --- | --- | --- |
-| `/v1/active-org` | 使用 | 失敗時は `rp_active_org` Cookie + `X-Workspace-Org`（membership リスト内のみ） |
-| `/v1/organizations/{id}/members` | 使用 | 失敗時は workspace メンバー列挙にフォールバック |
-| 標準 OIDC（authorize/token/userinfo/jwks） | 使用 | 必須 |
-
-詳細な接続チェックリストは上記。実装追随は Collab M1。
+| `/v1/active-org` | 使用 | Cookie + `X-Workspace-Org` |
+| `/v1/organizations/.../members` | 使用 | workspace メンバー列挙にフォールバック |
+| 標準 OIDC + discovery | 使用 | 必須 |
