@@ -75,6 +75,7 @@ flowchart LR
 - [x] Talent path: ゲート自己監査・バックアップ実演（[talent-platform/docs/07-talent-gate.md](./talent-platform/docs/07-talent-gate.md)、[08-backup-restore-drill.md](./talent-platform/docs/08-backup-restore-drill.md)）
 - [x] Attendance: staging overlay／手順（[attendance-staging.md](./attendance-staging.md)、`docker-desktop-f-ops-staging`）
 - [x] Attendance: cluster スモーク実行記録（2026-08-21 Pass: Quick・DEV_AUTH 401・Ingress health）
+- [x] Attendance: ゲート自己監査・バックアップ実演（[attendance/docs/07-attendance-gate.md](./attendance/docs/07-attendance-gate.md)、[08-backup-restore-drill.md](./attendance/docs/08-backup-restore-drill.md)）
 - 棚卸し正本: [implementation-backlog-by-pxx.md](./implementation-backlog-by-pxx.md)
 
 ### MN — 商用第 N 弾（規制ドメイン／バックオフィス）

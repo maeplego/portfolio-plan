@@ -31,3 +31,5 @@ cd pf-cloud-k8s
 確認: attendance `/health` `/ready`、`POST /v1/punches` + `X-Dev-User-Sub` → **401**。
 
 L3a 記録（2026-08-21）: Quick cluster smoke **pass**（DEV_AUTH 401・`attendance-api.localhost/health`。ビルド対象 3 イメージ）。
+
+ゲート: [attendance/docs/07-attendance-gate.md](./attendance/docs/07-attendance-gate.md)（**Go**）。バックアップ: [08-backup-restore-drill.md](./attendance/docs/08-backup-restore-drill.md)（**Pass**）。
