@@ -22,13 +22,13 @@
 | 認可コード再利用 | 一回限り消費（既存テスト） |
 | refresh 盗難 | ローテ／ファミリー revoke（既存） |
 | admin API 露出 | bearer 必須。弱い固定トークンを Git に置かない |
-| BYO IdP 誤設定 | [portability.md](../../portability.md) のクレーム契約と staging 手順 |
+| BYO IdP 誤設定 | [portability.md](../../12-portability.md) のクレーム契約と staging 手順 |
 | フィッシング／XSS でセッション奪取 | HttpOnly Cookie、RP 側の通常 Web 対策（アプリ側） |
 
 ## 範囲外（この IdP では扱わない）
 
 - パスキー、SAML、メール検証必須化
-- 給与・税務データ（第 N 弾／外部）
+- 給与・税務データ（P16／外部）
 - ペネトレーションテスト正式レポート（Enterprise 別）
 
 学習用であることの注意は製品 `SECURITY.md` も参照。商用契約時は本番定義ゲートを満たすこと。

@@ -8,7 +8,7 @@
 - 本ファイル
 - `portfolio-idea/11-booking-scheduler.md`
 
-人間向けの要件・外部仕様・内部設計・テスト仕様・API・図表は `portfolio-plan/calendar/docs/`。書き方は `portfolio-plan/documentation.md`。本ファイルは短く保ち、スタックとスライス順の正本にする。
+人間向けの要件・外部仕様・内部設計・テスト仕様・API・図表は `portfolio-plan/calendar/docs/`。書き方は `portfolio-plan/02-documentation.md`。本ファイルは短く保ち、スタックとスライス順の正本にする。
 
 P10 から面接枠を取る実装では `talent-platform/DESIGN.md` も渡す。
 

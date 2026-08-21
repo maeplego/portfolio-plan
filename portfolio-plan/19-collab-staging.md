@@ -1,6 +1,6 @@
 # Collab staging 手順
 
-> **読者**: 商用準備・運用向け。採用スキムは [HIRING.md](./HIRING.md) → [REVIEW.md](./REVIEW.md)。
+> **読者**: 商用準備・運用向け。採用スキムは [03-hiring.md](./03-hiring.md) → [05-review.md](./05-review.md)。
 
 | 項目 | 値 |
 | --- | --- |
@@ -13,7 +13,7 @@
 
 - `IDENTITY_ENV=staging`（一時鍵・memory 禁止）
 - `WORKSPACE_ENV=staging`（`WORKSPACE_DEV_AUTH=false`、`OIDC_ISSUER` 必須、org 必須）
-- `MEDIA_ENV=staging`（添付経路。手順は [media-staging.md](./media-staging.md)）
+- `MEDIA_ENV=staging`（添付経路。手順は [23-media-staging.md](./23-media-staging.md)）
 - 秘密は Git に置かない
 
 ## Compose で組む（推奨・再現しやすい）
@@ -23,7 +23,7 @@
 3. P04 Web: 通常の OIDC クライアント設定（`OIDC_CLIENT_ID=pf-workspace-web` 等）
 4. 確認: ログイン → ホーム → org 切替。`X-Dev-User-Sub` では API が 401
 
-詳細チェックリストは [production-definition.md](./production-definition.md)。BYO は [portability-byo-idp.md](./portability-byo-idp.md)。層の地図は [verification.md](./verification.md)。
+詳細チェックリストは [09-production-definition.md](./09-production-definition.md)。BYO は [13-portability-byo-idp.md](./13-portability-byo-idp.md)。層の地図は [06-verification.md](./06-verification.md)。
 
 ## Overlay
 
@@ -40,6 +40,6 @@ cd pf-cloud-k8s
 
 L3a 記録（2026-08-21）: DEV_AUTH 401・Ingress health・`workspace.localhost` → `idp.localhost/authorize` を確認して **pass**（初回はイメージ load 後の postgres Ready 待ちが PowerShell Stop で中断。`load-images.ps1` / `up-b-collab-staging.ps1` を修正済み）。
 
-Media 同梱: 2026-08-21 に `MEDIA_ENV=staging` と media DEV_AUTH 401 を追加確認（[media-staging.md](./media-staging.md)）。
+Media 同梱: 2026-08-21 に `MEDIA_ENV=staging` と media DEV_AUTH 401 を追加確認（[23-media-staging.md](./23-media-staging.md)）。
 
-詳細チェックリストは [production-definition.md](./production-definition.md)。BYO は [portability-byo-idp.md](./portability-byo-idp.md) と `pf-workspace/deploy/byo-oidc/`。層の位置づけは [verification.md](./verification.md) の L3a。
+詳細チェックリストは [09-production-definition.md](./09-production-definition.md)。BYO は [13-portability-byo-idp.md](./13-portability-byo-idp.md) と `pf-workspace/deploy/byo-oidc/`。層の位置づけは [06-verification.md](./06-verification.md) の L3a。

@@ -1,6 +1,6 @@
 # Talent path ゲート自己監査
 
-> **読者**: 商用ゲート・運用向け。採用スキムは [HIRING.md](../../HIRING.md)。
+> **読者**: 商用ゲート・運用向け。採用スキムは [03-hiring.md](../../03-hiring.md)。
 
 | 項目 | 値 |
 | --- | --- |
@@ -8,7 +8,7 @@
 | 監査日 | 2026-08-21 |
 | 判定 | **Go（Risk Accept: 採用フル E2E 未・recommend 任意）** |
 
-Collab / Commerce と同じゲート枠（[production-definition.md](../../production-definition.md)）。Talent は「求人マッチング PoC」まで。
+Collab / Commerce と同じゲート枠（[production-definition.md](../../09-production-definition.md)）。Talent は「求人マッチング PoC」まで。
 
 ## チェックリスト
 
@@ -43,6 +43,6 @@ Collab / Commerce と同じゲート枠（[production-definition.md](../../produ
 
 ## 関連
 
-- [talent-staging.md](../../talent-staging.md)
-- [commercial-roadmap.md](../../commercial-roadmap.md)
-- [implementation-backlog-by-pxx.md](../../implementation-backlog-by-pxx.md)
+- [talent-staging.md](../../21-talent-staging.md)
+- [commercial-roadmap.md](../../08-commercial-roadmap.md)
+- [implementation-backlog-by-pxx.md](../../11-implementation-backlog-by-pxx.md)

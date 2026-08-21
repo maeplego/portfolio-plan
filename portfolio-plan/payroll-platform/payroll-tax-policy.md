@@ -1,21 +1,21 @@
-# MN — 給与・税務／バックオフィス方針
+# P16 — 給与・税務／バックオフィス方針
 
 | 項目 | 値 |
 | --- | --- |
-| マイルストーン | **MN**（commercial-roadmap。M3 の次） |
+| 製品 / ロードマップ | **P16**（`08-commercial-roadmap.md` の M3 の次） |
 | 製品 ID | **P16** `payroll-platform` |
 | 最終更新 | 2026-08-21 |
-| 実装との関係 | `../pf-payroll`（MN2 まで）。方針は本書と [DESIGN.md](./payroll-platform/DESIGN.md)。staging: [payroll-staging.md](./payroll-staging.md) |
+| 実装との関係 | `../../pf-payroll`（デモ段階まで）。方針は本書と [DESIGN.md](./DESIGN.md)。staging: [24-payroll-staging.md](../24-payroll-staging.md) |
 
 ## 結論（判断）
 
 | 問い | 判断 |
 | --- | --- |
-| 新規 Pxx を作るか | **作る（P16 を予約）**。今すぐ空の `pf-*` や空 `docs/` は作らない |
+| 新規 Pxx を作るか | **作った（P16 / `pf-payroll`）**。空の `docs/` は規制名乗り前に無理に増やさない |
 | P09 Attendance に載せるか | **載せない**。P09 DESIGN は給与・年末調整を非目標。労基名乗りもしない |
 | P14 personal-finance に載せるか | **載せない**。個人家計であり法人給与・税務ではない |
 | フル自前 ERP／給与エンジンを先に書くか | **書かない**。まず **Attendance 集計エクスポート + AccountingPort / PayrollExportPort** |
-| カタログに「給与できます」と書くか | **MN ゲート Go まで書かない**（現状どおり対象外） |
+| カタログに「給与できます」と書くか | **P16 規制名乗りゲート Go まで書かない**（現状どおり対象外） |
 
 理由（overview の統合基準に照らす）:
 
@@ -28,52 +28,52 @@
 
 ```mermaid
 flowchart LR
-  MN0[MN0 方針・Ports]
-  MN1[MN1 Export adapter]
-  MN2[MN2 Thin domain]
-  MN3[MN3 Regulated claims]
-  MN0 --> MN1 --> MN2 --> MN3
+  Policy[Policy and ports]
+  Ports[Export adapters]
+  Demo[Thin domain demo]
+  Claims[Regulated claims]
+  Policy --> Ports --> Demo --> Claims
 ```
 
-### MN0 — 方針と契約（本スライスで完了扱い）
+### P16-方針 — 方針と契約（本スライスで完了扱い）
 
 - [x] 本ファイル + P16 `DESIGN.md`（非目標・Ports・依存を固定）
 - [x] カタログ／roadmap からリンク
-- [ ] 顧客向け一文: 「給与・税務は第 N 弾。当面は既存 SaaS＋エクスポート」
+- [ ] 顧客向け一文: 「給与・税務はP16。当面は既存 SaaS＋エクスポート」
 
-### MN1 — 連携アダプタ（最初のコード）
+### P16-Ports — 連携アダプタ（最初のコード）
 
 - [x] P09 月次 CSV（`minutes-v1`、金額なし）+ 契約ヘッダ
 - [x] `PayrollExportPort` + モックアダプタ（`pf-payroll`）
 - [x] `AccountingPort` + モック（分数量 DTO）
 - [x] `PAYROLL_ENV` staging で DEV_AUTH 拒否（単体）
 - [x] staging overlay（f-ops-staging + `payroll.localhost`）
-- [ ] バックアップ手順テンプレ（MN3 前でも任意）
+- [ ] バックアップ手順テンプレ（P16-規制名乗り 前でも任意）
 - **名乗らない**: 源泉・社保・振込確定、法令準拠
 
-### MN2 — 薄いドメイン
+### P16-デモ — 薄いドメイン
 
 - [x] デモ従業員レート（`demoYenPerHour`。税率表・実賃金ではない）
 - [x] 明細プレビュー UI（`GET /`、免責バナー常時）
 - [x] `GET /v1/statements/preview`
 - Collab／Attendance からの導線はリンクのみ（データ正本は P16）
 
-### MN3 — 規制を名乗るときだけ
+### P16-規制名乗り — 規制を名乗るときだけ
 
 - 税理士／社労士レビュー、監査証跡、保持期間、テナント隔離の強化
 - 源泉・年末調整・振込データを **名乗る** のはこのゲート **Go のあと**
-- 失敗したらカタログを対象外に戻し、MN2 までに落とす
+- 失敗したらカタログを対象外に戻し、P16-デモ までに落とす
 
-#### MN3 で「どうすればよいか」（実務）
+#### P16-規制名乗り で「どうすればよいか」（実務）
 
-今すぐ法令準拠を名乗らない。**MN2 のまま販売・提案し、規制名乗りは専門家レビュー後の別ゲート**にする。
+今すぐ法令準拠を名乗らない。**P16-デモ のまま販売・提案し、規制名乗りは専門家レビュー後の別ゲート**にする。
 
 | ステップ | やること | やらないこと |
 | --- | --- | --- |
 | 1. 現状維持 | カタログは「対象外／デモ」。disclaimer・`legalEffect: false` を壊さない | 提案書に「源泉・年末調整できます」と書く |
 | 2. レビュー準備 | 対象法令・帳票一覧、計算根拠の版管理案、データ保持、テナント境界を 1 枚にまとめる | レビュー前に本番向け税率表をハードコードして「準拠」とする |
 | 3. 専門家 | 税理士／社労士（必要なら弁護士）に **有償レビュー**。記録を `docs/` に残す（結論・日付・範囲・未対応） | 社内エンジニアだけで「たぶん大丈夫」で Go |
-| 4. Go / No-Go | Go ならカタログに Backoffice を掲載し、名乗れる範囲だけを書く。No-Go なら MN2 に戻す | 部分実装を全面準拠のように見せる |
+| 4. Go / No-Go | Go ならカタログに Backoffice を掲載し、名乗れる範囲だけを書く。No-Go なら P16-デモ に戻す | 部分実装を全面準拠のように見せる |
 | 5. 運用 | 監査ログ・バックアップ実演・BYO 給与／会計 SaaS 手順をゲート項目にする | 評価 LICENSE のまま実在従業員の本番給与 |
 
 レビュー依頼の最小パッケージ: (a) `minutes-v1` 契約と非金額境界、(b) デモレートが fiction である明示、(c) 名乗る予定の帳票リスト、(d) staging の認証境界。
@@ -93,7 +93,7 @@ flowchart LR
 推奨 SKU 形:
 
 1. **Attendance + Foundation**（今すぐ売れる）— 給与は「既存 SaaS へ CSV」または「P16 デモ連携（非準拠）」
-2. **Backoffice path（将来）** — P16 + P01 + P09。MN3 Go までカタログ非掲載
+2. **Backoffice path（将来）** — P16 + P01 + P09。P16-規制名乗り Go までカタログ非掲載
 3. Collab／Commerce／Talent とは **クロスセル** に留め、給与機能をそれらに埋め込まない
 
 ## 社会の仕組み（初心者向け・概要）
@@ -121,11 +121,11 @@ flowchart LR
 
 | タイミング | 目的 |
 | --- | --- |
-| **開発・商用名乗り前（MN3）** | 「この製品／運用で名乗ってよいか」の設計レビュー。一度きりではなく、大きな法令改正・機能追加のたびに再確認 |
+| **開発・商用名乗り前（P16-規制名乗り）** | 「この製品／運用で名乗ってよいか」の設計レビュー。一度きりではなく、大きな法令改正・機能追加のたびに再確認 |
 | **導入時（顧客ごと）** | 顧客の就業規則・賃金規程・被保険者区分に合わせた設定。税理士／社労士顧問が担当することが多い |
 | **毎年（運用）** | 年末調整の実務・料率改定・法令改正の追随。顧問契約で毎年見るのが普通。「最初の年だけ見て終わり」にはしない |
 
-製品側の MN3 は **開発時の名乗りゲート**。顧客の毎年の年末調整実務そのものではない。
+製品側の P16-規制名乗り は **開発時の名乗りゲート**。顧客の毎年の年末調整実務そのものではない。
 
 ### 国への提出 vs 社員への交付（超要約）
 
@@ -140,9 +140,9 @@ flowchart LR
 ─────────────────                   ────────────────────────
 P09 で時間記録                      ✅ デモ勤怠
 上長締め → CSV                      ✅ minutes-v1（金額なし）
-P16 で給与・税計算                  ⚠️ デモ明細のみ（fiction レート）。税・社保の準拠計算は未（MN3 前）
+P16 で給与・税計算                  ⚠️ デモ明細のみ（fiction レート）。税・社保の準拠計算は未（P16-規制名乗り 前）
 源泉票・年末調整                    ❌ 未実装・名乗らない
-税理士確認                          📋 MN3 ゲート（開発の名乗り）。毎年の顧客実務は別
+税理士確認                          📋 P16-規制名乗り ゲート（開発の名乗り）。毎年の顧客実務は別
 国提出／社員交付                    ❌ 製品スコープ外（当面）。既存給与 SaaS を推奨
 ```
 
@@ -158,7 +158,7 @@ P16 で給与・税計算                  ⚠️ デモ明細のみ（fiction �
 | P13 | 分析用エクスポートの受け皿候補。P09/P16 の本番を偽ソースにしない |
 | P14 | **依存しない**（混同禁止） |
 
-## 非目標（当面〜MN2）
+## 非目標（当面〜P16-デモ）
 
 - 日本の給与計算エンジンの完全内製を「準拠」と名乗ること
 - 電子申告（e-Tax）本線、マイナンバー本保管
@@ -168,7 +168,7 @@ P16 で給与・税計算                  ⚠️ デモ明細のみ（fiction �
 
 ## ゲート（production-definition の拡張）
 
-Collab ゲートに加え、MN3 で名乗るときだけ:
+Collab ゲートに加え、P16-規制名乗り で名乗るときだけ:
 
 - 法令・専門家レビュー記録
 - 計算根拠の監査ログ（誰が・どの版のルールで）
@@ -186,8 +186,8 @@ Collab ゲートに加え、MN3 で名乗るときだけ:
 
 ## 関連
 
-- [commercial-roadmap.md](./commercial-roadmap.md)
-- [package-catalog.md](./package-catalog.md)
-- [portability.md](./portability.md)
-- [payroll-platform/DESIGN.md](./payroll-platform/DESIGN.md)
-- [attendance/DESIGN.md](./attendance/DESIGN.md)（給与は非目標）
+- [08-commercial-roadmap.md](../08-commercial-roadmap.md)
+- [10-package-catalog.md](../10-package-catalog.md)
+- [12-portability.md](../12-portability.md)
+- [DESIGN.md](./DESIGN.md)
+- [attendance/DESIGN.md](../attendance/DESIGN.md)（給与は非目標）

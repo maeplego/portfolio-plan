@@ -5,7 +5,7 @@
 | 対象 | Collab 商用最小（契約で上書き可） |
 | 最終更新 | 2026-08-21 |
 
-本書で [production-definition.md](./production-definition.md) の Risk Accept（SLO・監査保持・High 脆弱性方針）を文書化する。数値は運用開始時に顧客契約で確定してよい。
+本書で [09-production-definition.md](./09-production-definition.md) の Risk Accept（SLO・監査保持・High 脆弱性方針）を文書化する。数値は運用開始時に顧客契約で確定してよい。
 
 ## 初期 SLO（案）
 

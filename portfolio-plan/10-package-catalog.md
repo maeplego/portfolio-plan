@@ -1,13 +1,13 @@
 # パッケージカタログ
 
-> **読者**: 商用準備・運用向け。採用スキムは [HIRING.md](./HIRING.md) → [REVIEW.md](./REVIEW.md)。
+> **読者**: 商用準備・運用向け。採用スキムは [03-hiring.md](./03-hiring.md) → [05-review.md](./05-review.md)。
 
 | 項目 | 値 |
 | --- | --- |
 | 対象 | 機能パッケージ販売・提案・評価ライセンスとの差分説明 |
 | 最終更新 | 2026-08-21 |
 
-公開ソースは評価用（[licensing.md](./licensing.md)）。商用利用は別契約。現状の束は **コラボ＋基盤＋一部業務のデモ** であり、社内 ERP／給与税務フルスイートではない。
+公開ソースは評価用（[15-licensing.md](./15-licensing.md)）。商用利用は別契約。現状の束は **コラボ＋基盤＋一部業務のデモ** であり、社内 ERP／給与税務フルスイートではない。
 
 ## 販売の切り方
 
@@ -26,13 +26,13 @@
 
 - **含む**: P01 Identity（推奨同梱）、P02 観測／K8s 骨格、P03 Media（任意）
 - **役割**: 他パッケージの前提。単体でも IdP＋観測デモ可
-- **BYO**: IdP を顧客 OIDC に差し替え可（[portability.md](./portability.md)）。P01 は推奨アダプタ
+- **BYO**: IdP を顧客 OIDC に差し替え可（[12-portability.md](./12-portability.md)）。P01 は推奨アダプタ
 
 ### Collab（第一弾・商用最小の本線）
 
 - **含む**: P04 Workspace。認証は Foundation の AuthPort（同梱 P01 または BYO IdP）。添付が要る構成では P03
 - **含まない**: 給与・税務・会計、本格決済、労基名乗り勤怠
-- **本番条件**: [production-definition.md](./production-definition.md)
+- **本番条件**: [09-production-definition.md](./09-production-definition.md)
 - **依存**: Overlay B（collab）または同等 Compose
 
 ### Commerce path
@@ -49,7 +49,7 @@
 ### Attendance（業務）
 
 - **含む**: P09
-- **注意**: デモ／学習品質の勤怠・工数。労基コンプラは名乗らない。給与連携は第 N 弾または外部 SaaS
+- **注意**: デモ／学習品質の勤怠・工数。労基コンプラは名乗らない。給与連携はP16または外部 SaaS
 - **客先常駐／SES**: 雇用主テナント本線。二社間の勤怠手渡しは設計意図あり（[attendance/DESIGN.md](./attendance/DESIGN.md)「客先常駐・SES」）。未実装の段階を提案で誇張しない
 
 ### その他（カタログ掲載・商用は後続）
@@ -63,7 +63,7 @@
 | Personal finance（P14） | **個人家計**。法人会計ではない |
 | Habit（P15） | 個人習慣。社内福利厚生ポータルではない |
 
-## 対象外（当面）と第 N 弾（MN / P16）
+## 対象外（当面）と P16
 
 次は **Collab〜近接パッケージの販売範囲に含めない**。提案時は既存 SaaS（freee、マネーフォワード、給与奉行等）連携を推奨する。
 
@@ -73,19 +73,19 @@
 - 経費精算の会計連動一式
 - 電子契約の本格ライフサイクル
 
-**商用第 N 弾** の受け皿は **P16 payroll-platform**（予約）。方針の正本は [mn-payroll-tax.md](./mn-payroll-tax.md)。実装はフル自前 ERP より **PayrollExportPort / AccountingPort** を優先し、法令レビューをゲートに含める。P09・P14 には載せない。
+**P16（給与・税務）** の受け皿は **P16 payroll-platform**（`../pf-payroll` 実装済み・カタログ非掲載）。方針の正本は [./payroll-platform/payroll-tax-policy.md](./payroll-platform/payroll-tax-policy.md)。実装はフル自前 ERP より **PayrollExportPort / AccountingPort** を優先し、法令レビューをゲートに含める。P09・P14 には載せない。
 
 ### Backoffice path（将来掲載）
 
 - **含む（予定）**: P16 ± P01、入力ソースとして **P09**（必須寄り）。添付は任意で P03
 - **含めない**: P14（個人家計）、Collab／Commerce 本体機能としての給与
-- **今**: カタログ対象外。MN0–MN2 実装あり・**MN3（規制名乗り）未**。staging: [payroll-staging.md](./payroll-staging.md)
-- **連携の正本**: [mn-payroll-tax.md](./mn-payroll-tax.md)「パッケージ販売時の連携」
+- **今**: カタログ対象外。デモ段階まで実装あり・**規制名乗りは未**。staging: [24-payroll-staging.md](./24-payroll-staging.md)
+- **連携の正本**: [./payroll-platform/payroll-tax-policy.md](./payroll-platform/payroll-tax-policy.md)「パッケージ販売時の連携」
 
 ## 関連
 
-- [production-definition.md](./production-definition.md)
-- [portability.md](./portability.md)
-- [portability-byo-idp.md](./portability-byo-idp.md)
-- [cost-estimate.md](./cost-estimate.md)
+- [09-production-definition.md](./09-production-definition.md)
+- [12-portability.md](./12-portability.md)
+- [13-portability-byo-idp.md](./13-portability-byo-idp.md)
+- [16-cost-estimate.md](./16-cost-estimate.md)
 - [00-overview.md](./00-overview.md)

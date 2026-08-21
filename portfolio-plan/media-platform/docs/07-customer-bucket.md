@@ -36,6 +36,6 @@
 
 ## 関連
 
-- [production-definition.md](../../production-definition.md)（オブジェクト格納ゲート）
+- [production-definition.md](../../09-production-definition.md)（オブジェクト格納ゲート）
 - [03-design.md](03-design.md)
 - `pf-media/deploy/.env.example`

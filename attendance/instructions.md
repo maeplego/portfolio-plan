@@ -1,6 +1,6 @@
 # P09 attendance — 実装時に読むもの
 
-1. `portfolio-plan/instructions.md`
+1. `portfolio-plan/01-instructions.md`
 2. 本ファイル
 3. `portfolio-plan/00-overview.md`
 4. `portfolio-plan/attendance/DESIGN.md`

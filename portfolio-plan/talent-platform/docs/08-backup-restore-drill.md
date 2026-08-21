@@ -30,5 +30,5 @@ Collab の正本手順は [workspace/docs/09-backup-restore-drill.md](../workspa
 
 ## 関連
 
-- [talent-staging.md](../../talent-staging.md)
+- [talent-staging.md](../../21-talent-staging.md)
 - [07-talent-gate.md](07-talent-gate.md)

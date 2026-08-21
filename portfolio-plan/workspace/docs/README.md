@@ -16,4 +16,4 @@
 | [09-backup-restore-drill.md](09-backup-restore-drill.md) | バックアップ実演の記録テンプレ |
 | [10-invite-visibility.md](10-invite-visibility.md) | 招待・公開範囲の顧客向け一枚絵 |
 
-ポートフォリオ横断: [production-definition.md](../../production-definition.md) / [collab-staging.md](../../collab-staging.md) / [commerce-staging.md](../../commerce-staging.md) / [commercial-roadmap.md](../../commercial-roadmap.md) / [verification.md](../../verification.md) / [collab-slo-security.md](../../collab-slo-security.md)
+ポートフォリオ横断: [production-definition.md](../../09-production-definition.md) / [collab-staging.md](../../19-collab-staging.md) / [commerce-staging.md](../../20-commerce-staging.md) / [commercial-roadmap.md](../../08-commercial-roadmap.md) / [verification.md](../../06-verification.md) / [collab-slo-security.md](../../14-collab-slo-security.md)

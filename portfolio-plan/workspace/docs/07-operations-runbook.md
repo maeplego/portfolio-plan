@@ -54,7 +54,7 @@
 
 ## 関連
 
-- [production-definition.md](../../production-definition.md)
-- [collab-staging.md](../../collab-staging.md)
+- [production-definition.md](../../09-production-definition.md)
+- [collab-staging.md](../../19-collab-staging.md)
 - [08-commercial-intro.md](08-commercial-intro.md)
 - [media-platform/docs/07-customer-bucket.md](../../media-platform/docs/07-customer-bucket.md)

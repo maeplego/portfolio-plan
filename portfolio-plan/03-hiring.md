@@ -13,7 +13,7 @@ OpenID Connect の IdP を共有し、チーム作業・EC・勤怠などの製�
 
 ## スコープ外（名乗っていないこと）
 
-- 本番品質・SLA・無保証のままの有償利用（[licensing.md](./licensing.md)）
+- 本番品質・SLA・無保証のままの有償利用（[15-licensing.md](./15-licensing.md)）
 - PCI 準拠の決済、労働基準法準拠の勤怠、源泉・年末調整の法的正しさ
 - AWS への `terraform apply`、15 製品の同時フル起動
 
@@ -35,10 +35,10 @@ OpenID Connect の IdP を共有し、チーム作業・EC・勤怠などの製�
 
 ## 次に読む（手順）
 
-手元で動かしたいときだけ → **[REVIEW.md](./REVIEW.md)**（ブラウザ確認 → Compose 1 パック）。
+手元で動かしたいときだけ → **[05-review.md](./05-review.md)**（ブラウザ確認 → Compose 1 パック）。
 
 Kubernetes・商用 staging・ゲート判定は、採用時のざっとした確認の対象外です。必要なら REVIEW 末尾の「さらに知る」へ。
 
 ## 英語要約
 
-See [HIRING.en.md](./HIRING.en.md).
+See [04-hiring.en.md](./04-hiring.en.md).

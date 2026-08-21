@@ -1,6 +1,6 @@
 # Commerce ゲート自己監査
 
-> **読者**: 商用ゲート・運用向け。採用スキムは [HIRING.md](../../HIRING.md)。
+> **読者**: 商用ゲート・運用向け。採用スキムは [03-hiring.md](../../03-hiring.md)。
 
 | 項目 | 値 |
 | --- | --- |
@@ -8,7 +8,7 @@
 | 監査日 | 2026-08-21 |
 | 判定 | **Go（Risk Accept: PCI 非名乗り・実カード禁止）** |
 
-Collab のゲート正本は [production-definition.md](../../production-definition.md)。Commerce は同じ枠を再利用し、決済はモックのまま明示する。
+Collab のゲート正本は [production-definition.md](../../09-production-definition.md)。Commerce は同じ枠を再利用し、決済はモックのまま明示する。
 
 ## チェックリスト
 
@@ -42,6 +42,6 @@ Collab のゲート正本は [production-definition.md](../../production-definit
 
 ## 関連
 
-- [commerce-staging.md](../../commerce-staging.md)
-- [commercial-roadmap.md](../../commercial-roadmap.md)
-- [implementation-backlog-by-pxx.md](../../implementation-backlog-by-pxx.md)
+- [commerce-staging.md](../../20-commerce-staging.md)
+- [commercial-roadmap.md](../../08-commercial-roadmap.md)
+- [implementation-backlog-by-pxx.md](../../11-implementation-backlog-by-pxx.md)

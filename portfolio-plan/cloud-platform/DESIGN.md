@@ -44,7 +44,7 @@ Terraform と K8s と観測スタックはライフサイクルが違う。state
 | **単体 Compose** | 各 `pf-*/deploy/compose.yaml` | その Pxx だけをレビュアが起動。stub / dev 認証可 |
 | **連携 K8s** | `pf-cloud-k8s` overlay | P01 + P02 + P03 など横断フロー。Docker Desktop Kubernetes |
 
-手順・URL・デモシナリオの正本: `portfolio-plan/integration-demo.md`。採用担当者の既定は `portfolio-plan/REVIEW.md`（Compose。K8s は任意）。
+手順・URL・デモシナリオの正本: `portfolio-plan/07-integration-demo.md`。採用担当者の既定は `portfolio-plan/05-review.md`（Compose。K8s は任意）。
 
 - **非目標**: 15 Pxx を 1 クラスタで同時フル起動
 - **overlay 方針**: `portfolio-integration-a-foundation` 〜 `f-ops` の用途別分割
@@ -113,7 +113,7 @@ Compose 単体デモは Docker Desktop の **Compose のみ** でも動く。K8s
 
 1. `pf-cloud-o11y` の Compose。サンプルアプリで RED ダッシュボードとトレース — **完了**
 2. 計装ガイドライン（ログ JSON キー名、`http.route` の正規化、禁止ラベル）— 正本: `portfolio-plan/cloud-platform/docs/` — **完了**
-3. **連携デモ設計の文書化**（`portfolio-plan/integration-demo.md`、本ファイル overlay 章）— **完了**
+3. **連携デモ設計の文書化**（`portfolio-plan/07-integration-demo.md`、本ファイル overlay 章）— **完了**
 4. `pf-cloud-k8s` 骨組み + foundation overlay（P01 + P03 + o11y 最小）— **完了**
 5. overlay 群を A-F に分割し、まず `portfolio-integration-c-scheduling-talent` を完成 — **完了**（A は `portfolio-integration-a-foundation` 別名併存）
 6. P04 の `deploy/k8s/` と overlay `b-collab`（P01+P02+P03+P04+P11 portal）— **完了**

@@ -43,7 +43,7 @@
 ## 5. 前提
 
 - 単体デモは各 `pf-*/deploy/compose.yaml`。連携デモは Docker Desktop Kubernetes
-- 採用の既定経路は `portfolio-plan/REVIEW.md` の Compose パック（Kubernetes オフで可）
+- 採用の既定経路は `portfolio-plan/05-review.md` の Compose パック（Kubernetes オフで可）
 - standalone kind をレビュア手順の正にしない
 - Terraform state の完成形は S3 + lock だが、apply しないためローカル `validate` で足りる
 - NAT 二重、多 AZ RDS を個人課金で再現しない

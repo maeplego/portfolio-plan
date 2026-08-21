@@ -1,12 +1,13 @@
 # ポートフォリオ実装マスタープラン
 
-> **採用担当の最初の 5 分は [HIRING.md](./HIRING.md) → [REVIEW.md](./REVIEW.md)。** 本ファイルは実装・全体地図用です。
+> **採用担当の最初の 5 分は [03-hiring.md](./03-hiring.md) → [05-review.md](./05-review.md)。** 本ファイルは実装・全体地図用です。
 
-この資料は、30 個のアイデアを **15 プロジェクト** に統合したあとの全体方針です。個別プロジェクトを実装するチャットでは、本ファイルと対象プロジェクトの `DESIGN.md`、対応する `portfolio-idea/*.md` をコンテキストに渡してください。
+この資料は、30 個のアイデアを **15 プロジェクト（就活カタログ）** に統合し、商用の給与デモとして **P16** を加えた全体方針です。個別プロジェクトを実装するチャットでは、本ファイルと対象プロジェクトの `DESIGN.md`、対応する `portfolio-idea/*.md` をコンテキストに渡してください。
 
 ## 結論
 
-- **統合後のプロジェクト数: 15**
+- **就活カタログ（元アイデア由来）: P01–P15（15）**
+- **工学上の製品 ID: P01–P16（+ `pf-payroll`）**
 - **元アイデア数: 30（欠落なし）**
 - **同時に本線として走らせる開発トラック: 最大 3**（基盤が揃ったあと）
 - 認証・ファイル・画像・観測・予約は「製品をまたぐ共有能力」として切り出し、同じ機能を 30 回実装しない
@@ -14,7 +15,7 @@
 
 就職活動上の見せ方は「15 個のバラバラな習作」ではなく、**1 つのポートフォリオ・エコシステム**である。ただし各プロジェクトは単独デモ可能で、他プロジェクトが落ちていても IdP モックやシードデータで動くことを必須とする。
 
-**ローカルデモは 2 モード。** 各 `pf-*/deploy/compose.yaml` の **単体デモ**（必須）と、Docker Desktop Kubernetes + `pf-cloud-k8s` の **連携デモ**（任意・横断確認用）。連携デモは `portfolio-integration-a` 〜 `f` の **用途別 overlay 群** に分ける。手順の正本は `portfolio-plan/integration-demo.md`。動作確認の層全体（CI・staging・本番 Go 含む）は [`verification.md`](./verification.md)。全 Pxx を 1 台で同時フル起動するのは非目標。
+**ローカルデモは 2 モード。** 各 `pf-*/deploy/compose.yaml` の **単体デモ**（必須）と、Docker Desktop Kubernetes + `pf-cloud-k8s` の **連携デモ**（任意・横断確認用）。連携デモは `portfolio-integration-a` 〜 `f` の **用途別 overlay 群** に分ける。手順の正本は `portfolio-plan/07-integration-demo.md`。動作確認の層全体（CI・staging・本番 Go 含む）は [`06-verification.md`](./06-verification.md)。全 Pxx を 1 台で同時フル起動するのは非目標。
 
 ## プロジェクト内訳
 
@@ -35,9 +36,9 @@
 | P13 | data-platform | 19 | モノレポ | ETL。後から commerce / talent をソースにする |
 | P14 | personal-finance | 10 | モノレポ | 家計簿 PWA |
 | P15 | habit-tracker | 22 | ポリレポ | モバイル習慣トラッカー |
-| P16 | payroll-platform | （商用 MN。元アイデア外） | `pf-payroll` | 給与連携・薄いデモ明細。**MN2 まで**。P09/P14 とは分離。規制名乗りは MN3 |
+| P16 | payroll-platform | （元アイデア外・商用追加） | `pf-payroll` | 給与連携・薄いデモ明細（デモ段階まで実装済）。P09/P14 とは分離。規制名乗りは未 |
 
-就職活動・カタログ上、P01–P15 が「元 30 アイデアの統合結果」。**P16 は商用ロードマップ MN 由来の追加製品**（MN0–MN2 実装済み。規制名乗りは MN3）。
+就職活動・カタログ上、P01–P15 が「元 30 アイデアの統合結果」。**P16 は商用追加製品**（デモ段階まで実装済み。規制名乗りは未。方針は `payroll-platform/payroll-tax-policy.md`）。
 
 ### アイデア → プロジェクト逆引き
 
@@ -231,7 +232,7 @@ flowchart TB
 実装チャットで迷ったら、個別 DESIGN より先にこの節を優先する。
 
 1. **単独起動**: 各プロジェクトは `docker compose up` でデモできる。他プロジェクトは stub でよい
-2. **連携デモ（任意）**: 複数 Pxx の横断確認は Docker Desktop Kubernetes + `pf-cloud-k8s` の **用途別 integration overlay**（`portfolio-integration-a` 〜 `f`）。手順の正本は `portfolio-plan/integration-demo.md`。全 Pxx 同時フル起動は非目標
+2. **連携デモ（任意）**: 複数 Pxx の横断確認は Docker Desktop Kubernetes + `pf-cloud-k8s` の **用途別 integration overlay**（`portfolio-integration-a` 〜 `f`）。手順の正本は `portfolio-plan/07-integration-demo.md`。全 Pxx 同時フル起動は非目標
 3. **契約**: 同期 API は OpenAPI 3。非同期は CloudEvents 風 JSON（`type`, `source`, `id`, `time`, `data`）
 4. **ID**: ULID。連番を外部に出さない
 5. **金額**: 整数（最小通貨単位）。浮動小数点禁止
@@ -254,7 +255,7 @@ flowchart TB
 
 ## 就職活動での出し方
 
-15 個全部を同じ深さで扱わない。次の 3 点セットを推奨する。起動手順は `portfolio-plan/REVIEW.md`（Compose パック。K8s は任意）。
+15 個全部を同じ深さで扱わない。次の 3 点セットを推奨する。起動手順は `portfolio-plan/05-review.md`（Compose パック。K8s は任意）。
 
 1. **基盤**: P01（認証の正確さ）
 2. **本線**: P04 か P06 のどちらか（画面がある方をその場でデモ）
@@ -278,7 +279,7 @@ OIDC 時は `org_id` 必須。Compose 既定の dev-auth は `X-Dev-User-Org`（
 
 ## 受注・再構築の規模感（概算）
 
-詳細表（各 Pxx・各連携）は [`cost-estimate.md`](./cost-estimate.md)。ブランチ運用は [`git-branching.md`](./git-branching.md)。商用パッケージ・本番ゲートは [`commercial-roadmap.md`](./commercial-roadmap.md) / [`production-definition.md`](./production-definition.md) / [`package-catalog.md`](./package-catalog.md) / [`portability.md`](./portability.md) / [`mn-payroll-tax.md`](./mn-payroll-tax.md)（給与税務 MN）。各 Pxx の必須／推奨実装は [`implementation-backlog-by-pxx.md`](./implementation-backlog-by-pxx.md)。動作確認の層は [`verification.md`](./verification.md)。
+詳細表（各 Pxx・各連携）は [`16-cost-estimate.md`](./16-cost-estimate.md)。ブランチ運用は [`17-git-branching.md`](./17-git-branching.md)。商用パッケージ・本番ゲートは [`08-commercial-roadmap.md`](./08-commercial-roadmap.md) / [`09-production-definition.md`](./09-production-definition.md) / [`10-package-catalog.md`](./10-package-catalog.md) / [`12-portability.md`](./12-portability.md) / [`./payroll-platform/payroll-tax-policy.md`](./payroll-platform/payroll-tax-policy.md)（給与税務 P16）。各 Pxx の必須／推奨実装は [`11-implementation-backlog-by-pxx.md`](./11-implementation-backlog-by-pxx.md)。動作確認の層は [`06-verification.md`](./06-verification.md)。
 
 学習デモ同等を企業がゼロから再構築する概算（単価 80–120 万円/人月想定）:
 
@@ -288,21 +289,21 @@ OIDC 時は `org_id` 必須。Compose 既定の dev-auth は `X-Dev-User-Org`（
 | REVIEW 推奨の薄い 3 点セット | 約 10–18 | 約 800–2,200 万円 |
 | 商用最小（セキュリティレビュー・HA・監査・法令対応を足す） | おおむね ×2–4 → 約 50–150 | 約 0.5–1.5 億円級 |
 
-根拠のシグナル: 15 製品・約 26 `pf-*`・主要ソース概算 ~8 万行・OIDC / RLS / K8s overlay A–F・多言語。本番 SaaS・PCI・労基準拠は別見積行。
+根拠のシグナル: 15 製品・27 `pf-*`・主要ソース概算 ~8 万行・OIDC / RLS / K8s overlay A–F・多言語。本番 SaaS・PCI・労基準拠は別見積行。
 
 ## 実装チャットへの渡し方
 
-詳細な工程は `portfolio-plan/instructions.md` を正とする。「P01 を実装して」のときは `identity-platform/AGENTS.md` と `chat-context/` 一式を先に読む。
+詳細な工程は `portfolio-plan/01-instructions.md` を正とする。「P01 を実装して」のときは `identity-platform/AGENTS.md` と `chat-context/` 一式を先に読む。
 
 | やりたいこと | 渡すファイル |
 | --- | --- |
-| 次に何を作るか決める | `portfolio-plan/00-overview.md` と `portfolio-plan/instructions.md` |
+| 次に何を作るか決める | `portfolio-plan/00-overview.md` と `portfolio-plan/01-instructions.md` |
 | 特定プロジェクトを実装する | 共通指示 + そのプロジェクトの `AGENTS.md` + DESIGN.md + 元アイデア + `chat-context/` 一式 |
-| 要件定義・仕様・設計・テスト書類 | `portfolio-plan/documentation.md`。見本は `calendar/docs/`。`DESIGN.md` は実装チャット用の短文 |
+| 要件定義・仕様・設計・テスト書類 | `portfolio-plan/02-documentation.md`。見本は `calendar/docs/`。`DESIGN.md` は実装チャット用の短文 |
 | 他プロジェクトとの API を実装する | 利用側と提供側、両方の指示と DESIGN.md |
 | インフラに載せる | アプリの DESIGN + `cloud-platform/DESIGN.md` |
-| 複数 Pxx の横断デモ | `portfolio-plan/integration-demo.md` + `cloud-platform/DESIGN.md` |
-| どの確認層を使うか迷う | `portfolio-plan/verification.md` |
-| 各 Pxx で何を実装すべきか | `portfolio-plan/implementation-backlog-by-pxx.md` |
+| 複数 Pxx の横断デモ | `portfolio-plan/07-integration-demo.md` + `cloud-platform/DESIGN.md` |
+| どの確認層を使うか迷う | `portfolio-plan/06-verification.md` |
+| 各 Pxx で何を実装すべきか | `portfolio-plan/11-implementation-backlog-by-pxx.md` |
 
 `DESIGN.md` は git 管理する。`chat-context/` は管理しない。製品コードは兄弟の製品リポジトリ。

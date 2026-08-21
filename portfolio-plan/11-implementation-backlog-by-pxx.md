@@ -1,12 +1,12 @@
 # 各 Pxx：実装必須／推奨（商用ゲート視点）
 
-> **読者**: 商用準備・運用向け。採用スキムは [HIRING.md](./HIRING.md) → [REVIEW.md](./REVIEW.md)。
+> **読者**: 商用準備・運用向け。採用スキムは [03-hiring.md](./03-hiring.md) → [05-review.md](./05-review.md)。
 
 | 項目 | 値 |
 | --- | --- |
-| 対象 | P01–P15 の商用化・デモ品質ギャップ棚卸し |
+| 対象 | P01–P16 の商用化・デモ品質ギャップ棚卸し |
 | 最終更新 | 2026-08-21 |
-| 前提 | パッケージ販売順は [commercial-roadmap.md](./commercial-roadmap.md)。本番定義は [production-definition.md](./production-definition.md)。確認層は [verification.md](./verification.md) |
+| 前提 | パッケージ販売順は [08-commercial-roadmap.md](./08-commercial-roadmap.md)。本番定義は [09-production-definition.md](./09-production-definition.md)。確認層は [06-verification.md](./06-verification.md) |
 
 **必須** = そのパッケージを「商用／顧客 PoC に実データ可」と名乗る前に揃えるもの。  
 **推奨** = デモ・採用・運用の質を上げるが、名乗らなければ後回し可。  
@@ -21,7 +21,7 @@
 | 必須（商用名乗るとき） | `*_ENV=staging\|production` で DEV_AUTH／一時鍵拒否、OIDC（または承認済み AuthPort）、`/health` `/ready`、秘密の env のみ |
 | 必須（Collab 級） | org／テナント隔離、バックアップ実演、監査イベント、staging スモーク |
 | 推奨 | OTLP、最低 1 アラート、顧客バケット／BYO 手順、最小 E2E |
-| 非目標 | 15 製品同時本番、SAML 必須化、PCI／労基／給与税務の名乗り（→ MN） |
+| 非目標 | 15 製品同時本番、SAML 必須化、PCI／労基／給与税務の名乗り（→ P16） |
 
 ---
 
@@ -108,7 +108,7 @@
 | **推奨（SES／客先）** | 段階 A: worksite／engagement メタ＋CSV。B: TimesheetHandoffPort。詳細は DESIGN「客先常駐・SES」 |
 | **推奨（締め期間）** | P1: org の `periodAnchorDay` — **完了**。P2 closeByDay リマインドは任意 |
 | **推奨** | 打刻改ざん耐性のテスト、カレンダー連携 |
-| **非目標** | 労基準拠を名乗った勤怠、給与連携（→ MN）、派遣法エンジン、他社給与の同一テナント混在 |
+| **非目標** | 労基準拠を名乗った勤怠、給与連携（→ P16）、派遣法エンジン、他社給与の同一テナント混在 |
 
 ## P10 talent
 
@@ -171,7 +171,7 @@
 ## 推奨の実装順（残り）
 
 1. クラスタ smoke は既定 Quick（`pf-cloud-k8s/docs/smoke-performance.md`）
-2. **MN 残り**: MN3 専門家レビュー（任意タイミング）。staging overlay は f-ops-staging に含む（[payroll-staging.md](./payroll-staging.md)）
+2. **P16 残り**: P16-規制名乗り 専門家レビュー（任意タイミング）。staging overlay は f-ops-staging に含む（[24-payroll-staging.md](./24-payroll-staging.md)）
 3. 公開デモでの BYO Auth0/Entra 実機は非目標のまま
 4. **P08 / P12 / P14 / P15** はカタログ後続。ENV パターンをコピーするだけでも価値あり
 5. Media DB を Collab バックアップに足すのは任意
@@ -182,14 +182,14 @@
 
 | 項目 | 内容 |
 | --- | --- |
-| **状態** | MN0–MN2（`pf-payroll` + f-ops-staging）。MN3 規制名乗りは未 |
+| **状態** | デモ段階まで（`pf-payroll` + f-ops-staging）。P16-規制名乗り 規制名乗りは未 |
 | **必須（次）** | staging overlay 任意、バックアップ手順テンプレ |
 | **推奨** | OIDC 検証の本実装、顧客向け一文 |
-| **非目標** | P09/P14 への混入、準拠名乗り（MN3 前） |
+| **非目標** | P09/P14 への混入、準拠名乗り（P16-規制名乗り 前） |
 
 ## 関連
 
-- [commercial-roadmap.md](./commercial-roadmap.md)
-- [package-catalog.md](./package-catalog.md)
-- [commerce-staging.md](./commerce-staging.md)
-- [collab-staging.md](./collab-staging.md)
+- [08-commercial-roadmap.md](./08-commercial-roadmap.md)
+- [10-package-catalog.md](./10-package-catalog.md)
+- [20-commerce-staging.md](./20-commerce-staging.md)
+- [19-collab-staging.md](./19-collab-staging.md)

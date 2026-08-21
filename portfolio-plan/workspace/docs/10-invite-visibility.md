@@ -21,4 +21,4 @@
 - オブジェクト格納バケットは非公開（presign のみ）
 - 詳細の正は [02-specification.md](02-specification.md)。障害時は [07-operations-runbook.md](07-operations-runbook.md)
 
-この一枚絵で [production-definition.md](../../production-definition.md) の「招待・共有リンク公開範囲」Risk Accept を閉じる。
+この一枚絵で [production-definition.md](../../09-production-definition.md) の「招待・共有リンク公開範囲」Risk Accept を閉じる。

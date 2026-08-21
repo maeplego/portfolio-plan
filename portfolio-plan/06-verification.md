@@ -1,6 +1,6 @@
 # 動作確認の地図（Verification）
 
-> **読者**: 商用準備・運用向け。採用スキムは [HIRING.md](./HIRING.md) → [REVIEW.md](./REVIEW.md)。
+> **読者**: 商用準備・運用向け。採用スキムは [03-hiring.md](./03-hiring.md) → [05-review.md](./05-review.md)。
 
 | 項目 | 値 |
 | --- | --- |
@@ -9,18 +9,18 @@
 
 「どの起動をすればよいか」が分からなくなったときの正本。手順の詳細は既存文書へリンクし、ここでは **層（何を保証するか）× 対象（何を見るか）** だけを固定する。
 
-公開ソースはデモ／評価用（[licensing.md](./licensing.md)）。本番と呼ぶ条件は [production-definition.md](./production-definition.md)。
+公開ソースはデモ／評価用（[15-licensing.md](./15-licensing.md)）。本番と呼ぶ条件は [09-production-definition.md](./09-production-definition.md)。
 
 ## 一目で選ぶ
 
 | やりたいこと | 使う層 | 起動の入口 |
 | --- | --- | --- |
-| コードを直したあとすぐ | **L0** | 各 `pf-*` の unit / CI（[ci.md](./ci.md)） |
-| 採用・自己デモ（既定） | **L1** | [REVIEW.md](./REVIEW.md)、`demo.ps1` / Compose |
-| K8s・Ingress・横断を見せる | **L2**（任意） | [integration-demo.md](./integration-demo.md) overlay |
-| 商用直前のゲート確認 | **L3a** | [collab-staging.md](./collab-staging.md) |
-| Auth0 / Entra など顧客 IdP | **L3b**（デモ非必須） | [portability-byo-idp.md](./portability-byo-idp.md) |
-| 売ってよいか判断 | **L4** | [production-definition.md](./production-definition.md) Go/No-Go |
+| コードを直したあとすぐ | **L0** | 各 `pf-*` の unit / CI（[18-ci.md](./18-ci.md)） |
+| 採用・自己デモ（既定） | **L1** | [05-review.md](./05-review.md)、`demo.ps1` / Compose |
+| K8s・Ingress・横断を見せる | **L2**（任意） | [07-integration-demo.md](./07-integration-demo.md) overlay |
+| 商用直前のゲート確認 | **L3a** | [19-collab-staging.md](./19-collab-staging.md) |
+| Auth0 / Entra など顧客 IdP | **L3b**（デモ非必須） | [13-portability-byo-idp.md](./13-portability-byo-idp.md) |
+| 売ってよいか判断 | **L4** | [09-production-definition.md](./09-production-definition.md) Go/No-Go |
 
 ```mermaid
 flowchart TB
@@ -49,7 +49,7 @@ flowchart TB
 | --- | --- |
 | **誰** | 開発者。採用担当は不要 |
 | **保証** | 単体・契約テストが緑。回帰の早期検知 |
-| **やること** | 各 `pf-*` の `go test` / `npm test`。[ci.md](./ci.md)。Collab 例: `pf-workspace/apps/e2e`（同梱 IdP、DEV_AUTH オフ） |
+| **やること** | 各 `pf-*` の `go test` / `npm test`。[18-ci.md](./18-ci.md)。Collab 例: `pf-workspace/apps/e2e`（同梱 IdP、DEV_AUTH オフ） |
 | **保証しない** | UI の採用デモ体験、クラスタ配線、顧客 IdP |
 
 ### L1 — 単体デモ／レビューパック（採用・自己デモの既定）
@@ -58,7 +58,7 @@ flowchart TB
 | --- | --- |
 | **誰** | 採用担当・技術レビュア・自分のデモ |
 | **保証** | その製品（または薄いパック）が Compose で動く |
-| **やること** | [REVIEW.md](./REVIEW.md)。各 `pf-*/deploy/compose.yaml`、または `pf-cloud-k8s` の `demo.ps1` / `review-up.ps1 -Pack p01-p03\|p04\|p06` |
+| **やること** | [05-review.md](./05-review.md)。各 `pf-*/deploy/compose.yaml`、または `pf-cloud-k8s` の `demo.ps1` / `review-up.ps1 -Pack p01-p03\|p04\|p06` |
 | **保証しない** | 本番セキュリティ、全 Pxx 同時起動、外部 SaaS、商用 SLO |
 
 対応する旧称: 「Compose で単独 Pxx」「開発者の手元デモ（画面付き）」の一部。
@@ -69,7 +69,7 @@ flowchart TB
 | --- | --- |
 | **誰** | インフラを見たいレビュア／自分 |
 | **保証** | IdP → アプリ → 観測など横断が overlay で見える |
-| **やること** | [integration-demo.md](./integration-demo.md)。overlay A–F、`cluster-smoke-*.ps1`。例: demo B（`docker-desktop-b-collab`）は DEV_AUTH 可の採用スモーク |
+| **やること** | [07-integration-demo.md](./07-integration-demo.md)。overlay A–F、`cluster-smoke-*.ps1`。例: demo B（`docker-desktop-b-collab`）は DEV_AUTH 可の採用スモーク |
 | **保証しない** | 商用 staging と同一であること（下記 L3a と混同しない） |
 
 採用の既定経路ではない（REVIEW が Compose 既定）。
@@ -80,20 +80,20 @@ flowchart TB
 | --- | --- |
 | **誰** | 商用パッケージ準備をする自分／顧客 PoC 前 |
 | **保証** | DEV_AUTH オフ、OIDC+org、本番ゲートの staging 項目を満たしうる |
-| **やること** | [collab-staging.md](./collab-staging.md)。`docker-desktop-b-collab-staging`（DEV_AUTH 禁止）。ゲートは [production-definition.md](./production-definition.md) |
+| **やること** | [19-collab-staging.md](./19-collab-staging.md)。`docker-desktop-b-collab-staging`（DEV_AUTH 禁止）。ゲートは [09-production-definition.md](./09-production-definition.md) |
 | **保証しない** | 評価 LICENSE のまま本番利用してよいこと |
 | **記録** | 2026-08-21: staging smoke **pass**（DEV_AUTH 401・OIDC redirect）。バックアップ実演 Pass → L4 自己監査 **Go（Risk Accept 付き）** |
 
 | Overlay | 層 | DEV_AUTH |
 | --- | --- | --- |
 | `docker-desktop-b-collab` | L2 デモ | API で可 |
-| `docker-desktop-b-collab-staging` | L3a | 禁止（workspace + [media-staging.md](./media-staging.md)） |
+| `docker-desktop-b-collab-staging` | L3a | 禁止（workspace + [23-media-staging.md](./23-media-staging.md)） |
 | `docker-desktop-d-commerce` | L2 デモ | gateway/order で可 |
-| `docker-desktop-d-commerce-staging` | L3a（Commerce 入口） | 禁止（[commerce-staging.md](./commerce-staging.md)）。2026-08-21 cluster smoke **pass** |
+| `docker-desktop-d-commerce-staging` | L3a（Commerce 入口） | 禁止（[20-commerce-staging.md](./20-commerce-staging.md)）。2026-08-21 cluster smoke **pass** |
 | `docker-desktop-c-scheduling-talent` | L2 デモ | Talent DEV_AUTH 可 |
-| `docker-desktop-c-scheduling-talent-staging` | L3a（Talent path 入口） | 禁止（[talent-staging.md](./talent-staging.md)）。2026-08-21 cluster smoke **pass**。ゲート [07-talent-gate.md](./talent-platform/docs/07-talent-gate.md) **Go** |
+| `docker-desktop-c-scheduling-talent-staging` | L3a（Talent path 入口） | 禁止（[21-talent-staging.md](./21-talent-staging.md)）。2026-08-21 cluster smoke **pass**。ゲート [07-talent-gate.md](./talent-platform/docs/07-talent-gate.md) **Go** |
 | `docker-desktop-f-ops` | L2 デモ | Attendance DEV_AUTH 可 |
-| `docker-desktop-f-ops-staging` | L3a（Attendance + Payroll 入口） | 禁止（[attendance-staging.md](./attendance-staging.md)、[payroll-staging.md](./payroll-staging.md)）。Attendance ゲート **Go**。Payroll は MN3 前のため規制名乗りなし |
+| `docker-desktop-f-ops-staging` | L3a（Attendance + Payroll 入口） | 禁止（[22-attendance-staging.md](./22-attendance-staging.md)、[24-payroll-staging.md](./24-payroll-staging.md)）。Attendance ゲート **Go**。Payroll は P16-規制名乗り 前のため規制名乗りなし |
 
 ### L3b — 外部 IdP／クラウド（BYO）
 
@@ -101,7 +101,7 @@ flowchart TB
 | --- | --- |
 | **誰** | BYO 契約の顧客 PoC。公開デモでは行わない |
 | **保証** | 設定とコードパスがあること（実装済み） |
-| **やること** | [portability-byo-idp.md](./portability-byo-idp.md)、`pf-workspace/deploy/byo-oidc/`（mock で経路確認可）。Auth0/Entra 実機は顧客環境 |
+| **やること** | [13-portability-byo-idp.md](./13-portability-byo-idp.md)、`pf-workspace/deploy/byo-oidc/`（mock で経路確認可）。Auth0/Entra 実機は顧客環境 |
 | **保証しない** | ポートフォリオ公開デモでの Auth0/Entra 接続実績 |
 
 ### L4 — 本番 Go（販売判断）
@@ -109,7 +109,7 @@ flowchart TB
 | | |
 | --- | --- |
 | **誰** | 契約・販売判断 |
-| **保証** | [production-definition.md](./production-definition.md) の必須ゲートが Yes または Risk Accept 記録済み |
+| **保証** | [09-production-definition.md](./09-production-definition.md) の必須ゲートが Yes または Risk Accept 記録済み |
 | **やること** | チェックリスト記入。評価 LICENSE のまま実課金運用は No-Go |
 | **保証しない** | 「デモが動いた＝本番完成」 |
 
@@ -117,7 +117,7 @@ flowchart TB
 
 ## パッケージ軸（層の上に載る）
 
-対象は [package-catalog.md](./package-catalog.md)。層を満たす単位は「全 15 本」ではなくパッケージ。
+対象は [10-package-catalog.md](./10-package-catalog.md)。層を満たす単位は「全 15 本」ではなくパッケージ。
 
 | パッケージ | 提案・デモに最低必要な層 | メモ |
 | --- | --- | --- |
@@ -146,24 +146,24 @@ flowchart TB
 
 | 領域 | 内容 | 足場 |
 | --- | --- | --- |
-| 品質ゲート | unit・境界・最小 E2E を CI で必須化 | [ci.md](./ci.md)、Collab e2e |
+| 品質ゲート | unit・境界・最小 E2E を CI で必須化 | [18-ci.md](./18-ci.md)、Collab e2e |
 | 環境分離 | demo ≠ staging ≠ production（DEV_AUTH 禁止） | `IDENTITY_ENV` / `WORKSPACE_ENV` |
 | 観測・アラート | health/ready、OTLP、最低 1 アラート、初期 SLO | pf-cloud-o11y alerts |
 | 運用 | runbook、バックアップ実演、ロールバック | workspace docs 07 |
 | セキュリティ | 依存スキャン、秘密を Git に置かない、監査 | ci Trivy、identity audit docs |
-| 契約・サポート | 評価 vs 商用、名乗らない領域の明示 | [licensing.md](./licensing.md)、package-catalog |
-| 変更管理 | trunk、小さなコミット、破壊的変更の告知 | [git-branching.md](./git-branching.md) |
+| 契約・サポート | 評価 vs 商用、名乗らない領域の明示 | [15-licensing.md](./15-licensing.md)、package-catalog |
+| 変更管理 | trunk、小さなコミット、破壊的変更の告知 | [git-branching.md](./17-git-branching.md) |
 | 顧客受け入れ | Go/No-Go 記録、PoC データ範囲の合意 | production-definition |
 
-ロードマップ: [commercial-roadmap.md](./commercial-roadmap.md)。
+ロードマップ: [08-commercial-roadmap.md](./08-commercial-roadmap.md)。
 
 ---
 
 ## 関連
 
-- [REVIEW.md](./REVIEW.md) — 採用向け L1 手順
-- [integration-demo.md](./integration-demo.md) — L1/L2 の詳細
-- [collab-staging.md](./collab-staging.md) — L3a
-- [production-definition.md](./production-definition.md) — L4
-- [package-catalog.md](./package-catalog.md) — パッケージ境界
-- [portability.md](./portability.md) / [portability-byo-idp.md](./portability-byo-idp.md) — L3b
+- [05-review.md](./05-review.md) — 採用向け L1 手順
+- [07-integration-demo.md](./07-integration-demo.md) — L1/L2 の詳細
+- [19-collab-staging.md](./19-collab-staging.md) — L3a
+- [09-production-definition.md](./09-production-definition.md) — L4
+- [10-package-catalog.md](./10-package-catalog.md) — パッケージ境界
+- [12-portability.md](./12-portability.md) / [13-portability-byo-idp.md](./13-portability-byo-idp.md) — L3b

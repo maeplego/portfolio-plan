@@ -2,13 +2,13 @@
 
 「P10 を実装して」と言われたら、回答や実装の前にこの順で読む。
 
-1. `portfolio-plan/instructions.md`
+1. `portfolio-plan/01-instructions.md`
 2. 本ファイル
 3. `portfolio-plan/00-overview.md`
 4. `portfolio-plan/talent-platform/DESIGN.md`
 5. `portfolio-idea/27-job-matching-platform.md`
 6. `talent-platform/chat-context/` の `P10_*.md` をファイル名昇順で全て
-7. 書類の更新・面接説明では `portfolio-plan/documentation.md` と `portfolio-plan/talent-platform/docs/README.md`
+7. 書類の更新・面接説明では `portfolio-plan/02-documentation.md` と `portfolio-plan/talent-platform/docs/README.md`
 
 面接予約の結合時は `calendar/AGENTS.md` と `portfolio-plan/calendar/DESIGN.md`。推薦結合時は `recommend/instructions.md`。
 

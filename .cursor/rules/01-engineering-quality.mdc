@@ -5,7 +5,7 @@ alwaysApply: true
 
 # 品質とバージョン管理
 
-詳細は `portfolio-plan/instructions.md` に従う。要約:
+詳細は `portfolio-plan/01-instructions.md` に従う。要約:
 
 - 秘密は環境変数のみ。`.env` や鍵ファイルをコミットしない
 - テストを書き、**通ることを確認してから** git に残す
@@ -14,4 +14,4 @@ alwaysApply: true
 - 適度にリファクタし、意図が分かるコメントを残す（何をしているかより、なぜか）
 - `DESIGN.md` と `portfolio-plan/**/docs/` は git 管理する。`chat-context/` は管理しない
 - 一往復ごとに `chat-context/Pxx_NNNNN_要約.md` を新規作成する
-- 要件・仕様・設計などの正式書類は `portfolio-plan/documentation.md` に従う
+- 要件・仕様・設計などの正式書類は `portfolio-plan/02-documentation.md` に従う

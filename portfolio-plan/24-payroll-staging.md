@@ -1,13 +1,13 @@
 # Payroll staging 手順
 
-> **読者**: 商用準備・運用向け。採用スキムは [HIRING.md](./HIRING.md) → [REVIEW.md](./REVIEW.md)。
+> **読者**: 商用準備・運用向け。採用スキムは [03-hiring.md](./03-hiring.md) → [05-review.md](./05-review.md)。
 
 | 項目 | 値 |
 | --- | --- |
 | 対象 | P16 payroll（± P01。入力ソースは P09。f-ops 同梱） |
 | 最終更新 | 2026-08-21 |
 
-デモ overlay F は `PAYROLL_DEV_AUTH=true` 可。商用 staging は Attendance と同じ `docker-desktop-f-ops-staging` に載せる。**源泉・社保・振込確定・法令準拠は名乗らない**（MN3 Go 前）。
+デモ overlay F は `PAYROLL_DEV_AUTH=true` 可。商用 staging は Attendance と同じ `docker-desktop-f-ops-staging` に載せる。**源泉・社保・振込確定・法令準拠は名乗らない**（P16-規制名乗り Go 前）。
 
 ## 商用 staging の条件
 
@@ -31,4 +31,4 @@ cd pf-cloud-k8s
 
 確認: `payroll.localhost/health`、`POST /v1/exports/payroll` + `X-Dev-User-Sub` のみ → **401**。
 
-関連: [attendance-staging.md](./attendance-staging.md)、[mn-payroll-tax.md](./mn-payroll-tax.md)。
+関連: [22-attendance-staging.md](./22-attendance-staging.md)、[./payroll-platform/payroll-tax-policy.md](./payroll-platform/payroll-tax-policy.md)。

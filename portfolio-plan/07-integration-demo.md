@@ -1,14 +1,14 @@
 # Kubernetes 連携デモ（L2・オペレータ向け）
 
-> **読者**: 商用準備・運用向け。採用スキムは [HIRING.md](./HIRING.md) → [REVIEW.md](./REVIEW.md)。
+> **読者**: 商用準備・運用向け。採用スキムは [03-hiring.md](./03-hiring.md) → [05-review.md](./05-review.md)。
 
 採用担当者・レビュアが **複数 Pxx の横断動作** を確認するための手順の正本。製品コードは兄弟 `pf-*` と `pf-cloud-k8s` に置く。
 
-動作確認の層（L0〜L4）の地図は **[verification.md](./verification.md)**。本ファイルは主に **L1 単体**と **L2 連携（任意）** の詳細。
+動作確認の層（L0〜L4）の地図は **[06-verification.md](./06-verification.md)**。本ファイルは主に **L1 単体**と **L2 連携（任意）** の詳細。
 
 ## 採用担当者の既定経路（K8s ではない）
 
-面接の 3 点セットとブラウザ手順は **[REVIEW.md](REVIEW.md)**。Compose レビューパック（`review-up.ps1 -Pack p01-p03|p04|p06`、`--build` なし）が層 1（verification の L1）。本ファイルの overlay A–F はインフラ深掘り用の任意デモ（L2）である。終わったら `pf-cloud-k8s` で `.\scripts\cleanup.ps1`。
+面接の 3 点セットとブラウザ手順は **[05-review.md](05-review.md)**。Compose レビューパック（`review-up.ps1 -Pack p01-p03|p04|p06`、`--build` なし）が層 1（verification の L1）。本ファイルの overlay A–F はインフラ深掘り用の任意デモ（L2）である。終わったら `pf-cloud-k8s` で `.\scripts\cleanup.ps1`。
 
 ## 2 つのローカルデモモード
 
@@ -50,7 +50,7 @@ cd pf-cloud-k8s
 | `portfolio-integration-c-scheduling-talent` | P01, P02, P05, P07, P10 | 採用ドメイン |
 | `portfolio-integration-d-commerce` | P01, P02, P03, P06, P07, P11 portal, P12（P13 は Compose） | commerce 本線 |
 | `portfolio-integration-e-content` | P01, P02, P03, P08, P11 portal | content / media |
-| `portfolio-integration-f-ops` | P01, P02, P09, P12, P14, P15 API | 業務 / 個人向け軽量群 |
+| `portfolio-integration-f-ops` | P01, P02, P09, P12, P14, P15 API, **P16** | 業務 / 個人向け軽量群 + 給与デモ |
 
 現時点の実装済み K8s overlay:
 
@@ -60,7 +60,7 @@ cd pf-cloud-k8s
 - `portfolio-integration-b-collab` + `docker-desktop-b-collab`（P04 + P11 portal。scanner なし）
 - `portfolio-integration-e-content` + `docker-desktop-e-content`（P08 + P11 portal）
 - `portfolio-integration-d-commerce` + `docker-desktop-d-commerce`（P06 フル + P07 + P11 portal + P12。P13 は Compose）
-- `portfolio-integration-f-ops` + `docker-desktop-f-ops`（P09 / P12 / P14 / P15 API。Expo は非搭載）
+- `portfolio-integration-f-ops` + `docker-desktop-f-ops`（P09 / P12 / P14 / P15 API / **P16 payroll**。Expo は非搭載）
 
 ## overlay の切り替え（12 GB 制約）
 
@@ -126,7 +126,7 @@ docker compose -f compose.yaml --env-file .env up --build
 
 ## 連携デモ（Kubernetes）
 
-> **ステータス**: foundation overlay は IdP ログイン → media ホームまで `oidc-smoke.ps1` / `demo-smoke.ps1` が通る。scheduling-talent overlay は Docker Desktop Kubernetes（context `docker-desktop`）上で `cluster-smoke-c-scheduling-talent.ps1` が予約確定 → `interview` まで通り、`http://talent.localhost` と `http://talent-api.localhost/health` を Ingress 確認済み（2026-08-19）。b-collab overlay は P04 + P11 portal（`portal.localhost`）。e-content は P08（blog + shortener。P11 なし）。d-commerce は P06 フル + P07（P01+P02+P03+P06+P07。P11/P12/P13 なし）。f-ops は P09 / P12 / P14 / P15 API（Expo なし。P12 は Postgres）。standalone kind では検証しない。
+> **ステータス**: foundation overlay は IdP ログイン → media ホームまで `oidc-smoke.ps1` / `demo-smoke.ps1` が通る。scheduling-talent overlay は Docker Desktop Kubernetes（context `docker-desktop`）上で `cluster-smoke-c-scheduling-talent.ps1` が予約確定 → `interview` まで通り、`http://talent.localhost` と `http://talent-api.localhost/health` を Ingress 確認済み（2026-08-19）。b-collab overlay は P04 + P11 portal（`portal.localhost`）。e-content は P08（blog + shortener。P11 なし）。d-commerce は P06 フル + P07（P01+P02+P03+P06+P07。P11/P12/P13 なし）。f-ops は P09 / P12 / P14 / P15 API / P16 payroll（Expo なし。P12 は Postgres）。standalone kind では検証しない。
 
 ### 0. kubectl context（必須）
 
@@ -410,7 +410,7 @@ Docker Desktop Kubernetes
 8. scheduling-talent smoke (`cluster-smoke-c-scheduling-talent.ps1`）
 9. b-collab smoke（P04 + P11 portal。`cluster-smoke-b-collab.ps1`）。scanner / CI dash は非搭載
 10. e-content smoke（P08 + P11 portal。`cluster-smoke-e-content.ps1`）
-11. f-ops smoke（P09 / P12 / P14 / P15 API。`cluster-smoke-f-ops.ps1`）
+11. f-ops smoke（P09 / P12 / P14 / P15 / P16。`cluster-smoke-f-ops.ps1`）
 12. d-commerce smoke（P06 フル + P07 + P11 portal + P12 + demo 画像 Job。P13 は Compose）
 
 ## 単体 Compose 連携デモ: P05 ↔ P10（予約確定 → 面接ステータス）
@@ -508,7 +508,7 @@ cd pf-talent-api/deploy; docker compose down -v
 
 ## 非目標（意図的にやらないこと）
 
-面接・レビューで「なぜ無いか」を説明できるよう、ここに集約する。`REVIEW.md` の Compose パックだけ見れば足りるものも多い。
+面接・レビューで「なぜ無いか」を説明できるよう、ここに集約する。`05-review.md` の Compose パックだけ見れば足りるものも多い。
 
 | 非目標 | 理由 |
 | --- | --- |
@@ -523,13 +523,13 @@ cd pf-talent-api/deploy; docker compose down -v
 | RabbitMQ / Kafka / NATS の本線化 | P06 も初期は HTTP + outbox。メッセージ基盤は学習外 |
 | `terraform apply` / AWS 本番デプロイ | モジュールと `validate` / `plan` まで。資格情報のないレビュアでも再現可 |
 | GHCR 公開イメージ必須 | `review-up.ps1 -UseLocalImages` で代替。公開 GHCR は初回を速くする任意改善 |
-| Playwright を既定 CI ジョブ化 | Compose 前提で重い。`ci.md` のローカル / dispatch 経路を正とする |
+| Playwright を既定 CI ジョブ化 | Compose 前提で重い。`18-ci.md` のローカル / dispatch 経路を正とする |
 | 全 Pxx の Playwright E2E | P01 / P05 / P06 / P08 / P14 の主要旅程のみ。残りは単体テスト + Compose smoke |
 
 ## 関連ドキュメント
 
-- `portfolio-plan/REVIEW.md` — 採用担当者（ブラウザ / Compose パック。K8s は任意）
+- `portfolio-plan/05-review.md` — 採用担当者（ブラウザ / Compose パック。K8s は任意）
 - `portfolio-plan/00-overview.md` — エコシステム全体・単独起動規約
 - `portfolio-plan/cloud-platform/DESIGN.md` — P02 技術正本・overlay 責務
-- `portfolio-plan/instructions.md` — 各 pf-* の `deploy/k8s/` 規約
+- `portfolio-plan/01-instructions.md` — 各 pf-* の `deploy/k8s/` 規約
 - `../pf-cloud-k8s/docs/ghcr.md` — GHCR 例（`GITHUB_TOKEN` のみ）

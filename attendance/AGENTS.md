@@ -2,13 +2,13 @@
 
 「P09 を実装して」と言われたら、回答や実装の前にこの順で読む。
 
-1. `portfolio-plan/instructions.md`
+1. `portfolio-plan/01-instructions.md`
 2. 本ファイル（なければ `attendance/instructions.md`）
 3. `portfolio-plan/00-overview.md`
 4. `portfolio-plan/attendance/DESIGN.md`
 5. `portfolio-idea/03-attendance-time-tracking.md`
 6. `attendance/chat-context/` の `P09_*.md` をファイル名昇順で全て
-7. 書類の更新・面接説明では `portfolio-plan/documentation.md` と `portfolio-plan/attendance/docs/README.md`
+7. 書類の更新・面接説明では `portfolio-plan/02-documentation.md` と `portfolio-plan/attendance/docs/README.md`
 
 認証結合時は `identity-platform/DESIGN.md`。P05 予約とは統合しない。
 

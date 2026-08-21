@@ -28,7 +28,7 @@ Compose が落ちたら Grafana は空になる。アプリは Collector に届�
 
 ## 3. 連携デモ
 
-手順は `portfolio-plan/integration-demo.md`。採用担当者の既定は `portfolio-plan/REVIEW.md`（Compose パック）。overlay は任意。
+手順は `portfolio-plan/07-integration-demo.md`。採用担当者の既定は `portfolio-plan/05-review.md`（Compose パック）。overlay は任意。
 
 - kubectl context は `docker-desktop`。standalone kind のまま apply しない
 - overlay は同時に全部載せない。切替は先に down

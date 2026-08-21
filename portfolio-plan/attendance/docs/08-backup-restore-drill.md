@@ -30,5 +30,5 @@ Collab の正本手順は [workspace/docs/09-backup-restore-drill.md](../workspa
 
 ## 関連
 
-- [attendance-staging.md](../../attendance-staging.md)
+- [attendance-staging.md](../../22-attendance-staging.md)
 - [07-attendance-gate.md](07-attendance-gate.md)

@@ -2,7 +2,7 @@
 
 「P03 を実装して」と言われたら、回答や実装の前にこの順で読む。
 
-1. `portfolio-plan/instructions.md`
+1. `portfolio-plan/01-instructions.md`
 2. 本ファイル
 3. `portfolio-plan/00-overview.md`
 4. `portfolio-plan/media-platform/DESIGN.md`

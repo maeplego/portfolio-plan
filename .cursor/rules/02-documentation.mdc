@@ -5,7 +5,7 @@ alwaysApply: true
 
 # 書類
 
-詳細は `portfolio-plan/documentation.md`。要約:
+詳細は `portfolio-plan/02-documentation.md`。要約:
 
 - 実装チャット用の短い設計は `portfolio-plan/<project>/DESIGN.md`
 - 要件定義・外部仕様・内部設計・テスト仕様・API・図表は `portfolio-plan/<project>/docs/`（Git 管理）

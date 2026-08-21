@@ -1,6 +1,6 @@
 # Attendance staging 手順
 
-> **読者**: 商用準備・運用向け。採用スキムは [HIRING.md](./HIRING.md) → [REVIEW.md](./REVIEW.md)。
+> **読者**: 商用準備・運用向け。採用スキムは [03-hiring.md](./03-hiring.md) → [05-review.md](./05-review.md)。
 
 | 項目 | 値 |
 | --- | --- |
@@ -30,7 +30,7 @@ cd pf-cloud-k8s
 
 高速化: `pf-cloud-k8s/docs/smoke-performance.md`。
 
-確認: attendance `/health` `/ready`、`POST /v1/punches` + `X-Dev-User-Sub` → **401**。payroll は [payroll-staging.md](./payroll-staging.md)。
+確認: attendance `/health` `/ready`、`POST /v1/punches` + `X-Dev-User-Sub` → **401**。payroll は [24-payroll-staging.md](./24-payroll-staging.md)。
 
 L3a 記録（2026-08-21）: Quick cluster smoke **pass**（DEV_AUTH 401・`attendance-api.localhost/health`。ビルド対象 3 イメージ）。
 

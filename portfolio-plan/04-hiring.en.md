@@ -13,7 +13,7 @@ An ecosystem of products (`pf-*` repos) sharing an OpenID Connect IdP, framed as
 
 ## Out of scope (we do not claim)
 
-- Production SLA or warranty under the public eval license ([licensing.md](./licensing.md))
+- Production SLA or warranty under the public eval license ([15-licensing.md](./15-licensing.md))
 - PCI-compliant payments, labor-law-certified attendance, or tax/withholding correctness
 - Live `terraform apply` to AWS, or running all 15 products at once
 
@@ -35,4 +35,4 @@ You do not need to review everything.
 
 ## Next
 
-Hands-on steps (Japanese): [REVIEW.md](./REVIEW.md). Full Japanese page: [HIRING.md](./HIRING.md).
+Hands-on steps (Japanese): [05-review.md](./05-review.md). Full Japanese page: [03-hiring.md](./03-hiring.md).

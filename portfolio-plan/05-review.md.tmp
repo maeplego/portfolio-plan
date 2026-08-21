@@ -1,0 +1,72 @@
+﻿# 繝昴・繝医ヵ繧ｩ繝ｪ繧ｪ縺ｮ遒ｺ隱肴焔鬆・ｼ域治逕ｨ諡・ｽ楢・髄縺托ｼ・
+| 鬆・岼 | 蛟､ |
+| --- | --- |
+| 蟇ｾ雎｡ | 謗｡逕ｨ諡・ｽ楢・・繝ｬ繝薙Η繧｢ |
+| 譌｢螳壹・邨瑚ｷｯ | 繝悶Λ繧ｦ繧ｶ縲∝ｿ・ｦ√↑繧・Docker Compose縲・*Kubernetes 縺ｯ莉ｻ諢・* |
+| 譛邨よ峩譁ｰ | 2026-08-21 |
+
+蜈医↓菴咲ｽｮ縺･縺代ｒ隱ｭ繧 竊・**[HIRING.md](./HIRING.md)**縲・ 
+縺薙％縺ｧ縺ｯ **蜍輔°縺玲婿**縺縺代ｒ譖ｸ縺阪∪縺吶・itHub 縺ｧ繧ｳ繝ｼ繝峨ｒ隕九※縲∝ｿ・ｦ√↑繧・Docker Compose 繧・1 繝代ャ繧ｯ襍ｷ蜍輔＠縺ｦ縺上□縺輔＞縲・ubernetes 縺ｯ蠢・医〒縺ｯ縺ゅｊ縺ｾ縺帙ｓ縲・
+蜈ｬ髢九Μ繝昴ず繝医Μ縺ｯ **繝・Δ繝ｻ蟄ｦ鄙偵・遉ｾ蜀・ｩ穂ｾ｡逕ｨ** 縺ｧ縺呻ｼ育┌菫晁ｨｼ縲・licensing.md](./licensing.md)・峨・
+## 0. 繝悶Λ繧ｦ繧ｶ縺縺托ｼ育ｴ・5 蛻・ｼ・
+GitHub 縺ｮ `pf-*` 縺ｨ縲√％縺ｮ繝｡繧ｿ繝ｪ繝昴ず繝医Μ繧定ｦ九ｋ縲・
+1. **P01 identity** 窶・authorize縲…onsent縲￣KCE縲》oken縲゛WKS・・pf-identity`・・2. **P04 workspace 縺ｾ縺溘・ P06 commerce** 窶・逕ｻ髱｢縺ｮ縺ゅｋ譛ｬ邱夲ｼ・pf-workspace` 縺ｾ縺溘・ `pf-commerce`・・3. **豺ｱ縺・1 譛ｬ** 窶・P02 隕ｳ貂ｬ縲￣11 髢狗匱閠・・繝ｼ繧ｿ繝ｫ縲￣12 繧､繝ｳ繧ｷ繝・Φ繝医・縺・★繧後°
+
+縲後ｄ繧峨↑縺九▲縺溘％縺ｨ縲阪・隕∫ｴ・・ [HIRING.md](./HIRING.md)縲りｩｳ邏ｰ蝨ｰ蝗ｳ縺ｯ `00-overview.md`縲・
+蟶ｸ譎ょ・髢九・ IdP 縺ｯ辟｡縺・・WS 縺ｸ縺ｮ `terraform apply` 縺ｯ **蟇ｾ雎｡螟・*縲・
+## 1. Compose 繝代ャ繧ｯ 1 縺､・・ocker Desktop縲・ubernetes 縺ｯ繧ｪ繝輔〒繧医＞・・
+菴懈･ｭ繝・ぅ繝ｬ繧ｯ繝医Μ縺ｯ `pf-cloud-k8s`縲ょ・蠑溘・陬ｽ蜩√Μ繝昴ず繝医Μ縺・clone 貂医∩縺ｧ縺ゅｋ縺薙→縲・
+```powershell
+cd pf-cloud-k8s
+$env:GHCR_OWNER = "maeplego"   # 蜷・pf-* 縺悟・髢・GHCR 繧､繝｡繝ｼ繧ｸ繧貞・縺励◆縺ゅ→
+.\scripts\review-up.ps1 -Pack p01-p03   # 縺ｾ縺溘・ p04 / p06
+```
+
+GHCR 繧剃ｽｿ縺・→縺搾ｼ・GHCR_OWNER` 縺ゅｊ・峨・ `docker compose pull` 縺ｮ縺ゅ→ `up -d --no-build`縲・
+髢狗匱繝槭す繝ｳ縺ｧ縺ｯ **`-UseLocalImages` 縺悟推陬ｽ蜩√・ `deploy/compose.yaml` 縺九ｉ繝薙Ν繝峨☆繧・*・亥・蝗槭・驕・＞縲・ 蝗樒岼莉･髯阪・繧ｭ繝｣繝・す繝･・峨よ焔蜈・〒 `pf-*:latest` 繧貞・縺ｫ tag 縺吶ｋ蠢・ｦ√・辟｡縺・・
+| 繝代ャ繧ｯ | 隕九∴繧九ｂ縺ｮ | URL |
+| --- | --- | --- |
+| `p01-p03` | IdP縲∥dmin縲《ample RP縲［edia・・IDC + org 繝・リ繝ｳ繝茨ｼ・| http://localhost:8080 ﾂｷ http://localhost:3002 ﾂｷ http://localhost:3001 ﾂｷ http://localhost:3004 |
+| `p04` | IdP + 繝ｯ繝ｼ繧ｯ繧ｹ繝壹・繧ｹ・医き繝ｳ繝舌Φ / Wiki / 繝√Ε繝・ヨ縲｛rg 繝・リ繝ｳ繝茨ｼ・| http://localhost:3006 |
+| `p06` | IdP + 繧ｹ繝医い繝輔Ο繝ｳ繝医∝惠蠎ｫ 1 繝・Δ縲｛ps・・rg 繝・リ繝ｳ繝茨ｼ・| http://localhost:3009 ﾂｷ `/demo` ﾂｷ http://localhost:3010 ﾂｷ http://localhost:8099/health ﾂｷ http://localhost:8110/health |
+
+GHCR 縺檎┌縺・→縺・
+
+```powershell
+.\scripts\review-up.ps1 -Pack p04 -UseLocalImages
+.\scripts\review-up.ps1 -Pack p06 -UseLocalImages
+```
+
+蛻晏屓縺ｯ繧､繝｡繝ｼ繧ｸ繧偵ン繝ｫ繝峨☆繧九ゆｻ･髯阪・繧ｭ繝｣繝・す繝･縲Ａp06` 縺ｯ payment縲］otify縲。FF縲｛ps-web 繧りｵｷ蜍輔☆繧九・
+## 3 轤ｹ繝・Δ・・ompose 襍ｷ蜍募ｾ鯉ｼ・
+**A. 隱崎ｨｼ・医ヱ繝・け `p01-p03`・・*
+
+1. http://localhost:3001・・ample RP・峨ｒ髢九″縲√Ο繧ｰ繧､繝ｳ縺吶ｋ
+2. 繝・Δ繝ｦ繝ｼ繧ｶ繝ｼ縺ｯ IdP 縺ｮ Compose 縺後す繝ｼ繝峨☆繧具ｼ・pf-identity` 縺ｮ README・峨よ悽逡ｪ繧｢繧ｫ繧ｦ繝ｳ繝医〒縺ｯ縺ｪ縺・3. 邂｡逅・UI 縺ｯ http://localhost:3002
+
+**B. 譛ｬ邱夲ｼ医←縺｡繧峨°荳譁ｹ・・*
+
+- P04: http://localhost:3006 窶・繝ｯ繝ｼ繧ｯ繧ｹ繝壹・繧ｹ繧剃ｽ懊ｋ・・ompose 縺ｯ髢狗匱繝倥ャ繝隱崎ｨｼ・・- P06: http://localhost:3009/demo 窶・蝨ｨ蠎ｫ 1 縺ｮ蜷梧凾雉ｼ蜈･・育援譁ｹ縺縺第・蜉滂ｼ・
+**C. 豺ｱ縺包ｼ井ｻｻ諢上ゅ∪縺 K8s 縺ｧ縺ｯ縺ｪ縺・ｼ・*
+
+- P02: `pf-cloud-o11y/deploy` 縺ｮ Compose 縺ｨ Grafana・医◎縺｡繧峨・ README・・
+## 譌｢遏･縺ｮ蛻ｶ髯・
+- Compose 繝代ャ繧ｯ縺ｮ media / workspace / commerce 縺ｯ **髢狗匱隱崎ｨｼ**縲ゅい繝励Μ讓ｪ譁ｭ縺ｮ譛ｬ譬ｼ OIDC 縺ｯ **莉ｻ諢・* 縺ｮ K8s foundation overlay
+- GHCR 縺ｮ tag 縺ｯ縲∝推 `pf-*` 縺悟・髢九う繝｡繝ｼ繧ｸ繧貞・縺励◆縺ゅ→縺ｫ蟄伜惠縺吶ｋ縲ゅ◎繧後∪縺ｧ縺ｯ `-UseLocalImages`
+- Docker Desktop Kubernetes 縺ｯ **謗｡逕ｨ諡・ｽ楢・・譌｢螳夂ｵ瑚ｷｯ縺ｧ縺ｯ縺ｪ縺・*
+- 螳溘き繝ｼ繝臥分蜿ｷ縲∝ｮ溷ｮｶ險医∵悽逡ｪ AWS 縺ｯ菴ｿ繧上↑縺・
+## 迚・ｻ倥￠
+
+邨ゅｏ縺｣縺溘ｉ `pf-cloud-k8s` 縺ｧ `.\scripts\cleanup.ps1`・域里螳壹・ K8s overlay 縺縺第ｭ｢繧√ｋ・峨・ompose 縺ｮ繝懊Μ繝･繝ｼ繝縺ｯ `.\scripts\review-down.ps1 -Pack p04` 縺ｪ縺ｩ縲・
+## GitHub 縺ｧ隕九ｋ縺翫☆縺吶ａ・・ 譛ｬ・・
+1. 縺薙・繝｡繧ｿ繝ｪ繝昴ず繝医Μ・・HIRING.md](./HIRING.md) 縺ｨ譛ｬ繝輔ぃ繧､繝ｫ・・2. **P01** `pf-identity`縲√∪縺溘・譛ｬ邱壹・ **P04** / **P06**
+3. 豺ｱ縺・1 譛ｬ: `pf-cloud-o11y` / `pf-developer-portal` / `pf-reliability` / `pf-recommend` 縺ｮ縺・★繧後°
+
+繧ｳ繝ｼ繝峨ｒ隕九ｋ隕ｳ轤ｹ縺ｮ陦ｨ縺ｯ [HIRING.md](./HIRING.md) 縺ｫ縺ゅｊ縺ｾ縺吶る擇謗･逕ｨ縺ｮ蜿｣鬆ｭ繝｡繝｢縺ｯ菴懆・髄縺代・ [interview-talking-points.md](./interview-talking-points.md) 縺ｧ縺吶・
+## 縺輔ｉ縺ｫ遏･繧具ｼ医＊縺｣縺ｨ縺励◆遒ｺ隱阪・蠕鯉ｼ・
+| 雉・侭 | 蜀・ｮｹ |
+| --- | --- |
+| [verification.md](./verification.md) | 遒ｺ隱阪・螻､ L0窶鏑4・医が繝壹Ξ繝ｼ繧ｿ蜷代￠・・|
+| [production-definition.md](./production-definition.md) / [package-catalog.md](./package-catalog.md) / [commercial-roadmap.md](./commercial-roadmap.md) | 蝠・畑繧ｲ繝ｼ繝医・繝代ャ繧ｱ繝ｼ繧ｸ蠅・阜 |
+| [ci.md](./ci.md) | 繝・せ繝医→ GitHub Actions |
+| [integration-demo.md](./integration-demo.md) | Kubernetes 騾｣謳ｺ繝・Δ・・2繝ｻ莉ｻ諢擾ｼ・|

@@ -36,7 +36,7 @@
 - 別契約が必要: 本番運用、有償サービスへの組込み、再販・托管の提供
 
 詳細は [LICENSE](./LICENSE) と
-[licensing.md](https://github.com/maeplego/portfolio-plan/blob/master/portfolio-plan/licensing.md)
+[15-licensing.md](https://github.com/maeplego/portfolio-plan/blob/master/portfolio-plan/15-licensing.md)
 を参照してください。
 ```
 
@@ -47,12 +47,12 @@
 
 ## 関連
 
-- 本番の定義: [production-definition.md](./production-definition.md)
-- パッケージ: [package-catalog.md](./package-catalog.md)
-- ポータビリティ: [portability.md](./portability.md)
-- 商用ロードマップ: [commercial-roadmap.md](./commercial-roadmap.md)
-- 見積: [cost-estimate.md](./cost-estimate.md)（概算レンジ。根拠なき水増しは書かない）
-- ブランチ: [git-branching.md](./git-branching.md)
-- 確認手順: [REVIEW.md](./REVIEW.md)
+- 本番の定義: [09-production-definition.md](./09-production-definition.md)
+- パッケージ: [10-package-catalog.md](./10-package-catalog.md)
+- ポータビリティ: [12-portability.md](./12-portability.md)
+- 商用ロードマップ: [08-commercial-roadmap.md](./08-commercial-roadmap.md)
+- 見積: [16-cost-estimate.md](./16-cost-estimate.md)（概算レンジ。根拠なき水増しは書かない）
+- ブランチ: [git-branching.md](./17-git-branching.md)
+- 確認手順: [05-review.md](./05-review.md)
 
 最終更新: 2026-08-21

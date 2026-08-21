@@ -2,13 +2,13 @@
 
 「P14 を実装して」と言われたら、回答や実装の前にこの順で読む。
 
-1. `portfolio-plan/instructions.md`
+1. `portfolio-plan/01-instructions.md`
 2. 本ファイル
 3. `portfolio-plan/00-overview.md`
 4. `portfolio-plan/personal-finance/DESIGN.md`
 5. `portfolio-idea/10-household-budget-pwa.md`
 6. `personal-finance/chat-context/` の `P14_*.md` をファイル名昇順で全て
-7. 書類の更新・面接説明では `portfolio-plan/documentation.md` と `portfolio-plan/personal-finance/docs/README.md`
+7. 書類の更新・面接説明では `portfolio-plan/02-documentation.md` と `portfolio-plan/personal-finance/docs/README.md`
 
 認証結合時は `identity-platform/DESIGN.md`。P15 とはドメインを共有しない。
 

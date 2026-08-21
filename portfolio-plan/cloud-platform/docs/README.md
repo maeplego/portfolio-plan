@@ -2,7 +2,7 @@
 
 実装は [pf-cloud-o11y](https://github.com/maeplego/pf-cloud-o11y)、[pf-cloud-k8s](https://github.com/maeplego/pf-cloud-k8s)、[pf-cloud-aws](https://github.com/maeplego/pf-cloud-aws) です。このフォルダは観測・ローカル Kubernetes・Terraform モジュールの説明です。AWS へ本番デプロイはしません。文書と実装が違うときは、コードとテストを優先してください。
 
-起動の手順は [REVIEW.md](../../REVIEW.md) です。Kubernetes の URL 一覧は `pf-cloud-k8s/docs/` です。GitHub Actions と手元テストの切り分けは [ci.md](../../ci.md) です。
+起動の手順は [05-review.md](../../05-review.md) です。Kubernetes の URL 一覧は `pf-cloud-k8s/docs/` です。GitHub Actions と手元テストの切り分けは [18-ci.md](../../18-ci.md) です。
 
 | ファイル | 内容 |
 | --- | --- |

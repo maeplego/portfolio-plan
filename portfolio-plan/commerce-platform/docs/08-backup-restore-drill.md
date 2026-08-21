@@ -29,5 +29,5 @@ Collab の正本手順は [workspace/docs/09-backup-restore-drill.md](../workspa
 
 ## 関連
 
-- [commerce-staging.md](../../commerce-staging.md)
+- [commerce-staging.md](../../20-commerce-staging.md)
 - [07-commerce-gate.md](07-commerce-gate.md)

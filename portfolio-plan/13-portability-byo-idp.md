@@ -3,7 +3,7 @@
 | 項目 | 値 |
 | --- | --- |
 | 最終更新 | 2026-08-21 |
-| 契約の正本 | [portability.md](../portability.md) |
+| 契約の正本 | [12-portability.md](./12-portability.md) |
 
 同梱 P01 の代わりに、顧客またはラボの OIDC IdP（Entra、Auth0、Keycloak 等）を使う。  
 **ポートフォリオデモでは Auth0 / Entra への実接続確認はしない。** 実装と設定例のみ用意（製品側 `pf-workspace/deploy/byo-oidc/AUTH0-ENTRA.md`）。

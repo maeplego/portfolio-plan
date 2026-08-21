@@ -1,6 +1,6 @@
 # Commerce staging 手順
 
-> **読者**: 商用準備・運用向け。採用スキムは [HIRING.md](./HIRING.md) → [REVIEW.md](./REVIEW.md)。
+> **読者**: 商用準備・運用向け。採用スキムは [03-hiring.md](./03-hiring.md) → [05-review.md](./05-review.md)。
 
 | 項目 | 値 |
 | --- | --- |
@@ -22,7 +22,7 @@
 3. storefront: 既存 OIDC クライアント設定
 4. 確認: ログイン必須経路。`X-Dev-User-Sub` だけでは注文 API が通らない
 
-Collab ゲートの再利用項目は [production-definition.md](./production-definition.md)。層は [verification.md](./verification.md)。
+Collab ゲートの再利用項目は [09-production-definition.md](./09-production-definition.md)。層は [06-verification.md](./06-verification.md)。
 
 ## Overlay
 

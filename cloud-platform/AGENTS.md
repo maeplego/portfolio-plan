@@ -2,7 +2,7 @@
 
 「P02 を実装して」と言われたら、回答や実装の前にこの順で読む。
 
-1. `portfolio-plan/instructions.md`
+1. `portfolio-plan/01-instructions.md`
 2. 本ファイル（なければ `cloud-platform/instructions.md`）
 3. `portfolio-plan/00-overview.md`
 4. `portfolio-plan/cloud-platform/DESIGN.md`
@@ -10,7 +10,7 @@
 6. `portfolio-idea/17-kubernetes-microservices.md`
 7. `portfolio-idea/18-observability-stack.md`
 8. `cloud-platform/chat-context/` の `P02_*.md` をファイル名昇順で全て
-9. 連携デモを触るときは `portfolio-plan/integration-demo.md` も読む
+9. 連携デモを触るときは `portfolio-plan/07-integration-demo.md` も読む
 
 製品コードはワークスペースの兄弟リポジトリ:
 

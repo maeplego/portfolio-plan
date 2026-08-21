@@ -95,8 +95,8 @@ master
 
 ## 関連
 
-- ライセンス: `licensing.md`
-- CI 方針: `ci.md`
-- 工程: `instructions.md`
+- ライセンス: `15-licensing.md`
+- CI 方針: `18-ci.md`
+- 工程: `01-instructions.md`
 
 最終更新: 2026-08-21

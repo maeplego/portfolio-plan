@@ -6,10 +6,10 @@
 | 既定の経路 | ブラウザ、必要なら Docker Compose。**Kubernetes は任意** |
 | 最終更新 | 2026-08-21 |
 
-先に位置づけを読む → **[HIRING.md](./HIRING.md)**。  
+先に位置づけを読む → **[03-hiring.md](./03-hiring.md)**。  
 ここでは **動かし方**だけを書きます。GitHub でコードを見て、必要なら Docker Compose を 1 パック起動してください。Kubernetes は必須ではありません。
 
-公開リポジトリは **デモ・学習・社内評価用** です（無保証。[licensing.md](./licensing.md)）。
+公開リポジトリは **デモ・学習・社内評価用** です（無保証。[15-licensing.md](./15-licensing.md)）。
 
 ## 0. ブラウザだけ（約 5 分）
 
@@ -19,7 +19,7 @@ GitHub の `pf-*` と、このメタリポジトリを見る。
 2. **P04 workspace または P06 commerce** — 画面のある本線（`pf-workspace` または `pf-commerce`）
 3. **深さ 1 本** — P02 観測、P11 開発者ポータル、P12 インシデントのいずれか
 
-「やらなかったこと」の要約は [HIRING.md](./HIRING.md)。詳細地図は `00-overview.md`。
+「やらなかったこと」の要約は [03-hiring.md](./03-hiring.md)。詳細地図は `00-overview.md`。
 
 常時公開の IdP は無い。AWS への `terraform apply` は **対象外**。
 
@@ -82,17 +82,17 @@ GHCR が無いとき:
 
 ## GitHub で見るおすすめ（3 本）
 
-1. このメタリポジトリ（[HIRING.md](./HIRING.md) と本ファイル）
+1. このメタリポジトリ（[03-hiring.md](./03-hiring.md) と本ファイル）
 2. **P01** `pf-identity`、または本線の **P04** / **P06**
 3. 深さ 1 本: `pf-cloud-o11y` / `pf-developer-portal` / `pf-reliability` / `pf-recommend` のいずれか
 
-コードを見る観点の表は [HIRING.md](./HIRING.md) にあります。面接用の口頭メモは作者向けの [interview-talking-points.md](./interview-talking-points.md) です。
+コードを見る観点の表は [03-hiring.md](./03-hiring.md) にあります。面接用の口頭メモは Git に置かない（ローカル chat-context/ のみ）。
 
 ## さらに知る（ざっとした確認の後）
 
 | 資料 | 内容 |
 | --- | --- |
-| [verification.md](./verification.md) | 確認の層 L0–L4（オペレータ向け） |
-| [production-definition.md](./production-definition.md) / [package-catalog.md](./package-catalog.md) / [commercial-roadmap.md](./commercial-roadmap.md) | 商用ゲート・パッケージ境界 |
-| [ci.md](./ci.md) | テストと GitHub Actions |
-| [integration-demo.md](./integration-demo.md) | Kubernetes 連携デモ（L2・任意） |
+| [06-verification.md](./06-verification.md) | 確認の層 L0–L4（オペレータ向け） |
+| [09-production-definition.md](./09-production-definition.md) / [10-package-catalog.md](./10-package-catalog.md) / [08-commercial-roadmap.md](./08-commercial-roadmap.md) | 商用ゲート・パッケージ境界 |
+| [18-ci.md](./18-ci.md) | テストと GitHub Actions |
+| [07-integration-demo.md](./07-integration-demo.md) | Kubernetes 連携デモ（L2・任意） |

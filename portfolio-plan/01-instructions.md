@@ -30,6 +30,7 @@ Cursor ルール（`.cursor/rules/`）はこのファイルの要約である。
 | P13 | `data-platform/` | `data-platform/instructions.md` |
 | P14 | `personal-finance/` | `personal-finance/instructions.md` |
 | P15 | `habit-tracker/` | `habit-tracker/instructions.md` |
+| P16 | `payroll-platform/` | `payroll-platform/AGENTS.md` |
 
 設計資料（`portfolio-plan/<project>/DESIGN.md`）と実装ルート（`<project>/`）は場所が違う。実装・チャット記録は実装ルート側に置く。
 
@@ -46,7 +47,7 @@ Cursor ルール（`.cursor/rules/`）はこのファイルの要約である。
 
 ## ブランチ戦略
 
-正本は `portfolio-plan/git-branching.md`。要約:
+正本は `portfolio-plan/17-git-branching.md`。要約:
 
 - 既定ブランチは `master`（常にデモ可能）
 - 作業は短命の `feature|fix|docs|chore/...` → merge → 削除（trunk-based）
@@ -73,19 +74,20 @@ Cursor ルール（`.cursor/rules/`）はこのファイルの要約である。
 - 既存ファイルを追記して履歴を混ぜない
 - ファイル名: `{ID}_{5桁連番}_{内容の要約}.md`
   - 例: `P01_00001_engineering-standards-and-start.md`
+  - 横断・給与も **`Pxx_` 接頭**（例: `P16_…`）。旧 `MN_` は使わない
   - 連番は既存の最大 + 1。欠番を埋めない
 - 含めるもの: 日時、ユーザー依頼の要約、前提、読んだファイル、決定事項、実装・調査結果、次に残っていること
 - 秘密（パスワード、トークン、鍵）は記録しない。必要なら「環境変数 `X` を設定した」とだけ書く
 
 ## 要件・仕様・設計などの書類
 
-人間向けの正式書類（要件定義、外部仕様、内部設計、テスト仕様、API、図表）の置き方と必須セットは `portfolio-plan/documentation.md` を正とする。
+人間向けの正式書類（要件定義、外部仕様、内部設計、テスト仕様、API、図表）の置き方と必須セットは `portfolio-plan/02-documentation.md` を正とする。
 
 - 実装チャット用の短い設計は従来どおり `portfolio-plan/<project>/DESIGN.md`
 - 人間向けの要件・仕様・設計は `portfolio-plan/<project>/docs/`（Git 管理。`chat-context/` とは別）。採用担当も読む。『面接用』と書かない
 - 未着手 Pxx に空の `docs/` は作らない
 - 矛盾したらテストとコードが正。次に `DESIGN.md`。`docs/` は追随する
-- 「書類を書いて」と言われたら `documentation.md` の必須セットを確認し、見本は `calendar/docs/`
+- 「書類を書いて」と言われたら `02-documentation.md` の必須セットを確認し、見本は `calendar/docs/`
 
 ## コミットの粒度
 
@@ -117,7 +119,7 @@ feat(password): Argon2id のハッシュと検証を追加
 - Postgres 等が必要なテストは `integration` タグか Testcontainers。失敗時にスキップして緑を偽装しない
 - コミット直前に対象パッケージのテストを再実行する
 - 脆弱性の exploit / PoC は書かない（診断ツールでも同様）
-- GitHub Actions の既定は単体テストと依存スキャンである。Compose 起動・Playwright・クラスタ smoke の範囲は `portfolio-plan/ci.md`
+- GitHub Actions の既定は単体テストと依存スキャンである。Compose 起動・Playwright・クラスタ smoke の範囲は `portfolio-plan/18-ci.md`
 
 ## コード品質
 
@@ -160,7 +162,7 @@ pf-*/
 ```
 
 - **本文は製品側**、`pf-cloud-k8s` は base + overlay + 他製品 kustomization への `resources:` 参照
-- overlay 名: `portfolio-integration`（初版）。手順は `portfolio-plan/integration-demo.md`
+- overlay 名: `portfolio-integration`（初版）。手順は `portfolio-plan/07-integration-demo.md`
 
 ### 必須規約
 

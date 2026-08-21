@@ -8,10 +8,9 @@
 
 | あなた | 開く順 |
 | --- | --- |
-| **採用担当・レビュア** | 1. [portfolio-plan/HIRING.md](portfolio-plan/HIRING.md) → 2. [REVIEW.md](portfolio-plan/REVIEW.md)（動かしたいとき） |
-| 実装・エージェント | [AGENTS.md](./AGENTS.md) → [portfolio-plan/instructions.md](portfolio-plan/instructions.md) |
-| 英語のみ | [portfolio-plan/HIRING.en.md](portfolio-plan/HIRING.en.md) |
-| 自分の面接準備 | [portfolio-plan/interview-talking-points.md](portfolio-plan/interview-talking-points.md)（採用担当向けではない） |
+| **採用担当・レビュア** | 1. [portfolio-plan/03-hiring.md](portfolio-plan/03-hiring.md) → 2. [portfolio-plan/05-review.md](portfolio-plan/05-review.md)（動かしたいとき） |
+| 実装・エージェント | [AGENTS.md](./AGENTS.md) → [portfolio-plan/01-instructions.md](portfolio-plan/01-instructions.md) |
+| 英語のみ | [portfolio-plan/04-hiring.en.md](portfolio-plan/04-hiring.en.md) |
 
 公開アカウントは [maeplego](https://github.com/maeplego) です。プロフィールのピンは 3 本（このリポジトリ、画面のある本線 1 本、深さ 1 本）。
 
@@ -36,16 +35,16 @@
 | P15 | [pf-habit-mobile](https://github.com/maeplego/pf-habit-mobile) / [pf-habit-api](https://github.com/maeplego/pf-habit-api) | 習慣トラッカー（アプリは Kubernetes に載せない） |
 | P16 | [pf-payroll](https://github.com/maeplego/pf-payroll) | 給与連携デモ（規制名乗りはしない） |
 
-単体デモは各 `pf-*` の Docker Compose です。まとめ起動は [pf-cloud-k8s](https://github.com/maeplego/pf-cloud-k8s) の `scripts/review-up.ps1`（手順は REVIEW.md）。
+単体デモは各 `pf-*` の Docker Compose です。まとめ起動は [pf-cloud-k8s](https://github.com/maeplego/pf-cloud-k8s) の `scripts/review-up.ps1`（手順は [05-review.md](portfolio-plan/05-review.md)）。
 
 ## 全体地図・運用（採用スキムの後で）
 
 | 資料 | 内容 |
 | --- | --- |
 | [portfolio-plan/00-overview.md](portfolio-plan/00-overview.md) | 15+1 プロダクトの役割と非目標（実装地図） |
-| [portfolio-plan/licensing.md](portfolio-plan/licensing.md) | デモ／評価・無保証・商用は別契約 |
-| [portfolio-plan/git-branching.md](portfolio-plan/git-branching.md) | ブランチ戦略 |
-| [portfolio-plan/cost-estimate.md](portfolio-plan/cost-estimate.md) | 受託再構築の概算見積 |
+| [portfolio-plan/15-licensing.md](portfolio-plan/15-licensing.md) | デモ／評価・無保証・商用は別契約 |
+| [portfolio-plan/17-git-branching.md](portfolio-plan/17-git-branching.md) | ブランチ戦略 |
+| [portfolio-plan/16-cost-estimate.md](portfolio-plan/16-cost-estimate.md) | 受託再構築の概算見積 |
 
 ## ライセンスと利用条件
 
@@ -54,4 +53,4 @@
 - 許可: クローン、ローカル実行、学習、非本番の評価
 - 別契約が必要: 本番運用、有償サービスへの組込み、再販・托管の提供
 
-詳細は [LICENSE](./LICENSE) と [portfolio-plan/licensing.md](portfolio-plan/licensing.md) を参照してください。
+詳細は [LICENSE](./LICENSE) と [portfolio-plan/15-licensing.md](portfolio-plan/15-licensing.md) を参照してください。

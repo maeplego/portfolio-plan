@@ -1,6 +1,6 @@
 # Talent path staging 手順
 
-> **読者**: 商用準備・運用向け。採用スキムは [HIRING.md](./HIRING.md) → [REVIEW.md](./REVIEW.md)。
+> **読者**: 商用準備・運用向け。採用スキムは [03-hiring.md](./03-hiring.md) → [05-review.md](./05-review.md)。
 
 | 項目 | 値 |
 | --- | --- |
@@ -22,7 +22,7 @@
 3. Talent API: `TALENT_ENV=staging`、`TALENT_DEV_AUTH=false`、OIDC
 4. 確認: `X-Dev-User-Sub` だけでは Talent 保護 API が 401
 
-層は [verification.md](./verification.md)。ギャップは [implementation-backlog-by-pxx.md](./implementation-backlog-by-pxx.md)。
+層は [06-verification.md](./06-verification.md)。ギャップは [11-implementation-backlog-by-pxx.md](./11-implementation-backlog-by-pxx.md)。
 
 ## Overlay
 

@@ -2,14 +2,14 @@
 
 「P08 を実装して」と言われたら、回答や実装の前にこの順で読む。
 
-1. `portfolio-plan/instructions.md`
+1. `portfolio-plan/01-instructions.md`
 2. 本ファイル（なければ `content-platform/instructions.md`）
 3. `portfolio-plan/00-overview.md`
 4. `portfolio-plan/content-platform/DESIGN.md`
 5. `portfolio-idea/07-tech-blog-cms.md`
 6. `portfolio-idea/09-url-shortener-analytics.md`
 7. `content-platform/chat-context/` の `P08_*.md` をファイル名昇順で全て
-8. 書類の更新・面接説明では `portfolio-plan/documentation.md` と `portfolio-plan/content-platform/docs/README.md`
+8. 書類の更新・面接説明では `portfolio-plan/02-documentation.md` と `portfolio-plan/content-platform/docs/README.md`
 
 画像は P03、3-tier は P02。overlay E は Compose デモが安定してから。
 

@@ -13,11 +13,11 @@
 
 ## 切替チェックリスト
 
-1. [production-definition.md](../../production-definition.md) の Collab ゲートを記入
+1. [production-definition.md](../../09-production-definition.md) の Collab ゲートを記入
 2. staging: `WORKSPACE_ENV=staging`、`WORKSPACE_DEV_AUTH=false`（overlay: `docker-desktop-b-collab-staging`）
-3. 同梱: デモユーザ／クライアント seed。BYO: [portability-byo-idp.md](../../portability-byo-idp.md) と `pf-workspace/deploy/byo-oidc/README.md`
+3. 同梱: デモユーザ／クライアント seed。BYO: [portability-byo-idp.md](../../13-portability-byo-idp.md) と `pf-workspace/deploy/byo-oidc/README.md`
 4. E2E: `pf-workspace/apps/e2e`（同梱経路）
 5. 運用: [07-operations-runbook.md](07-operations-runbook.md)
-6. ライセンス: 評価 LICENSE → 商用契約（[licensing.md](../../licensing.md)）
+6. ライセンス: 評価 LICENSE → 商用契約（[licensing.md](../../15-licensing.md)）
 
-給与・税務は対象外（商用第 N 弾）。
+給与・税務は対象外（P16（給与・税務））。

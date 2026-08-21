@@ -25,5 +25,5 @@
 
 - 監査必須イベント: [08-audit-events.md](08-audit-events.md)
 - 脅威モデル: [09-threat-model.md](09-threat-model.md)
-- ポートフォリオ本番定義: [../../production-definition.md](../../production-definition.md)
-- BYO IdP: [../../portability.md](../../portability.md)
+- ポートフォリオ本番定義: [../../09-production-definition.md](../../09-production-definition.md)
+- BYO IdP: [../../12-portability.md](../../12-portability.md)

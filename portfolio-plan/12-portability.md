@@ -59,24 +59,24 @@ flowchart TB
 | アダプタ | Garage（デモ）、AWS S3／互換（顧客バケット） |
 | 成果 | エンドポイント・バケット・資格情報の外部化 |
 
-### 将来ポート（第 3 弾以降・第 N 弾）
+### 追加ポート（M3 以降・P16）
 
 | ポート | 用途 | 目安 |
 | --- | --- | --- |
 | NotifyPort | メール／Webhook 通知 | Commerce／Collab 拡張 |
 | PaymentPort | 決済 | Commerce 商用化時 |
-| PayrollExportPort / AccountingPort | 給与・仕訳連携 | **MN / P16**（[mn-payroll-tax.md](./mn-payroll-tax.md)。当面カタログ対象外） |
+| PayrollExportPort / AccountingPort | 給与・仕訳連携 | **P16**（[./payroll-platform/payroll-tax-policy.md](./payroll-platform/payroll-tax-policy.md)。当面カタログ対象外） |
 
 ## サポート境界の言い方（提案用）
 
 - 「Collab は御社 IdP（OIDC）に接続できます。同梱 IdP は必須ではありません」
 - 「ファイルは S3 互換の御社バケットを指せます」
-- 「給与・税務エンジンの内製は第 N 弾。当面は既存給与／会計 SaaS へのエクスポート連携を推奨します」
+- 「給与・税務エンジンの内製はP16。当面は既存給与／会計 SaaS へのエクスポート連携を推奨します」
 
 ## 関連
 
-- [package-catalog.md](./package-catalog.md)
-- [production-definition.md](./production-definition.md)
-- [commercial-roadmap.md](./commercial-roadmap.md)
-- [collab-staging.md](./collab-staging.md)
-- [portability-byo-idp.md](./portability-byo-idp.md)
+- [10-package-catalog.md](./10-package-catalog.md)
+- [09-production-definition.md](./09-production-definition.md)
+- [08-commercial-roadmap.md](./08-commercial-roadmap.md)
+- [19-collab-staging.md](./19-collab-staging.md)
+- [13-portability-byo-idp.md](./13-portability-byo-idp.md)

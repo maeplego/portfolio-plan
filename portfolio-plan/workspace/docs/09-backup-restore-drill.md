@@ -3,7 +3,7 @@
 | 項目 | 値 |
 | --- | --- |
 | 対象 | Collab（P01 IdP DB + P04 Workspace DB。± P03 media DB） |
-| 用途 | [production-definition.md](../../production-definition.md) の「staging で一度実演」ゲート |
+| 用途 | [production-definition.md](../../09-production-definition.md) の「staging で一度実演」ゲート |
 
 未記入のまま Go 判定しない。架空／同意済みデータのみ。
 
@@ -42,4 +42,4 @@
 ## 関連
 
 - [07-operations-runbook.md](07-operations-runbook.md)
-- [collab-staging.md](../../collab-staging.md)
+- [collab-staging.md](../../19-collab-staging.md)

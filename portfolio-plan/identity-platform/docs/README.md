@@ -16,4 +16,4 @@
 | [08-audit-events.md](08-audit-events.md) | 監査必須イベントと保持方針 |
 | [09-threat-model.md](09-threat-model.md) | 脅威モデル 1 枚 |
 
-ポートフォリオ横断: [production-definition.md](../../production-definition.md) / [portability.md](../../portability.md) / [portability-byo-idp.md](../../portability-byo-idp.md)
+ポートフォリオ横断: [production-definition.md](../../09-production-definition.md) / [portability.md](../../12-portability.md) / [portability-byo-idp.md](../../13-portability-byo-idp.md)
