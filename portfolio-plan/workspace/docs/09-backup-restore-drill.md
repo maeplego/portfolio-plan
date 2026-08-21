@@ -11,16 +11,24 @@
 
 | 項目 | 記入 |
 | --- | --- |
-| 日付（UTC） | |
-| 環境 | staging / Compose staging / overlay B staging |
-| 担当 | |
-| 対象 DB | idp / workspace / media |
-| バックアップ手段 | `pg_dump` / マネージドスナップショット / その他 |
-| バックアップ成果物の保管場所 | （パスまたはオブジェクトキー。秘密は書かない） |
-| リストア先 | 別 DB 名 or 一時 namespace |
-| 所要時間 | |
-| 結果 | Pass / Fail |
-| 残課題 | |
+| 日付（UTC） | 2026-08-21 |
+| 環境 | overlay B staging（`docker-desktop-b-collab-staging`） |
+| 担当 | portfolio agent（ローカル Docker Desktop Kubernetes） |
+| 対象 DB | idp / workspace（media は今回対象外） |
+| バックアップ手段 | `pg_dump -Fc`（platform Postgres Pod 内） |
+| バックアップ成果物の保管場所 | ホスト TEMP `pf-collab-backup-drill-20260821/`（`idp.dump` / `workspace.dump`。Git に置かない） |
+| リストア先 | 同一クラスタ内 `idp_drill` / `workspace_drill` |
+| 所要時間 | 約 5–10 分（dump・restore・短時間 cutover 含む） |
+| 結果 | **Pass** |
+| 残課題 | media DB の同様実演は任意。顧客環境ではマネージドスナップショット手順を契約に合わせる |
+
+## 実演で確認したこと
+
+1. `idp` / `workspace` を custom format で dump
+2. `idp_drill` / `workspace_drill` へ `pg_restore`（public テーブル数一致: idp 12 / workspace 18）
+3. IdP を一時的に `idp_drill` へ向け `/health` と `/jwks.json` 応答を確認後、primary に戻す
+4. Workspace API を一時的に `workspace_drill` へ向け postgres 起動・`/health` `/ready` を確認後、primary に戻す
+5. cutback 後 `workspace.localhost` → IdP authorize リダイレクトを再確認
 
 ## 推奨手順（Postgres 論理バックアップ）
 
@@ -33,5 +41,5 @@
 
 ## 関連
 
-- [07-operations-runbook.md](../workspace/docs/07-operations-runbook.md)
+- [07-operations-runbook.md](07-operations-runbook.md)
 - [collab-staging.md](../../collab-staging.md)

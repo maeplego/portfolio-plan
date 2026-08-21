@@ -50,10 +50,10 @@ flowchart LR
 - [x] RLS／招待／共同編集／チャットの手動 runbook 要約（詳細は仕様・テスト。顧客一枚絵は Risk Accept）
 - [x] AuthPort 経由の BYO フォールバック（Cookie / X-Workspace-Org）
 - [x] Blob 顧客バケット手順（[media-platform/docs/07-customer-bucket.md](./media-platform/docs/07-customer-bucket.md)）
-- [ ] production-definition チェックリストで **Go**（2026-08-21 自己監査は **No-Go**: バックアップ実演記録未。Risk Accept は記録済み）
-- [ ] staging で [09-backup-restore-drill.md](./workspace/docs/09-backup-restore-drill.md) を 1 回記入
+- [x] production-definition チェックリストで **Go**（Risk Accept 記録済み。評価 LICENSE のまま実課金は不可）
+- [x] staging で [09-backup-restore-drill.md](./workspace/docs/09-backup-restore-drill.md) を 1 回記入（2026-08-21 Pass）
 
-**完了条件**: 顧客 PoC に実データを入れる判断ができる（バックアップ実演後に再監査）。
+**完了条件**: 顧客 PoC に実データを入れる判断ができる（ゲート Go。契約・法務 Risk Accept は顧客オンボで消化）。
 
 ### M3 — 次パッケージ（各々別計画で実装）
 

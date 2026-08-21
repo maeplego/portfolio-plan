@@ -80,7 +80,7 @@ flowchart TB
 | **保証** | DEV_AUTH オフ、OIDC+org、本番ゲートの staging 項目を満たしうる |
 | **やること** | [collab-staging.md](./collab-staging.md)。`docker-desktop-b-collab-staging`（DEV_AUTH 禁止）。ゲートは [production-definition.md](./production-definition.md) |
 | **保証しない** | 評価 LICENSE のまま本番利用してよいこと |
-| **記録** | 2026-08-21: staging smoke **pass**（DEV_AUTH 401・OIDC redirect）。本番 Go は別（バックアップ実演未） |
+| **記録** | 2026-08-21: staging smoke **pass**（DEV_AUTH 401・OIDC redirect）。バックアップ実演 Pass → L4 自己監査 **Go（Risk Accept 付き）** |
 
 | Overlay | 層 | DEV_AUTH |
 | --- | --- | --- |

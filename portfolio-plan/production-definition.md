@@ -39,7 +39,7 @@
 ### データ保護
 
 - [x] **Yes** — 秘密は環境変数／秘密管理のみ（Git に鍵を置かない）
-- [ ] **No** — バックアップ／リストア手順があり、staging で一度実演記録がある（手順・テンプレ: [workspace/docs/09-backup-restore-drill.md](./workspace/docs/09-backup-restore-drill.md)。**実演ログ未記入**のため本番 Go 不可）
+- [x] **Yes** — バックアップ／リストア手順があり、staging で一度実演記録がある（[workspace/docs/09-backup-restore-drill.md](./workspace/docs/09-backup-restore-drill.md)、2026-08-21 Pass）
 - [x] **Yes** — オブジェクト格納は S3 互換設定で差し替え可能（[media-platform/docs/07-customer-bucket.md](./media-platform/docs/07-customer-bucket.md)）
 
 ### 品質
@@ -79,11 +79,13 @@
 
 ### 自己監査サマリ（2026-08-21）
 
-| 判定 | **No-Go（本番 Go ではない）** |
+| 判定 | **Go（Collab ゲート。Risk Accept 付き）** |
 | --- | --- |
-| ブロッカー | バックアップ／リストアの **staging 実演記録が未作成**（手順テンプレのみ） |
+| ブロッカー | なし（バックアップ実演 Pass） |
 | Risk Accept | 招待公開範囲の顧客向け一枚絵、脆弱性例外リスト、SLO 数値、監査保持の法務確定 |
-| 次アクション | [09-backup-restore-drill.md](./workspace/docs/09-backup-restore-drill.md) を staging で 1 回記入 → 再監査 |
+| 注意 | 評価 LICENSE のまま実課金運用は引き続き No-Go。本番契約・秘密管理は顧客環境で別途 |
+
+再監査（同日）: staging `pg_dump`/`pg_restore` 実演後、バックアップ項目を Yes に更新。
 
 記録テンプレ: 日付、環境、チェック担当、Yes/No/Risk Accept、残課題。`commercial-roadmap.md` のマイルストーンと対応づける。
 
