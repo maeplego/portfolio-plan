@@ -167,7 +167,7 @@
 ## 推奨の実装順（残り）
 
 1. クラスタ smoke は既定 Quick（`pf-cloud-k8s/docs/smoke-performance.md`）
-2. **MN1 残り**: payroll staging overlay（任意）— コアは `pf-payroll` 済み（[mn-payroll-tax.md](./mn-payroll-tax.md)）
+2. **MN 残り**: payroll staging overlay（任意）— MN2 UI 済み（[mn-payroll-tax.md](./mn-payroll-tax.md)）
 3. 公開デモでの BYO Auth0/Entra 実機は非目標のまま
 4. **P08 / P12 / P14 / P15** はカタログ後続。ENV パターンをコピーするだけでも価値あり
 5. Media DB を Collab バックアップに足すのは任意
@@ -178,8 +178,8 @@
 
 | 項目 | 内容 |
 | --- | --- |
-| **状態** | MN0 方針 + MN1 API（`pf-payroll`）。overlay / UI 未 |
-| **必須（MN1 残り）** | staging overlay 任意、バックアップ手順テンプレ |
+| **状態** | MN0–MN2（`pf-payroll` API + 明細 UI）。overlay / 準拠名乗りは未 |
+| **必須（次）** | staging overlay 任意、バックアップ手順テンプレ |
 | **推奨** | OIDC 検証の本実装、顧客向け一文 |
 | **非目標** | P09/P14 への混入、準拠名乗り（MN3 前） |
 

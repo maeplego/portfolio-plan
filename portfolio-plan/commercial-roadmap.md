@@ -90,7 +90,7 @@ flowchart LR
 | --- | --- | --- |
 | MN0 | 方針・Ports・P16 予約、カタログ対象外の維持 | **完了**（2026-08-21） |
 | MN1 | P09 集計エクスポート + `PayrollExportPort` / `AccountingPort` モック | **コード完了**（`pf-payroll`、overlay は未） |
-| MN2 | 薄い明細ドメイン（「法的効力なし」明示） | 未着手 |
+| MN2 | 薄い明細ドメイン（「法的効力なし」明示） | **完了**（UI + demo rates、2026-08-21） |
 | MN3 | 法令・専門家レビュー後に規制機能を名乗る | 未着手 |
 
 - 着手条件: M2 Go 済み、M3 主要パッケージ（Commerce / Talent / Attendance）の staging 入口済み
