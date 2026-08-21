@@ -63,8 +63,13 @@ flowchart LR
 
 - [x] Commerce: `COMMERCE_ENV` staging/production で DEV_AUTH 拒否（gateway + order）
 - [x] Commerce staging 手順・overlay 入口（[commerce-staging.md](./commerce-staging.md)、`docker-desktop-d-commerce-staging`）
-- [ ] Commerce: cluster スモーク（DEV_AUTH 401）とゲート自己監査
-- [ ] Talent / Attendance: 同様の ENV プロファイル
+- [x] Commerce: cluster スモーク脚本（`cluster-smoke-d-commerce-staging.ps1`）
+- [x] Commerce: cluster スモーク実行記録（2026-08-21 Pass: DEV_AUTH 401・Ingress health）
+- [ ] Commerce: ゲート自己監査（バックアップ実演は Collab 手順流用可）
+- [x] Talent: `TALENT_ENV` staging/production で DEV_AUTH 拒否
+- [x] Media: `MEDIA_ENV` staging/production で DEV_AUTH 拒否
+- [ ] Calendar / Attendance: 同様の ENV プロファイル
+- 棚卸し正本: [implementation-backlog-by-pxx.md](./implementation-backlog-by-pxx.md)
 
 ### MN — 商用第 N 弾（規制ドメイン／バックオフィス）
 
@@ -97,3 +102,4 @@ flowchart LR
 - [cost-estimate.md](./cost-estimate.md)（Collab 商用最小の行）
 - [git-branching.md](./git-branching.md)
 - [REVIEW.md](./REVIEW.md)
+- [implementation-backlog-by-pxx.md](./implementation-backlog-by-pxx.md)

@@ -34,4 +34,13 @@ cd pf-cloud-k8s
 .\scripts\smoke-d-commerce-staging.ps1   # kustomize + dry-run
 ```
 
-フル cluster スモーク（health・DEV_AUTH 401）は Collab の `cluster-smoke-b-collab-staging.ps1` と同型で後続。当面は上記 dry-run と unit（`COMMERCE_ENV`）で入口を固定する。
+フル cluster スモーク:
+
+```powershell
+cd pf-cloud-k8s
+.\scripts\cluster-smoke-d-commerce-staging.ps1   # または -SkipBuild（ホストにイメージがあるとき）
+```
+
+確認: gateway `/health`、`X-Dev-User-Sub` で cart が **401**、storefront 到達。
+
+L3a 記録（2026-08-21）: DEV_AUTH 401・`commerce-api.localhost/health`・storefront 到達を確認して **pass**。

@@ -273,7 +273,7 @@ OIDC 時は `org_id` 必須。Compose 既定の dev-auth は `X-Dev-User-Org`（
 
 ## 受注・再構築の規模感（概算）
 
-詳細表（各 Pxx・各連携）は [`cost-estimate.md`](./cost-estimate.md)。ブランチ運用は [`git-branching.md`](./git-branching.md)。商用パッケージ・本番ゲートは [`commercial-roadmap.md`](./commercial-roadmap.md) / [`production-definition.md`](./production-definition.md) / [`package-catalog.md`](./package-catalog.md) / [`portability.md`](./portability.md)。動作確認の層は [`verification.md`](./verification.md)。
+詳細表（各 Pxx・各連携）は [`cost-estimate.md`](./cost-estimate.md)。ブランチ運用は [`git-branching.md`](./git-branching.md)。商用パッケージ・本番ゲートは [`commercial-roadmap.md`](./commercial-roadmap.md) / [`production-definition.md`](./production-definition.md) / [`package-catalog.md`](./package-catalog.md) / [`portability.md`](./portability.md)。各 Pxx の必須／推奨実装は [`implementation-backlog-by-pxx.md`](./implementation-backlog-by-pxx.md)。動作確認の層は [`verification.md`](./verification.md)。
 
 学習デモ同等を企業がゼロから再構築する概算（単価 80–120 万円/人月想定）:
 
@@ -298,5 +298,6 @@ OIDC 時は `org_id` 必須。Compose 既定の dev-auth は `X-Dev-User-Org`（
 | インフラに載せる | アプリの DESIGN + `cloud-platform/DESIGN.md` |
 | 複数 Pxx の横断デモ | `portfolio-plan/integration-demo.md` + `cloud-platform/DESIGN.md` |
 | どの確認層を使うか迷う | `portfolio-plan/verification.md` |
+| 各 Pxx で何を実装すべきか | `portfolio-plan/implementation-backlog-by-pxx.md` |
 
 `DESIGN.md` は git 管理する。`chat-context/` は管理しない。製品コードは兄弟の製品リポジトリ。
