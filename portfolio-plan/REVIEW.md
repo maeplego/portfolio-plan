@@ -80,21 +80,15 @@ GHCR が無いとき:
 
 終わったら `pf-cloud-k8s` で `.\scripts\cleanup.ps1`（既定は K8s overlay だけ止める）。Compose のボリュームは `.\scripts\review-down.ps1 -Pack p04` など。
 
-## GitHub ピン（3 点）
+## GitHub で見るおすすめ（3 本）
 
 1. このメタリポジトリ（[HIRING.md](./HIRING.md) と本ファイル）
 2. **P01** `pf-identity`、または本線の **P04** / **P06**
 3. 深さ 1 本: `pf-cloud-o11y` / `pf-developer-portal` / `pf-reliability` / `pf-recommend` のいずれか
 
-## 口頭での説明例（約 5 分）
+コードを見る観点の表は [HIRING.md](./HIRING.md) にあります。面接用の口頭メモは作者向けの [interview-talking-points.md](./interview-talking-points.md) です。
 
-15 個全部は扱いません。[HIRING.md](./HIRING.md) の「口頭 3 点」と同じです。
-
-- **認証（pf-identity）**: PKCE、redirect URI の完全一致、refresh の回転
-- **本線どちらか**: ワークスペース作成、または EC `/demo` の在庫 1 同時購入
-- **深さ 1 つ**: トレース、OpenAPI 破壊検知、訓練採点、推薦 fail-closed のいずれか
-
-## さらに知る（採用スキムの後）
+## さらに知る（ざっとした確認の後）
 
 | 資料 | 内容 |
 | --- | --- |

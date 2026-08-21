@@ -11,6 +11,7 @@
 | **採用担当・レビュア** | 1. [portfolio-plan/HIRING.md](portfolio-plan/HIRING.md) → 2. [REVIEW.md](portfolio-plan/REVIEW.md)（動かしたいとき） |
 | 実装・エージェント | [AGENTS.md](./AGENTS.md) → [portfolio-plan/instructions.md](portfolio-plan/instructions.md) |
 | 英語のみ | [portfolio-plan/HIRING.en.md](portfolio-plan/HIRING.en.md) |
+| 自分の面接準備 | [portfolio-plan/interview-talking-points.md](portfolio-plan/interview-talking-points.md)（採用担当向けではない） |
 
 公開アカウントは [maeplego](https://github.com/maeplego) です。プロフィールのピンは 3 本（このリポジトリ、画面のある本線 1 本、深さ 1 本）。
 

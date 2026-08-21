@@ -9,26 +9,30 @@ This is a **learning / demo / internal-evaluation** software portfolio — not a
 
 ## In one sentence
 
-An ecosystem of products (`pf-*` repos) sharing an OpenID Connect IdP, shown as **customer-installable packages**, not a vendor-hosted multi-tenant SaaS.
+An ecosystem of products (`pf-*` repos) sharing an OpenID Connect IdP, framed as **customer-installable packages**, not a vendor-hosted multi-tenant SaaS.
 
-## We do not claim
+## Out of scope (we do not claim)
 
 - Production SLA or warranty under the public eval license ([licensing.md](./licensing.md))
 - PCI-compliant payments, labor-law-certified attendance, or tax/withholding correctness
 - Live `terraform apply` to AWS, or running all 15 products at once
 
-## Three GitHub pins
+## Suggested reading path (3 repos)
 
-1. This meta repo (design + this page)
-2. A UI product: [pf-workspace](https://github.com/maeplego/pf-workspace) or [pf-commerce](https://github.com/maeplego/pf-commerce)
-3. One depth repo: identity, observability, or reliability
+You do not need to review everything.
 
-## Talk track (~5 min)
+1. **This meta repo** — design and this page
+2. **A UI product** — [pf-workspace](https://github.com/maeplego/pf-workspace) or [pf-commerce](https://github.com/maeplego/pf-commerce)
+3. **One depth repo** — identity, observability, or reliability
 
-1. Auth (PKCE, refresh rotation) — `pf-identity`
-2. Main line — workspace create, or commerce “stock=1 race” demo
-3. One depth topic — traces, OpenAPI breaking CI, incident drill scoring, or recommend fail-closed
+## What to look for in the code
+
+| Area | Example repo | Focus |
+| --- | --- | --- |
+| Auth | `pf-identity` | PKCE, redirect URI handling, refresh-token rotation |
+| Main UI | workspace or commerce | Workspace create, or stock=1 concurrent purchase demo |
+| Depth | o11y / portal / reliability / recommend | Traces, OpenAPI breaking CI, drill scoring, or fail-closed fallback |
 
 ## Next
 
-Hands-on steps (Japanese): [REVIEW.md](./REVIEW.md). Full Japanese one-pager: [HIRING.md](./HIRING.md).
+Hands-on steps (Japanese): [REVIEW.md](./REVIEW.md). Full Japanese page: [HIRING.md](./HIRING.md).
