@@ -26,6 +26,7 @@
     { "name": "pf-data", "path": "../pf-data", "project": "P13" },
     { "name": "pf-habit-mobile", "path": "../pf-habit-mobile", "project": "P15" },
     { "name": "pf-habit-api", "path": "../pf-habit-api", "project": "P15" },
-    { "name": "pf-attendance", "path": "../pf-attendance", "project": "P09" }
+    { "name": "pf-attendance", "path": "../pf-attendance", "project": "P09" },
+    { "name": "pf-payroll", "path": "../pf-payroll", "project": "P16" }
   ]
 }

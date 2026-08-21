@@ -9,4 +9,4 @@
 5. `portfolio-plan/package-catalog.md` の「対象外と第 N 弾」
 6. `payroll-platform/chat-context/` があればファイル名昇順
 
-製品コードは未着手。着手後は兄弟 `../pf-payroll`。空の `docs/` は作らない。
+製品コードは兄弟 `../pf-payroll`。テストはそこで `npm test`。空の `docs/` は作らない（デモ塊ができてから）。

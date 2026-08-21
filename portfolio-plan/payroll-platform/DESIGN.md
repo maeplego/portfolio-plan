@@ -1,34 +1,44 @@
-# P16 payroll-platform（予約）
+# P16 payroll-platform
 
 | 項目 | 値 |
 | --- | --- |
-| 状態 | **未実装**。方針のみ（[mn-payroll-tax.md](../mn-payroll-tax.md)） |
-| 製品リポジトリ | 未作成（着手時 `pf-payroll`） |
+| 状態 | **MN1 実装中**（`pf-payroll`） |
+| 製品リポジトリ | `../pf-payroll` |
 | 最終更新 | 2026-08-21 |
 
 ## 目的
 
 法人向けの **給与連携・（将来）薄い給与／税務ドメイン** を、勤怠（P09）や個人家計（P14）と分けて持つ。商用マイルストーン MN の受け皿。
 
-## スタック（着手時の仮）
+## スタック（MN1）
 
-- API: Go または TypeScript（既存 PF の慣例に合わせる。決定は最初の実装スライスで）
-- DB: Postgres
-- 認証: P01 OIDC / BYO（`PAYROLL_ENV` staging で DEV_AUTH 拒否）
+- API: TypeScript + Hono（`pf-payroll`）
+- Store: メモリ（MN1）。Postgres は MN2 以降
+- 認証: `PAYROLL_ENV` staging/production で DEV_AUTH 拒否。OIDC フル検証は後続
 
-## 実装順（コードが始まったら）
+## 実装順
 
-1. `PayrollExportPort` インタフェース + モックアダプタ + P09 集計 CSV 取り込み
-2. staging overlay 入口（f-ops 近傍または専用）
-3. デモ用明細プレビュー（法的効力なしの明示）
-4. （任意）AccountingPort スタブ
-5. docs 01–06（デモできる塊ができてから。空 docs は作らない）
+1. [x] `PayrollExportPort` + モック + P09 `minutes-v1` CSV 取り込み
+2. [x] `AccountingPort` モック（分数量の仕訳 DTO。円ではない）
+3. [ ] staging overlay 入口
+4. [ ] デモ用明細プレビュー UI
+5. [ ] docs 01–06（デモ塊が揃ってから）
 
 ## 他 Pxx との契約
 
-- **P09 → P16**: 月次の勤務分・工数のエクスポート。金額は出さない側が正（P09）
-- **P16 → 外部**: 給与／会計 SaaS。自前を名乗るまで Port の先はモックまたは顧客 BYO
-- **P14**: 参照しない・統合しない
+- **P09 → P16**: `GET /v1/months/{month}/export.csv`、ヘッダ `X-Attendance-Export-Contract: minutes-v1`。金額列なし
+- **P16 → 外部**: モック PayrollExport / Accounting。自前準拠は名乗らない
+- **P14**: 参照しない
+
+## API（MN1）
+
+| 方法 | パス | 内容 |
+| --- | --- | --- |
+| GET | `/health` `/ready` | 生存 |
+| GET | `/v1/disclaimer` | 法的効力なしの明示 |
+| POST | `/v1/imports/attendance-csv` | P09 CSV 本文 |
+| POST | `/v1/exports/payroll` | モック給与 SaaS へ |
+| POST | `/v1/exports/accounting` | モック会計へ（分のみ） |
 
 ## 非目標
 
@@ -37,8 +47,8 @@
 - 電子申告本線、マイナンバー本保管
 - フル ERP
 
-## デモ観点（将来）
+## デモ観点
 
-1. staging で DEV_AUTH 401
-2. 架空従業員の月次 export → モック PayrollExport がファイル／JSON を受け取る
-3. UI に「デモ計算・法的効力なし」が表示される
+1. staging で DEV_AUTH 起動拒否（単体テスト）
+2. 架空 CSV → import → mock payroll / accounting receipt（`npm test`）
+3. 応答に `legalEffect: false` と disclaimer

@@ -5,7 +5,7 @@
 | マイルストーン | **MN**（commercial-roadmap。M3 の次） |
 | 製品 ID | **P16** `payroll-platform`（予約。未実装） |
 | 最終更新 | 2026-08-21 |
-| 実装との関係 | コード・`pf-*` リポジトリは未着手。本書と [DESIGN.md](./payroll-platform/DESIGN.md) が方針の正本 |
+| 実装との関係 | MN1 コードは `../pf-payroll`。方針は本書と [DESIGN.md](./payroll-platform/DESIGN.md) |
 
 ## 結論（判断）
 
@@ -43,10 +43,11 @@ flowchart LR
 
 ### MN1 — 連携アダプタ（最初のコード）
 
-- P09 から **PII を出さない**（または最小化・同意済み架空データのみ）月次集計 CSV／JSON
-- `PayrollExportPort`: 外部給与 SaaS（freee 人事労務、給与奉行、Money Forward 等）へ渡す形の **スタブ＋1 モックアダプタ**
-- `AccountingPort`: 仕訳の外向き DTO のみ（自前総勘定元帳は作らない）
-- ゲート: DEV_AUTH 拒否、テナント、秘密は env、バックアップ手順テンプレ
+- [x] P09 月次 CSV（`minutes-v1`、金額なし）+ 契約ヘッダ
+- [x] `PayrollExportPort` + モックアダプタ（`pf-payroll`）
+- [x] `AccountingPort` + モック（分数量 DTO）
+- [x] `PAYROLL_ENV` staging で DEV_AUTH 拒否（単体）
+- [ ] staging overlay / バックアップ手順テンプレ
 - **名乗らない**: 源泉・社保・振込確定、法令準拠
 
 ### MN2 — 薄いドメイン（任意）
@@ -94,8 +95,8 @@ Collab ゲートに加え、MN3 で名乗るときだけ:
 | --- | --- |
 | メタ | `portfolio-plan/payroll-platform/`（DESIGN + 後から docs） |
 | 製品 | `../pf-payroll`（モノレポ想定: `apps/api`, 任意 `apps/web`） |
-| 登録 | 着手コミットと同時に `product-repos.json` と workspace 同期 |
-| 今やらない | 空リポジトリだけの作成、空の `docs/` |
+| 登録 | `product-repos.json` に `pf-payroll` 登録済み。着手後は workspace 同期 |
+| 今やらない | 空の `docs/` 先行、法令準拠の名乗り |
 
 ## 関連
 
