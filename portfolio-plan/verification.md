@@ -88,6 +88,8 @@ flowchart TB
 | `docker-desktop-b-collab-staging` | L3a | 禁止 |
 | `docker-desktop-d-commerce` | L2 デモ | gateway/order で可 |
 | `docker-desktop-d-commerce-staging` | L3a（Commerce 入口） | 禁止（[commerce-staging.md](./commerce-staging.md)）。2026-08-21 cluster smoke **pass** |
+| `docker-desktop-c-scheduling-talent` | L2 デモ | Talent DEV_AUTH 可 |
+| `docker-desktop-c-scheduling-talent-staging` | L3a（Talent path 入口） | 禁止（[talent-staging.md](./talent-staging.md)）。2026-08-21 cluster smoke **pass** |
 
 ### L3b — 外部 IdP／クラウド（BYO）
 

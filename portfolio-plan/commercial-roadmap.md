@@ -70,6 +70,9 @@ flowchart LR
 - [x] Media: `MEDIA_ENV` staging/production で DEV_AUTH 拒否
 - [x] Calendar: `CALENDAR_ENV` staging/production で DEV_AUTH 拒否
 - [x] Attendance: `ATTENDANCE_ENV` staging/production で DEV_AUTH 拒否
+- [x] Talent path staging overlay／手順（[talent-staging.md](./talent-staging.md)、`docker-desktop-c-scheduling-talent-staging`）
+- [x] Talent path: cluster スモーク（2026-08-21 Pass: DEV_AUTH 401・talent/calendar Ingress health）
+- [ ] Talent path: ゲート自己監査・バックアップ実演
 - 棚卸し正本: [implementation-backlog-by-pxx.md](./implementation-backlog-by-pxx.md)
 
 ### MN — 商用第 N 弾（規制ドメイン／バックオフィス）
@@ -100,7 +103,7 @@ flowchart LR
 
 ## 関連
 
-- [cost-estimate.md](./cost-estimate.md)（Collab 商用最小の行）
-- [git-branching.md](./git-branching.md)
-- [REVIEW.md](./REVIEW.md)
+- [collab-staging.md](./collab-staging.md)
+- [commerce-staging.md](./commerce-staging.md)
+- [talent-staging.md](./talent-staging.md)
 - [implementation-backlog-by-pxx.md](./implementation-backlog-by-pxx.md)

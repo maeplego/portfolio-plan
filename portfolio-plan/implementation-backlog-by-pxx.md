@@ -63,8 +63,8 @@
 
 | | |
 | --- | --- |
-| **状態** | Compose／OIDC 可。`CALENDAR_ENV` で staging DEV_AUTH 拒否済み |
-| **必須（Talent path 商用時）** | staging overlay への `CALENDAR_ENV` 適用、org クレーム方針 |
+| **状態** | Compose／OIDC 可。`CALENDAR_ENV` で staging DEV_AUTH 拒否済み。Talent staging overlay に ENV 適用 |
+| **必須（Talent path 商用時）** | cluster スモークでの calendar 到達確認、org クレーム方針 |
 | **推奨** | ホストタイムゾーン／重複予約の境界テスト拡充、E2E |
 | **非目標** | 勤怠との統合 |
 
@@ -108,8 +108,8 @@
 
 | | |
 | --- | --- |
-| **状態** | `TALENT_ENV` staging/production で DEV_AUTH 拒否済み |
-| **必須（Talent path 商用）** | staging overlay、org 隔離テスト、calendar 連携の staging、バックアップ |
+| **状態** | `TALENT_ENV`、staging overlay、cluster smoke **Pass**（DEV_AUTH 401） |
+| **必須（Talent path 商用）** | ゲート自己監査、バックアップ実演、org 隔離の深さ確認 |
 | **推奨** | recommend 連携のフォールバック、面接枠の E2E |
 | **非目標** | 社内人事マスタ正本 |
 
@@ -162,12 +162,11 @@
 
 ## 推奨の実装順（残り）
 
-1. **P06** Commerce cluster staging スモーク完了 → ゲート自己監査（M3）
+1. **P10 + P05** Talent path cluster staging スモーク → ゲート自己監査
 2. **P03** staging overlay／Compose で `MEDIA_ENV` 適用をデモ経路に載せる
-3. **P10 + P05** Talent／Calendar の ENV + staging overlay（Talent path）
-4. **P09** Attendance ENV（労基は名乗らないまま）
-5. **P08 / P12 / P14 / P15** はカタログ後続。ENV パターンをコピーするだけでも価値あり
-6. **MN** 給与税務は Collab〜Attendance のあと
+3. **P09** Attendance staging overlay（労基は名乗らないまま）
+4. **P08 / P12 / P14 / P15** はカタログ後続。ENV パターンをコピーするだけでも価値あり
+5. **MN** 給与税務は Collab〜Attendance のあと
 
 ## 関連
 
