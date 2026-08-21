@@ -8,6 +8,9 @@
 | --- | --- |
 | [portfolio-plan/REVIEW.md](portfolio-plan/REVIEW.md) | ブラウザと Docker Compose での確認（Kubernetes は任意） |
 | [portfolio-plan/00-overview.md](portfolio-plan/00-overview.md) | 15 プロダクトの役割と、意図的にやらなかったこと |
+| [portfolio-plan/licensing.md](portfolio-plan/licensing.md) | デモ／評価用・無保証・商用は別契約 |
+| [portfolio-plan/git-branching.md](portfolio-plan/git-branching.md) | ブランチ戦略（trunk-based） |
+| [portfolio-plan/cost-estimate.md](portfolio-plan/cost-estimate.md) | 受託再構築の概算見積 |
 
 公開アカウントは [maeplego](https://github.com/maeplego) です。プロフィールのピンは 3 本にしています（このリポジトリ、画面のある本線 1 本、深さ 1 本）。
 
@@ -32,3 +35,12 @@
 | P15 | [pf-habit-mobile](https://github.com/maeplego/pf-habit-mobile) / [pf-habit-api](https://github.com/maeplego/pf-habit-api) | 習慣トラッカー（アプリは Kubernetes に載せない） |
 
 単体デモは各 `pf-*` の Docker Compose です。複数プロダクトをまとめて見るときは [pf-cloud-k8s](https://github.com/maeplego/pf-cloud-k8s) のレビュー用スクリプトを使います。手順は REVIEW.md にあります。
+
+## ライセンスと利用条件
+
+本リポジトリは **デモ・学習・社内評価用** です。現状品質に **保証はありません**。
+
+- 許可: クローン、ローカル実行、学習、非本番の評価
+- 別契約が必要: 本番運用、有償サービスへの組込み、再販・托管の提供
+
+詳細は [LICENSE](./LICENSE) と [portfolio-plan/licensing.md](portfolio-plan/licensing.md) を参照してください。

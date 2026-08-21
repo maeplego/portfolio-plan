@@ -8,6 +8,8 @@
 
 GitHub でコードを見て、必要なら Docker Compose を 1 パック起動してください。Kubernetes は必須ではありません。
 
+公開リポジトリは **デモ・学習・社内評価用** です。保証はなく、本番・商用利用は別契約です（[licensing.md](./licensing.md) / 各 `LICENSE`）。
+
 ## 0. ブラウザだけ（約 5 分）
 
 GitHub の `pf-*` と、このメタリポジトリを見る。

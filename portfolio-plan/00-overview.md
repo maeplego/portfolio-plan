@@ -273,9 +273,9 @@ OIDC 時は `org_id` 必須。Compose 既定の dev-auth は `X-Dev-User-Org`（
 
 ## 受注・再構築の規模感（概算）
 
-詳細表（各 Pxx・各連携）は [`cost-estimate.md`](./cost-estimate.md)。
+詳細表（各 Pxx・各連携）は [`cost-estimate.md`](./cost-estimate.md)。ブランチ運用は [`git-branching.md`](./git-branching.md)。
 
-学習デモ同等を企業がゼロから再構築する感度（単価 80–120 万円/人月想定）:
+学習デモ同等を企業がゼロから再構築する概算（単価 80–120 万円/人月想定）:
 
 | 切り口 | 人月 | 費用帯 |
 | --- | --- | --- |

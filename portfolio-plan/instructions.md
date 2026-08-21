@@ -44,6 +44,15 @@ Cursor ルール（`.cursor/rules/`）はこのファイルの要約である。
 
 この `project` リポジトリはアイデア・設計・共通指示・Cursor ルールを管理する。製品コードは **兄弟ディレクトリの製品リポジトリ**（例: `../pf-identity`）に置く。入れ子の `.git` は作らない。
 
+## ブランチ戦略
+
+正本は `portfolio-plan/git-branching.md`。要約:
+
+- 既定ブランチは `master`（常にデモ可能）
+- 作業は短命の `feature|fix|docs|chore/...` → merge → 削除（trunk-based）
+- 常設 `develop` は使わない。`master` へ force push しない
+- 複数 `pf-*` をまたぐ変更は上流（IdP）→利用側→`pf-cloud-k8s`→メタの順
+
 ## VS Code / Cursor ワークスペース
 
 複数の `pf-*` を同時に開くときは `portfolio.code-workspace` を使う。正本は `portfolio-plan/product-repos.json` である。
