@@ -1,7 +1,7 @@
 # Always-on unit + vuln CI.
 # Compose up, Playwright browsers, and Docker Desktop Kubernetes are not in this
 # workflow: hosted runners have no Desktop cluster, and image builds are too slow
-# for every push. See portfolio-plan/ci.md in the meta repo.
+# for every push. See portfolio-plan/18-ci.md in the meta repo.
 name: ci
 
 on:
