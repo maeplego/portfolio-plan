@@ -3,6 +3,9 @@
 # Chat transcripts (may contain sensitive discussion)
 **/chat-context/
 
+# Local deep-dive diagrams / study notes (not formal docs; not reviewed for git)
+portfolio-plan/deep-dive/
+
 # Secrets and keys
 .env
 .env.*
