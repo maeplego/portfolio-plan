@@ -93,9 +93,18 @@ npm test
 npm run dev   # http://127.0.0.1:8020/
 ```
 
+Compose / `demo.ps1`:
+
+```powershell
+cd pf-payroll\deploy
+copy .env.example .env
+docker compose --env-file .env up --build
+# または: cd pf-cloud-k8s; .\scripts\demo.ps1 -Key p16
+```
+
 P09 の `GET /v1/months/{month}/export.csv`（契約 `minutes-v1`）を UI または `POST /v1/imports/attendance-csv` に渡す。
 
-**Staging:** `pf-cloud-k8s` の `docker-desktop-f-ops-staging`（`payroll.localhost`）。手順は `portfolio-plan/24-payroll-staging.md`。確認: DEV_AUTH のみの export は **401**。
+**K8s demo:** `cluster-smoke-f-ops.ps1`（disclaimer + `payroll.localhost`）。**Staging:** `docker-desktop-f-ops-staging`（`payroll.localhost`）。手順は `portfolio-plan/24-payroll-staging.md`。確認: DEV_AUTH のみの export は **401**。
 
 デモ観点:
 

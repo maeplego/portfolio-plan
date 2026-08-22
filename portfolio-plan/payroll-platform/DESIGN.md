@@ -30,7 +30,8 @@ React を使わないのは技術的制約ではなく **デモ段階の薄い�
 3. [x] デモ用明細プレビュー UI（常時 disclaimer）
 4. [x] デモ従業員レート（税率表・実賃金表ではない）
 5. [x] staging overlay 入口（`docker-desktop-f-ops-staging` + `payroll.localhost`）
-6. [ ] docs 01–06（デモ塊が揃ってから。P16-規制名乗り 前は規制名乗りなし）
+6. [x] L1 Compose + `demo.ps1 -Key p16`（メモリ store。規制名乗りなし）
+7. [ ] docs 01–06（デモ塊が揃ってから。P16-規制名乗り 前は規制名乗りなし）
 
 ## 他 Pxx との契約
 
