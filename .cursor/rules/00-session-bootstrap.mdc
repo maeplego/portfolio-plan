@@ -1,12 +1,12 @@
 ---
-description: 会話開始時に読むファイルとプロジェクト特定の手順
+description: セッション開始時は地図だけ読む。全履歴の先読み禁止
 alwaysApply: true
 ---
 
 # セッション開始
 
-実装・調査の前に `AGENTS.md` の順で読む。チャット履歴だけに頼らない。
+1. Pxx を特定 → その `AGENTS.md`（索引）
+2. `DESIGN.md` の該当節 + 対象 `pf-*` コード
+3. `chat-context/CURRENT.md` があれば読む。過去ログは全読しない
 
-「P01 を実装して」の読み込み対象は `identity-platform/AGENTS.md`。
-
-`DESIGN.md` と `portfolio-plan/<project>/docs/` は git 管理する。`chat-context/` は管理しない。製品コードは兄弟の製品リポジトリに置く。書類の置き方は `portfolio-plan/02-documentation.md`。
+詳細手順は skill `start-pxx`。正本の長い規約は `portfolio-plan/01-instructions.md`（必要な節だけ）。

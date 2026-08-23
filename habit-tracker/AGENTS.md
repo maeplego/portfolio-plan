@@ -1,13 +1,13 @@
 # P15 habit-tracker
 
-「P15 を実装して」と言われたら、回答や実装の前にこの順で読む。
+「P15 を実装して」と言われたら skill `start-pxx`。全部先読みせず、必要なものだけ:
 
 1. `portfolio-plan/01-instructions.md`
 2. 本ファイル（なければ `habit-tracker/instructions.md`）
 3. `portfolio-plan/00-overview.md`
 4. `portfolio-plan/habit-tracker/DESIGN.md`
 5. `portfolio-idea/22-mobile-habit-tracker.md`
-6. `habit-tracker/chat-context/` の `P15_*.md` をファイル名昇順で全て
+6. `habit-tracker/chat-context/CURRENT.md`（あれば）。過去の `P15_*.md` は全読しない（不明点だけ Grep）
 7. 書類の更新・面接説明では `portfolio-plan/02-documentation.md` と `portfolio-plan/habit-tracker/docs/README.md`
 
 認証結合時は `identity-platform/DESIGN.md`。P14 とはドメインを共有しない。
@@ -19,4 +19,4 @@
 
 このフォルダは設計・指示・チャット記録用。入れ子 Git は作らない。
 
-チャット記録の次ファイルは `chat-context/P15_XXXXX_要約.md`（既存最大連番 + 1）。秘密は書かない。実在の習慣ログは記録にもコードにも入れない。
+状態の引き継ぎは `chat-context/CURRENT.md` を更新（skill `record-chat-context`）。大きな区切りだけ `chat-context/P15_XXXXX_要約.md`（既存最大連番 + 1）。秘密は書かない。実在の習慣ログは記録にもコードにも入れない。

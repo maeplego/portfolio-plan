@@ -1,4 +1,4 @@
-# P04 workspace — 実装時に読むもの
+# P04 workspace — 実装時（skill `start-pxx`、全部先読みしない）
 
 1. `portfolio-plan/01-instructions.md`
 2. 本ファイル
@@ -8,6 +8,6 @@
 6. `portfolio-idea/02-team-knowledge-wiki.md`
 7. `portfolio-idea/12-realtime-chat-notifications.md`
 8. `portfolio-idea/26-collaborative-markdown-editor.md`
-9. `workspace/chat-context/` をファイル名昇順で全て
+9. `workspace/chat-context/CURRENT.md`（あれば）。過去の `P04_*.md` は全読しない（不明点だけ Grep）
 
-メディア結合時は P03、認証は P01 の指示も読む。チャット記録は `P04_XXXXX_要約.md`。
+メディア結合時は P03、認証は P01 の指示も読む。状態は `chat-context/CURRENT.md`（skill `record-chat-context`）。

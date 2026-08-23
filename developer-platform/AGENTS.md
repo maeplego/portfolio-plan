@@ -1,6 +1,6 @@
 # P11 developer-platform
 
-「P11 を実装して」と言われたら、回答や実装の前にこの順で読む。
+「P11 を実装して」と言われたら skill `start-pxx`。全部先読みせず、必要なものだけ:
 
 1. `portfolio-plan/01-instructions.md`
 2. 本ファイル（なければ `developer-platform/instructions.md`）
@@ -11,7 +11,7 @@
 7. `portfolio-idea/23-cli-project-scaffolding.md`（CLI。完成扱いは P04/P06 の実テンプレ後）
 8. `portfolio-idea/15-ci-pipeline-dashboard.md`
 9. `portfolio-idea/08-code-review-assistant.md`
-10. `developer-platform/chat-context/` の `P11_*.md` をファイル名昇順で全て
+10. `developer-platform/chat-context/CURRENT.md`（あれば）。過去の `P11_*.md` は全読しない（不明点だけ Grep）
 
 製品コードはワークスペースの兄弟:
 
@@ -26,4 +26,4 @@
 
 このフォルダは設計・指示・チャット記録用。入れ子 Git は作らない。
 
-チャット記録の次ファイルは `chat-context/P11_XXXXX_要約.md`（既存最大連番 + 1）。秘密は書かない。
+状態の引き継ぎは `chat-context/CURRENT.md` を更新（skill `record-chat-context`）。大きな区切りだけ `chat-context/P11_XXXXX_要約.md`（既存最大連番 + 1）。秘密は書かない。

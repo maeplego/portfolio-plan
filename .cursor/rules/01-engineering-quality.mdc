@@ -1,17 +1,12 @@
 ---
-description: コミット粒度、テスト必須、秘密情報、コード品質
+description: 秘密管理・テスト後コミット・危険作業の禁止
 alwaysApply: true
 ---
 
-# 品質とバージョン管理
+# 品質（不変）
 
-詳細は `portfolio-plan/01-instructions.md` に従う。要約:
-
-- 秘密は環境変数のみ。`.env` や鍵ファイルをコミットしない
-- テストを書き、**通ることを確認してから** git に残す
-- メソッド／小さな単位ごとにコミット。まとまった機能でもコミット
-- コミットメッセージはなぜを書く。`--no-verify` は使わない
-- 適度にリファクタし、意図が分かるコメントを残す（何をしているかより、なぜか）
-- `DESIGN.md` と `portfolio-plan/**/docs/` は git 管理する。`chat-context/` は管理しない
-- 一往復ごとに `chat-context/Pxx_NNNNN_要約.md` を新規作成する
-- 要件・仕様・設計などの正式書類は `portfolio-plan/02-documentation.md` に従う
+- 秘密は環境変数のみ。`.env` / 鍵 / `chat-context/` をコミットしない
+- テストを書き、通ってから git に残す。`--no-verify` 禁止
+- コミットは意図の単位。メッセージは「なぜ」
+- 脆弱性の exploit / PoC は書かない
+- 正式書類は `portfolio-plan/02-documentation.md`（skill `write-docs`）

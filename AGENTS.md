@@ -1,14 +1,16 @@
 # Agent bootstrap
 
-実装・調査の前に、チャット履歴だけに頼らず次を読む。
+チャット履歴だけに頼らない。**全部を先読みしない。** 地図だけ読んで、詳細はタスクに応じて開く。
 
-1. `portfolio-plan/01-instructions.md`（工程の正本）
-2. プロジェクト ID（P01–P16）を特定する
-3. そのフォルダの `AGENTS.md`（なければ `instructions.md`）
-4. そこに列挙された overview / `DESIGN.md` / 元アイデア md
-5. そのフォルダの `chat-context/` をファイル名昇順で全部
-6. 要件・仕様・設計などの書類を書く／直すときは `portfolio-plan/02-documentation.md`。対象に `docs/` があれば `docs/README.md` から開く
+1. プロジェクト ID（P01–P16）を特定する
+2. そのフォルダの `AGENTS.md`（なければ `instructions.md`）— 索引のみ
+3. 実装・調査なら: `portfolio-plan/<project>/DESIGN.md` の**該当節**と、対象 `pf-*` のコード
+4. 状態の引き継ぎ: `<project>/chat-context/CURRENT.md`（あれば）。横断メタ作業はリポジトリ直下 `chat-context/CURRENT.md` も可。過去の `Pxx_*.md` は **全読禁止** — 不明点だけファイル名 / Grep で探す
+5. 書類を書く／直すとき: skill `write-docs` と `portfolio-plan/02-documentation.md`
+6. 工程の詳細・コミット規約: 必要なら `portfolio-plan/01-instructions.md`（毎回全文は不要）
 
-「P01 を実装して」の読み込み対象は `identity-platform/AGENTS.md`。
+「P01 を実装して」→ `identity-platform/AGENTS.md` と skill `start-pxx`。
 
-`DESIGN.md` と指示ファイルは git 管理する。`chat-context/` と `.env` は管理しない。製品コードは兄弟ディレクトリの製品リポジトリ（例: `../pf-identity`）に置く。新規 `pf-*` 追加時は `portfolio-plan/product-repos.json` を更新し `scripts/sync-workspace.ps1` で `portfolio.code-workspace` を再生成する。
+コミット前検証は skill `verify-pf`。往復の記録は skill `record-chat-context`（`CURRENT.md` 更新 + 必要なら連番ログ 1 件）。
+
+`DESIGN.md` と `portfolio-plan/**/docs/` は git 管理。`chat-context/` と `.env` は管理しない。製品コードは兄弟 `../pf-*`。新規 `pf-*` は `portfolio-plan/product-repos.json` 更新後 `scripts/sync-workspace.ps1`。

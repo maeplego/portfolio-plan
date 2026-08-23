@@ -1,6 +1,6 @@
 # P08 content-platform
 
-「P08 を実装して」と言われたら、回答や実装の前にこの順で読む。
+「P08 を実装して」と言われたら skill `start-pxx`。全部先読みせず、必要なものだけ:
 
 1. `portfolio-plan/01-instructions.md`
 2. 本ファイル（なければ `content-platform/instructions.md`）
@@ -8,7 +8,7 @@
 4. `portfolio-plan/content-platform/DESIGN.md`
 5. `portfolio-idea/07-tech-blog-cms.md`
 6. `portfolio-idea/09-url-shortener-analytics.md`
-7. `content-platform/chat-context/` の `P08_*.md` をファイル名昇順で全て
+7. `content-platform/chat-context/CURRENT.md`（あれば）。過去の `P08_*.md` は全読しない（不明点だけ Grep）
 8. 書類の更新・面接説明では `portfolio-plan/02-documentation.md` と `portfolio-plan/content-platform/docs/README.md`
 
 画像は P03、3-tier は P02。overlay E は Compose デモが安定してから。
@@ -21,4 +21,4 @@
 
 このフォルダは設計・指示・チャット記録用。入れ子 Git は作らない。
 
-チャット記録の次ファイルは `chat-context/P08_XXXXX_要約.md`（既存最大連番 + 1）。秘密は書かない。
+状態の引き継ぎは `chat-context/CURRENT.md` を更新（skill `record-chat-context`）。大きな区切りだけ `chat-context/P08_XXXXX_要約.md`（既存最大連番 + 1）。秘密は書かない。
