@@ -11,6 +11,17 @@ Cursor ルール（`.cursor/rules/`）と Skills（`.cursor/skills/`）はこの
 
 繰り返し手順は Skills に置く（`start-pxx` / `verify-pf` / `write-docs` / `record-chat-context`）。Rules の `alwaysApply` は短い不変条件のみ。
 
+## 別ワークスペースへの流用（agent-harness）
+
+巨大な `portfolio.code-workspace` はそのまま使ってよい。新規・別リポジトリでは **薄いハーネスだけ** を入れる。
+
+- 正本: `agent-harness/`（汎用 rules / skills / テンプレ）
+- インストール: `.\scripts\install-agent-harness.ps1 -TargetPath '…' -SeedTemplates`
+- 全 Cursor プロジェクト共通: 同スクリプトに `-Personal`（`~/.cursor/skills/`）
+- ポートフォリオ固有（`start-pxx` / `verify-pf`）は本リポジトリの `.cursor/skills/` に残す
+
+詳細は `agent-harness/README.md`。
+
 ## プロジェクトフォルダ
 
 | ID | フォルダ | 指示ファイル |

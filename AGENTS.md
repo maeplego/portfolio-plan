@@ -13,4 +13,6 @@
 
 コミット前検証は skill `verify-pf`。往復の記録は skill `record-chat-context`（`CURRENT.md` 更新 + 必要なら連番ログ 1 件）。
 
+別ワークスペースへ汎用 skills / rules を流用するときは `agent-harness/` と `scripts/install-agent-harness.ps1`（`-Personal` で `~/.cursor/skills/`）。
+
 `DESIGN.md` と `portfolio-plan/**/docs/` は git 管理。`chat-context/` と `.env` は管理しない。製品コードは兄弟 `../pf-*`。新規 `pf-*` は `portfolio-plan/product-repos.json` 更新後 `scripts/sync-workspace.ps1`。

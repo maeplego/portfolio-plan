@@ -1,0 +1,13 @@
+---
+description: Session start — read the map only; never preload full chat archives
+alwaysApply: true
+---
+
+# Session start
+
+1. Identify the active app / package from the user request
+2. Read root `AGENTS.md` (index only)
+3. Open `DESIGN.md` (or equivalent) **relevant sections** + the code you will change
+4. If `chat-context/CURRENT.md` exists, read it. Do **not** read all archive logs
+
+Procedures: skill `start-project`. Long standards live in project docs — open only the section you need.

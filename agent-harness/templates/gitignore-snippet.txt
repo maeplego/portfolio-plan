@@ -1,0 +1,9 @@
+# Agent handoff (may contain sensitive discussion) — do not commit
+**/chat-context/
+
+# Secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key

@@ -1,0 +1,12 @@
+---
+description: Secrets, tests-before-commit, no exploit PoCs
+alwaysApply: true
+---
+
+# Quality invariants
+
+- Secrets via env only. Never commit `.env`, keys, or `chat-context/`
+- Write tests; leave git green. No `--no-verify`
+- Commit by intent; message explains **why**
+- Do not write vulnerability exploits or PoCs
+- Human docs: skill `write-docs` (tests/code beat DESIGN beat docs/)

@@ -1,0 +1,13 @@
+---
+description: Human-facing requirements and design docs layout. Use when editing docs/ or DESIGN.md
+alwaysApply: false
+globs: "**/docs/**,**/DESIGN.md,**/*documentation*.md"
+---
+
+# Documentation
+
+- Short implementation notes: `DESIGN.md` (or project equivalent)
+- Human requirements / external / internal / test / API docs: `docs/` (git-managed)
+- Do not create empty `docs/` before real work starts
+- On conflict: **tests/code → DESIGN.md → docs/**
+- Never mark unimplemented behavior as done acceptance criteria

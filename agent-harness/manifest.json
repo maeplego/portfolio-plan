@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "name": "agent-harness",
+  "description": "Portable Cursor rules + skills for thin agent context (CURRENT.md, no full chat dumps).",
+  "rules": [
+    "00-session-bootstrap.mdc",
+    "01-engineering-quality.mdc",
+    "02-documentation.mdc"
+  ],
+  "skills": [
+    "start-project",
+    "record-chat-context",
+    "write-docs",
+    "verify-before-commit"
+  ],
+  "templates": [
+    "AGENTS.md",
+    "CURRENT.md",
+    "gitignore-snippet.txt"
+  ]
+}
