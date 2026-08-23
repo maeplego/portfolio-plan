@@ -84,24 +84,33 @@
 - ウイルススキャンは発展。デモは種別制限で代替
 - 公開 SaaS として任意 URL を fetch する実装は SSRF になるので禁止（プロセッサは自バケットのみ）
 
-## 組織テナント（IdP org）
+## ドライブモデル（個人 + 組織）
 
-- OIDC 時は `org` scope 必須。`org_id` が無いトークンは API が拒否する
-- ファイル／フォルダ／共有リンクに `org_id` をスタンプし、一覧・操作は `owner_sub` + `org_id` で拘束
-- クォータはサービス層で org キー（`org:{orgID}`）。DB カラム名は従来のまま
-- Web は OrgSwitcher（IdP `PUT /v1/active-org` + refresh）。dev-auth は `X-Dev-User-Org`（省略時 `org-demo-a`）
+登録だけでは組織に入らない。個人ドライブはログインだけで使える。組織ドライブは IdP の所属（招待／管理者が追加）が必要。
+
+| | 個人ドライブ | 組織ドライブ |
+| --- | --- | --- |
+| 識別 | `org_id` 空 | アクティブ `org_id` |
+| 可視性 | 本人のみ | 同一 org のメンバーで共有 |
+| クォータ | 既定 20MiB（`MEDIA_PERSONAL_QUOTA_BYTES`） | 既定 100MiB 共有プール（`MEDIA_ORG_QUOTA_BYTES` / 旧 `MEDIA_QUOTA_BYTES`） |
+| API | `X-Media-Drive: personal`（省略時も個人） | `X-Media-Drive: org`（`org_id` 無しは 403） |
+
+- ファイル／フォルダ／共有リンクに `org_id` をスタンプ。個人は空文字、組織は共有キー
+- クォータキー: 個人 `user:{sub}`、組織 `org:{orgID}`
+- Web は `?drive=personal|org`。組織タブでのみ OrgSwitcher（IdP `PUT /v1/active-org` + refresh）。dev-auth は `X-Dev-User-Org`（省略時は個人）
 - `purpose` はアップロード種別のホワイトリスト（テナントキーにしない）
+- 登録時に個人用 org を自動作成しない
 
 ## 他プロジェクトとの契約
 
 同期 API（概要）:
 
-- `POST /v1/uploads/presign` `{ contentType, size, purpose }`
+- `POST /v1/uploads/presign` `{ contentType, size, purpose }`（ヘッダ `X-Media-Drive`）
 - `POST /v1/uploads/complete` `{ fileId, etag }`（etag はオブジェクトと照合。引用符は正規化）
-- `GET /v1/files/:id` メタデータと派生 URL（他人の id は 404）
+- `GET /v1/files/:id` メタデータと派生 URL（スコープ外は 404）
 - `POST /v1/share-links` / `GET /v1/share-links` / `DELETE /v1/share-links/{token}`（パスワード任意）
 
-`purpose` ホワイトリスト: `drive`, `wiki`, `chat`, `blog`, `blog-cover`, `product`（空は `drive`）。クォータはサービス層で org キー（`org:{orgID}`、org 無しは `user:{sub}`）。パスワード付き共有は実装済み。
+`purpose` ホワイトリスト: `drive`, `wiki`, `chat`, `blog`, `blog-cover`, `product`（空は `drive`）。パスワード付き共有は実装済み。
 
 内部利用（P06 カタログ等）はユーザーの drive ではなく `service/{service}/...` プレフィックス。認可は M2M またはユーザーの委任。
 
