@@ -2,7 +2,7 @@
 
 | 項目 | 値 |
 | --- | --- |
-| 最終更新 | 2026-10-08（手番 12） |
+| 最終更新 | 2026-10-08（手番 13） |
 
 印: 止＝作者の答え待ち／い＝いつか／記＝記録、書き換えない（手番 3 の頼みの文から。書いたのは Cambium のペッパー。作者が貼った時点で作者の頼み。決定 9）
 
@@ -29,9 +29,9 @@
 | [design/attendance-payroll/daicho.md](./design/attendance-payroll/daicho.md) | 台帳の筋書きと道具の形（決定 11〜14） | 台帳に触るとき | |
 | [design/attendance-payroll/kikan.md](./design/attendance-payroll/kikan.md) | 足りない器官と、器官ではない直し（決定 15〜17） | 二周目の前 | い（D1〜D9） |
 | [olive/prompt_ledger_2026_10_08.md](./olive/prompt_ledger_2026_10_08.md) | オリーブへの便 0001（台帳の道具を作る） | 便を渡すとき | 止（便 0002 のあと） |
-| [olive/prompt_ci_2026_10_08.md](./olive/prompt_ci_2026_10_08.md) | オリーブへの便 0002（CI のきっかけを絞る。決定 24〜26） | 便を渡すとき | 止（問 23・問 24） |
+| [olive/prompt_ci_2026_10_08.md](./olive/prompt_ci_2026_10_08.md) | オリーブへの便 0002（CI のきっかけを絞る。決定 24〜28） | 便を渡すとき | 止（作者が貼る） |
 | [olive/tayori.md](./olive/tayori.md) | オリーブ宛ての短い知らせ | オリーブが窓を開いたとき | |
-| [bamboo/prompt_kikan_2026_10_08.md](./bamboo/prompt_kikan_2026_10_08.md) | バンブーへの最初の便（器官の出典と、コードの当たり所） | 便を渡すとき | 止（作者が貼る） |
+| [bamboo/prompt_kikan_2026_10_08.md](./bamboo/prompt_kikan_2026_10_08.md) | バンブーへの最初の便（器官の出典と、コードの当たり所） | 便を渡すとき | 止（作者が要ると言うまで。決定 29） |
 
 ## 旧い名前の行き先
 
