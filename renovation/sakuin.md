@@ -2,7 +2,7 @@
 
 | 項目 | 値 |
 | --- | --- |
-| 最終更新 | 2026-10-08（手番 4） |
+| 最終更新 | 2026-10-08（手番 5） |
 
 印: 止＝作者の答え待ち／い＝いつか／記＝記録、書き換えない（手番 3 の頼みの文から。ペッパーが下書きし、作者が貼った）
 
@@ -19,9 +19,9 @@
 | [shuten.md](./shuten.md) | 出典の一覧（S-N） | 法や業務の事実を書く・引くとき | |
 | [kuchi.md](./kuchi.md) | 口の台帳（線をまたいで一枚）と実測 M1〜M15 | 入力と出力に触るとき | |
 | [okite_all.md](./okite_all.md) | 全部の掟（O-N）と、どの役に当たるか | 掟を足す・分けるとき | |
-| [eucalyptus/okite.md](./eucalyptus/okite.md)・[olive/okite.md](./olive/okite.md)・[bamboo/okite.md](./bamboo/okite.md)・[pepper/okite.md](./pepper/okite.md) | 役ごとの掟と「書き写す三つ」 | 窓を開いたとき | バンブーは止（問 12） |
+| [eucalyptus/okite.md](./eucalyptus/okite.md)・[olive/okite.md](./olive/okite.md)・[bamboo/okite.md](./bamboo/okite.md)・[pepper/okite.md](./pepper/okite.md) | 役ごとの掟と「書き写す三つ」 | 窓を開いたとき | バンブーは止（問 12・問 14） |
 | [eucalyptus/okite.md](./eucalyptus/okite.md)「起動の文（版 1）」 | 手番 1 で作者が貼った、ユーカリの長い起動文（書き手の札は問 13） | 前の起動を確かめるとき | 記・止（問 13） |
-| [pepper/okite.md](./pepper/okite.md)「起動の文（pf-ペッパー）」 | ペッパーの起動の文 | ペッパーを起こすとき | 止（作者が貼る。決定 6） |
+| [pepper/okite.md](./pepper/okite.md)「起動の文（pf-ペッパー）」 | ペッパーの起動の文 | ペッパーを起こすとき | 止（問 14） |
 | [kiroku/](./kiroku/)`YYYY_MM_DD.md` | 手番ごとの記録。作者の言葉（逐語）・決定 N・問 N・#N | 決定や問の元を引くとき | 記 |
 | [design/attendance-payroll/README.md](./design/attendance-payroll/README.md) | 線 attendance-payroll の決まったこと | この線の設計を読む前 | |
 | [design/attendance-payroll/daicho.md](./design/attendance-payroll/daicho.md) | 台帳の筋書きと道具の形 | 台帳に触るとき | 止（問 2〜6） |
