@@ -126,7 +126,7 @@ laws.e-gov.go.jp
 2. 環境を確かめた。JDK 21.0.12・Maven 3.9.11・Node 22.22.0。
 3. 試験を回した。P09 は 42 件・失敗 0。P16 は 12 件・失敗 0。P16 の `tsc --noEmit` は 1 件の誤り（[kuchi.md](../kuchi.md) M1・M2）。
 4. 振る舞いを測った（M3〜M15）。製品の写しは読むだけで、製品のファイルは変えていない（`git status` は空。無視される `target/` と `node_modules/` だけできた）。
-5. 法令の出典を確かめた。はじめ `laws.e-gov.go.jp` と `www.mhlw.go.jp` は外向きの制限で届かなかった。作者が許可したあと、e-Gov 法令 API で労働基準法（`322AC0000000049`）・割増賃金令（`406CO0000000005`）・国民の祝日に関する法律（`323AC1000000178`）を取り、引いた 16 句が原文にあることを照らした。厚生労働省のリーフレット（`www.mhlw.go.jp/content/11200000/001310369.pdf`）を読んだ。`jsite.mhlw.go.jp`（労働局）はまだ届かない（今回は要らなかった）。
+5. 法令の出典を確かめた。はじめ `laws.e-gov.go.jp` と `www.mhlw.go.jp` は外向きの制限で届かなかった。作者が許可したあと、e-Gov 法令 API で労働基準法（`322AC0000000049`）・割増賃金令（`406CO0000000005`）・国民の祝日に関する法律（`323AC1000000178`）を取り、kikan.md と daicho.md で引いた句がすべて原文にあることを照らした。厚生労働省のリーフレット（`www.mhlw.go.jp/content/11200000/001310369.pdf`）を読んだ。`jsite.mhlw.go.jp`（労働局）はまだ届かない（今回は要らなかった）。
 6. 紙を書いた: [naze.md](../naze.md)・[kuchi.md](../kuchi.md)・[daicho.md](../daicho.md)・[kikan.md](../kikan.md)・[kettei.md](../kettei.md)・[okite.md](../okite.md)・[hajimeni.md](../hajimeni.md)・[machigai.md](../machigai.md)・[README.md](../README.md)・[bin/0001](../bin/0001-olive-daicho-no-dougu.md)（下書き）。
 7. 作者の言葉は一度だけ書き起こし、記号の数を原文と照らした（—— 8 組・■ 5・→ 5・／ 4・★ 3 など）。各ファイルへは機械で写し、写しが元と一字も違わないことを照らした（Y4）。
 8. 枝 `claude/dazzling-franklin-c45tgk` にコミットした（a036bf6）。push は 403 で拒まれた（「Claude doesn't have GitHub access to maeplego/portfolio-plan for your organization」）。コミットは手元にだけある。
