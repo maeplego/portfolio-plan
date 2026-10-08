@@ -2,7 +2,7 @@
 
 | 項目 | 値 |
 | --- | --- |
-| 最終更新 | 2026-10-08（手番 6） |
+| 最終更新 | 2026-10-08（手番 7） |
 
 印: 止＝作者の答え待ち／い＝いつか／記＝記録、書き換えない（手番 3 の頼みの文から。書いたのはペッパー。作者が貼った時点で作者の頼み。決定 9）
 
@@ -24,11 +24,11 @@
 | [pepper/okite.md](./pepper/okite.md)「起動の文（pf-ペッパー）」 | 作者が pf-ペッパーの窓に貼った起動の文（書いたのはペッパー。決定 9・10） | 前の起動を確かめるとき | 記 |
 | [kiroku/](./kiroku/)`YYYY_MM_DD.md` | 手番ごとの記録。作者の言葉（逐語）・決定 N・問 N・#N | 決定や問の元を引くとき | 記 |
 | [design/attendance-payroll/README.md](./design/attendance-payroll/README.md) | 線 attendance-payroll の決まったこと | この線の設計を読む前 | |
-| [design/attendance-payroll/daicho.md](./design/attendance-payroll/daicho.md) | 台帳の筋書きと道具の形 | 台帳に触るとき | 止（問 2〜6） |
-| [design/attendance-payroll/kikan.md](./design/attendance-payroll/kikan.md) | 足りない器官と、器官ではない直し | 二周目の前 | 止（問 7・8）・い（D1〜D9） |
-| [olive/prompt_ledger_2026_10_08.md](./olive/prompt_ledger_2026_10_08.md) | オリーブへの便 0001（下書き） | 便を渡すとき | 止（問 2〜6） |
+| [design/attendance-payroll/daicho.md](./design/attendance-payroll/daicho.md) | 台帳の筋書きと道具の形（決定 11〜14） | 台帳に触るとき | |
+| [design/attendance-payroll/kikan.md](./design/attendance-payroll/kikan.md) | 足りない器官と、器官ではない直し（決定 15〜17） | 二周目の前 | い（D1〜D9） |
+| [olive/prompt_ledger_2026_10_08.md](./olive/prompt_ledger_2026_10_08.md) | オリーブへの便 0001（台帳の道具を作る） | 便を渡すとき | 止（問 17） |
 | [olive/tayori.md](./olive/tayori.md) | オリーブ宛ての短い知らせ | オリーブが窓を開いたとき | |
-| [bamboo/prompt_kikan_2026_10_08.md](./bamboo/prompt_kikan_2026_10_08.md) | バンブーへの最初の便（器官の出典と、コードの当たり所） | 便を渡すとき | 止（問 15） |
+| [bamboo/prompt_kikan_2026_10_08.md](./bamboo/prompt_kikan_2026_10_08.md) | バンブーへの最初の便（器官の出典と、コードの当たり所） | 便を渡すとき | 止（作者が貼る） |
 
 ## 旧い名前の行き先
 

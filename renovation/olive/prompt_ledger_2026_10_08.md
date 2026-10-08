@@ -1,24 +1,25 @@
-# 便 0001 — pf-ユーカリ → pf-オリーブ「台帳の道具を作る」（下書き）
+# 便 0001 — pf-ユーカリ → pf-オリーブ「台帳の道具を作る」
 
 | 項目 | 値 |
 | --- | --- |
-| 状態 | 下書き。まだ渡さない |
-| 渡す条件 | 問 2〜6 の答えで〔 〕を埋める。オリーブの枝を作者が決める。作者が貼って渡す |
-| 書いた日 | 2026-10-08（手番 0001） |
+| 状態 | 〔枝〕のほかは、できた。問 17 の答えで〔枝〕を埋める。ペッパーが照らしてから、作者が貼る |
+| 渡す条件 | 問 17 の答え（枝の名）。ペッパーの照らし。作者が二行で pf-オリーブを起こし、「書き写す三つ」が返ったあとに、作者が貼る |
+| 書いた日 | 2026-10-08（手番 1）。手番 7 で決定 11〜14 を入れ、道を今の器に直した |
+| もと | [design/attendance-payroll/daicho.md](../design/attendance-payroll/daicho.md)・決定 11〜15（[README.md](../design/attendance-payroll/README.md)） |
 
 下の囲みの中を、そのまま貼る。
 
 ```text
 （pf-ユーカリから pf-オリーブへの便 0001 —— 作者が貼って渡す）
 
-あなたは「pf-オリーブ」です。pf- 系の改修の実装を担当します。設計と記録は pf-ユーカリ、決めるのは作者です。
-この便で頼むのは「台帳の道具を作る」段だけです。器官（夜勤・残業の区分など）とスイッチは、まだ作りません。
+pf-オリーブへ。この便で頼むのは「台帳の道具を作る」段だけです。器官（夜勤・残業の区分など）とスイッチは、まだ作りません。設計と記録は pf-ユーカリ、決めるのは作者です。
 
 ■ 対象
 - maeplego/pf-attendance（P09）: apps/api（Java 21・Spring Boot・Maven）
 - maeplego/pf-payroll（P16）: TypeScript（Hono・vitest）
-- maeplego/portfolio-plan（読むだけ）: portfolio-plan/renovation/attendance-payroll/
-  先に daicho.md（筋書きと道具の形）と kuchi.md（口と実測）を読む。naze.md（目的と範囲）も。
+- maeplego/portfolio-plan（読むだけ）: renovation/ の紙
+  先に renovation/design/attendance-payroll/daicho.md（筋書きと道具の形）と renovation/kuchi.md（口と実測）を読む。renovation/naze.md（目的と範囲）と renovation/design/attendance-payroll/README.md（決まったこと）も。
+- renovation/ は、枝 claude/dazzling-franklin-c45tgk のものを読む（master は遅れることがある）。clone が master だけを追う設定なら、git ls-remote --heads origin で枝を見て、git fetch origin claude/dazzling-franklin-c45tgk と名指しで取る。
 
 ■ 目的
 今の振る舞いを一字も変えずに、代表の筋書きを通したときの出力をそのまま記録し、hash を残す。
@@ -37,22 +38,25 @@
 
 ■ 作るもの
 P09（pf-attendance）
-- 置き場所: 〔問 4 の答え〕
+- 置き場所: リポジトリの直下に ledger/（台帳のファイル）。試験のコードは apps/api/src/test の下。
 - 形: @SpringBootTest + MockMvc。時計は試験側で MutableClock に差し替える（PunchHttpTest の ClockConfig と同じ型）。
-- 筋書き: daicho.md の S1・S2・S3。人数は〔問 2 の答え〕。
-- 記録する出力: 〔問 3 の答え〕
+- 筋書き: daicho.md の S1・S2・S3。人数は 10 名（org-demo-a の全員）。
+- 記録する出力: daicho.md の「S1 で読む出力」の表のとおり。日ごとの分・minutes-v1、ほかの出口（freee・MF・erp-generic-ja・受け渡し CSV・PDF の文字・未打刻）、拒否を含む全呼び出しの記録。画面の写しは入れない。
 - 書き出し: UTF-8・LF でファイルに書く（標準出力は ASCII のことがある）。
-- hash: 〔問 5 の答え〕。manifest.sha256（sha256sum の形、道の順）と、manifest の sha256 を LEDGER.sha256 に書く。
+- hash: 各ファイルに二本。生のバイトの sha256 と、正準形（行の並べ替え・JSON のキー順・id を除く）の sha256。manifest は sha256sum の形（道の順）で、生と正準形の二つを作る。二つの manifest の sha256 を LEDGER.sha256 に書く。
 - 比べ方: コミットした台帳（golden）と、いま作った出力を照らす。一字でも違えば落ち、差分の行を出す。取り直しは -Dledger.update=true のときだけ。
 
 P16（pf-payroll）
+- 置き場所: リポジトリの直下に ledger/。
 - 入力: P09 の S1 の minutes-v1 の写し。出どころ（P09 の commit・道・sha256）を ledger/input/SOURCE に書く。
 - 筋書き: daicho.md の P1。
 - 記録: 取り込みの応答（id を除く）・明細プレビュー・給与と会計の export の中身・受領（adapter と件数だけ）。
+- hash: P09 と同じ形（生と正準形の二本）。
 - 比べ方: vitest で golden と照らす。取り直しは LEDGER_UPDATE=1 のときだけ。
-- 〔問 4 が う のとき〕継ぎ目の照合: 手元用のスクリプトを置く。兄弟の ../pf-attendance の台帳のファイルと、ledger/input の写しの sha256 を照らす。npm test には入れない。
+- 継ぎ目の照合: 手元用のスクリプトを置く。兄弟の ../pf-attendance の台帳のファイルと、ledger/input の写しの sha256 を照らす。npm test には入れない。
 
 ■ 終わりの形（ここで止まって報告する）
+- P09 の台帳ができたところで、一度返してよい（P16 は P09 の S1 の minutes-v1 を入力に使うので、先に P09 を照らせる）。
 - 両方の試験が緑。P09: mvn -B -f apps/api/pom.xml test。P16: npm test。既存の試験の数（P09 42 件・P16 12 件）が減っていない。
 - 二度走らせて manifest が同じ。
 - 報告に書くこと:
@@ -67,3 +71,17 @@ P16（pf-payroll）
 
 ★ 決めるのは作者
 ```
+
+## 手番 7 で変えたこと
+
+| どこ | 前 | 今 | もと |
+| --- | --- | --- | --- |
+| 頭の一行 | 「あなたは「pf-オリーブ」です。…」 | 「pf-オリーブへ。…」 | 役は二行で起こす（hajimeni.md） |
+| 対象の道 | `portfolio-plan/renovation/attendance-payroll/` | `renovation/…` と、枝を名指しで取る一行 | 手番 3 の器・罠帳 W-12 |
+| 置き場所 | 〔問 4 の答え〕 | 各リポジトリの直下に `ledger/` | 決定 13（直下はユーカリの設計） |
+| 人数 | 〔問 2 の答え〕 | 10 名 | 決定 11 |
+| 記録する出力 | 〔問 3 の答え〕 | daicho.md の表のとおり。画面の写しは入れない | 決定 12 |
+| hash | 〔問 5 の答え〕 | 生と正準形の二本。manifest も二つ | 決定 14（manifest を二つにするのはユーカリの設計） |
+| 継ぎ目の照合 | 〔問 4 が う のとき〕 | 条件を外した | 決定 13 |
+| 途中で返す | — | P09 の台帳ができたところで、一度返してよい | ユーカリ（P16 の入力は P09 の出力。バンブー便の「途中で返してよい」と同じ考え） |
+| 〔枝〕 | 〔枝〕 | 〔枝〕のまま | 問 17 |
