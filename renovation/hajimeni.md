@@ -3,11 +3,11 @@
 | 項目 | 値 |
 | --- | --- |
 | 何の紙 | 窓を開いた役が、最初に全文を読む紙 |
-| 作った手番 | 手番 3（2026-10-08。作者の頼み） |
+| 作った手番 | 手番 3（2026-10-08）。もとは手番 3 の頼みの文。頼みの文はペッパーが下書きし、作者が貼った |
 
 ## 作者が貼る二行
 
-作者が貼るのは、この二行だけ（作者の言葉・逐語。手番 3）。一行目の役の名は、起こす役に合わせて作者が選ぶ。
+作者が貼るのは、この二行だけ（手番 3 の頼みの文から逐語。頼みの文はペッパーが下書きし、作者が貼った）。一行目の役の名は、起こす役に合わせて作者が選ぶ。
 
 <!-- VERBATIM:t0003#L5-6 -->
 
@@ -22,18 +22,19 @@
 | --- | --- | --- |
 | pf-ユーカリ | `renovation/`（この器） | 作者と一緒に、改修の設計と記録をする。実装はしない |
 | pf-オリーブ | 製品リポジトリ（今は `pf-attendance`・`pf-payroll`）の、作者が決めた枝 | 実装 |
-| pf-バンブー | まだ聞いていない（問 11） | まだ聞いていない（問 11） |
+| pf-バンブー | 作者の一言を待つ（決定 4・問 12） | 作者の一言を待つ（決定 4・問 12） |
 | pf-ペッパー | なし | 読むだけ。紙を書かず、押さず、番号を振らない |
 
-出どころ: ユーカリとオリーブは起動文の一行目（「…改修の設計と記録を担当します。実装はしません（実装は pf-オリーブ）。」。[pepper/okite.md](./pepper/okite.md) の「起動の文」）。ペッパーは作者の頼み（手番 3）。オリーブの持ち場は、ユーカリの読み（手番 3 の Y7）。
+出どころ: ユーカリとオリーブは起動文の一行目（「…改修の設計と記録を担当します。実装はしません（実装は pf-オリーブ）。」。[eucalyptus/okite.md](./eucalyptus/okite.md) の「起動の文（版 1）」）。ペッパーは手番 3 の頼みの文（ペッパーが下書きし、作者が貼った）による。オリーブの持ち場は、ユーカリの読み（手番 3 の Y7）。
 
 ## 役ごとに読むもの
 
 この順に、全文を読む。
 
-1. 共通: [naze.md](./naze.md)・[ima.md](./ima.md)・[sakuin.md](./sakuin.md)
-2. 自分の okite.md: [eucalyptus/okite.md](./eucalyptus/okite.md)・[olive/okite.md](./olive/okite.md)・[bamboo/okite.md](./bamboo/okite.md)・[pepper/okite.md](./pepper/okite.md) のうち一つ
-3. 最後に kiroku の最新: [kiroku/](./kiroku/) のいちばん新しい日付の紙の、いちばん下の手番
+1. 作者の掟の紙: `renovation/CLAUDE.md`（作者だけが書く。役は読むだけで、触らない。決定 2。作者が置くまでは無い）
+2. 共通: [naze.md](./naze.md)・[ima.md](./ima.md)・[sakuin.md](./sakuin.md)
+3. 自分の okite.md: [eucalyptus/okite.md](./eucalyptus/okite.md)・[olive/okite.md](./olive/okite.md)・[bamboo/okite.md](./bamboo/okite.md)・[pepper/okite.md](./pepper/okite.md) のうち一つ
+4. 最後に kiroku の最新: [kiroku/](./kiroku/) のいちばん新しい日付の紙の、いちばん下の手番
 
 ## 読んだら
 

@@ -4,7 +4,7 @@
 | --- | --- |
 | 対象 | P09 [pf-attendance](https://github.com/maeplego/pf-attendance)・P16 [pf-payroll](https://github.com/maeplego/pf-payroll) |
 | 段 | 一周目（写し取り）の準備。台帳の道具はまだ無い |
-| 最終更新 | 2026-10-08（手番 3） |
+| 最終更新 | 2026-10-08（手番 4） |
 | 役 | 作者（決める）・pf-ユーカリ（設計と記録）・pf-オリーブ（実装） |
 | 矛盾時の正 | 自動テストと製品コード、次に各 `DESIGN.md`、次にこのフォルダ |
 
@@ -28,4 +28,4 @@
 | --- | --- |
 | [daicho.md](./daicho.md) | 台帳の筋書きと、道具の形の案 |
 | [kikan.md](./kikan.md) | 足りない器官と、器官ではない直し |
-| 九枚（01_requirements〜08_cut_order） | 二周目の設計のときに作る（作者の頼み・手番 3）。今は無い |
+| 九枚（01_requirements〜08_cut_order） | 二周目の設計のときに作る（手番 3 の頼み）。今は無い |
