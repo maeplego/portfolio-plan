@@ -2,7 +2,7 @@
 
 | 項目 | 値 |
 | --- | --- |
-| 最終更新 | 2026-10-08（手番 25） |
+| 最終更新 | 2026-10-09（手番 28） |
 
 | # | 罠 | どうする | 踏んだ所 |
 | --- | --- | --- | --- |
@@ -37,3 +37,4 @@
 | W-29 | 「<区画> で <命令> を走らせる」と書くと、cd を誘う | cd を使わない形で書く（`npm --prefix <道>`・`tsc -p <道>/tsconfig.json`・`git -C <道>`） | 手番 24（#24） |
 | W-30 | `git fetch origin <枝>` のあとに別の fetch をすると、FETCH_HEAD が上書きされる。枝の先のつもりで、master の先を測ってしまう | 枝の先は、fetch のすぐあとに `git rev-parse FETCH_HEAD` で取るか、`git ls-remote` の値を使う。二つが合うか確かめる | 手番 25（#25） |
 | W-31 | 探した結果から `grep -v <道の一部>` で除くと、中身にその文字がある行も消える | 道で除くときは `grep -r --exclude-dir=<名>` を使う。`grep -rl` の一覧とも照らす | 手番 25（#26） |
+| W-32 | クラウドの窓の clone では、`git branch -a` に、origin に無い枝（窓に割り当てた `claude/…`）が `remotes/origin/…` として出ることがある。origin にある枝（`ci/trigger` など）が出ないこともある | origin の枝は `git ls-remote --heads origin` で見る。`git branch -a`・`git branch -r` は当てにしない（W-12 と同じ手当て） | 手番 27（この窓の portfolio-plan。`remote.origin.fetch` は全部の枝を追う形なのに、`refs/remotes` は master と窓の枝だけだった【測】）。前のユーカリの窓では見えていなかった（前のユーカリの言葉。手番 28） |

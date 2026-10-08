@@ -2,9 +2,9 @@
 
 | 項目 | 値 |
 | --- | --- |
-| 状態 | できた。便 0002・0003 が master に入り、枝を切り替えてから渡す（決定 26・37）。ペッパー（pf-ペッパー）が照らしてから、作者が貼る |
+| 状態 | できた。渡す条件がそろった（便 0002・0003 は master に入った。決定 44。枝は手番 28 に docs/eucalyptus に切り替えた。決定 47）。ペッパー（pf-ペッパー）が照らしてから、作者が貼る |
 | 渡す条件 | 便 0002・0003 が master に入り、枝を切り替えたあと（決定 26・37）。「対象」の renovation/ を読む一行は、手番 25 に枝 docs/eucalyptus に直した（決定 35）。ペッパーの照らし。作者が貼る（便 0002 と同じ窓でよい。新しい窓なら、二行で起こして「書き写す三つ」が返ってから） |
-| 書いた日 | 2026-10-08（手番 1）。手番 7 で決定 11〜14 を入れ、道を今の器に直した。手番 8 で枝の名（決定 20）を、手番 10 で CI の決まり（決定 24）を、手番 18 で問と答え（決定 33・39）を、手番 26 で枝を消す頼み（決定 46）を入れた |
+| 書いた日 | 2026-10-08（手番 1）。手番 7 で決定 11〜14 を入れ、道を今の器に直した。手番 8 で枝の名（決定 20）を、手番 10 で CI の決まり（決定 24）を、手番 18 で問と答え（決定 33・39）を、手番 26 で枝を消す頼み（決定 46）を、手番 28 で cd を使わない命令の形（罠帳 W-29）を入れた |
 | もと | [design/attendance-payroll/daicho.md](../design/attendance-payroll/daicho.md)・決定 11〜15（[README.md](../design/attendance-payroll/README.md)） |
 
 下の囲みの中を、そのまま貼る。
@@ -25,7 +25,7 @@ pf-オリーブへ。この便で頼むのは「台帳の道具を作る」段�
 - maeplego/pf-payroll（P16）: TypeScript（Hono・vitest）
 - maeplego/portfolio-plan（読むだけ）: renovation/ の紙
   先に renovation/design/attendance-payroll/daicho.md（筋書きと道具の形）と renovation/kuchi.md（口と実測）を読む。renovation/naze.md（目的と範囲）と renovation/design/attendance-payroll/README.md（決まったこと）も。
-- renovation/ は、枝 docs/eucalyptus のものを読む（master は遅れることがある）。clone が master だけを追う設定なら、git ls-remote --heads origin で枝を見て、git fetch origin docs/eucalyptus と名指しで取る。
+- renovation/ は、枝 docs/eucalyptus のものを読む（master は遅れることがある）。clone が master だけを追う設定なら、git -C <portfolio-plan の道> ls-remote --heads origin で枝を見て、git -C <portfolio-plan の道> fetch origin docs/eucalyptus と名指しで取り、すぐに git -C <portfolio-plan の道> show FETCH_HEAD:renovation/<紙> で読む。
 
 ■ 目的
 今の振る舞いを一字も変えずに、代表の筋書きを通したときの出力をそのまま記録し、hash を残す。
@@ -69,7 +69,7 @@ P16（pf-payroll）
 
 ■ 終わりの形（ここで止まって報告する）
 - P09 の台帳ができたところで、一度返してよい（P16 は P09 の S1 の minutes-v1 を入力に使うので、先に P09 を照らせる）。
-- 両方の試験が緑。P09: mvn -B -f apps/api/pom.xml test。P16: npm test。既存の試験の数（P09 42 件・P16 12 件）が減っていない。
+- 両方の試験が緑。P09: mvn -B -f <pf-attendance の道>/apps/api/pom.xml test。P16: npm --prefix <pf-payroll の道> test。既存の試験の数（P09 42 件・P16 12 件）が減っていない。
 - 二度走らせて manifest が同じ。
 - 報告に書くこと:
   - 0: 消した四本の枝と、消す前に確かめた先（ハッシュ）
@@ -134,3 +134,11 @@ P16（pf-payroll）
 | --- | --- | --- | --- |
 | ■ 0（新しい節） | — | 合流が済んだ四本の枝を、祖先かを確かめてから一本ずつ消す。これからの作業の枝も、合流して master が緑なら消す | 決定 46（問 36 → あ） |
 | 報告に書くこと | — | 0: 消した四本の枝と、消す前に確かめた先 | 決定 46 |
+
+## 手番 28 で変えたこと
+
+| どこ | 前 | 今 | もと |
+| --- | --- | --- | --- |
+| 状態 | 便 0002・0003 が master に入り、枝を切り替えてから渡す | 渡す条件がそろった | 決定 44・47 |
+| 対象（renovation/ を読む一行） | `git ls-remote …`・`git fetch …` | `git -C <portfolio-plan の道> …`。取ったら、すぐに FETCH_HEAD で読む | 罠帳 W-29・W-30。hajimeni.md の「読む場所」の一行と同じ形 |
+| 終わりの形（試験の命令） | `mvn -B -f apps/api/pom.xml test`・`npm test` | `mvn -B -f <pf-attendance の道>/apps/api/pom.xml test`・`npm --prefix <pf-payroll の道> test` | 罠帳 W-29（#24）。この形で P09 は 42 件・P16 は 12 件、どちらも失敗 0【測】（手番 28。master の 938e128・fdf434b） |
