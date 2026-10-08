@@ -2,7 +2,7 @@
 
 | 項目 | 値 |
 | --- | --- |
-| 最終更新 | 2026-10-08（手番 24） |
+| 最終更新 | 2026-10-08（手番 25） |
 
 印: 止＝作者の答え待ち／い＝いつか／記＝記録、書き換えない（手番 3 の頼みの文から。書いたのは Cambium のペッパー。作者が貼った時点で作者の頼み。決定 9）
 
@@ -28,9 +28,9 @@
 | [design/attendance-payroll/README.md](./design/attendance-payroll/README.md) | 線 attendance-payroll の決まったこと | この線の設計を読む前 | |
 | [design/attendance-payroll/daicho.md](./design/attendance-payroll/daicho.md) | 台帳の筋書きと道具の形（決定 11〜14） | 台帳に触るとき | |
 | [design/attendance-payroll/kikan.md](./design/attendance-payroll/kikan.md) | 足りない器官と、器官ではない直し（決定 15〜17） | 二周目の前 | い（D1〜D10） |
-| [olive/prompt_ledger_2026_10_08.md](./olive/prompt_ledger_2026_10_08.md) | オリーブへの便 0001（台帳の道具を作る） | 便を渡すとき | 止（便 0002・0003 と、枝の切り替えのあと。決定 37） |
-| [olive/prompt_ci_2026_10_08.md](./olive/prompt_ci_2026_10_08.md) | オリーブへの便 0002（CI のきっかけを絞る。決定 24〜28） | 便を渡すとき | 合流中（portfolio-plan・pf-payroll は合流した。pf-attendance は web/deps のあと） |
-| [olive/prompt_merge_deps_2026_10_08.md](./olive/prompt_merge_deps_2026_10_08.md) | オリーブへの便 0003（便 0002 の合流・問の番号・pf-attendance の依存。決定 31〜33） | 便を渡すとき | 一度目の報告が来た（手番 20）。一度目が済んだ（手番 24。web/deps の CI は緑）。二度目は作者の「はい」待ち |
+| [olive/prompt_ledger_2026_10_08.md](./olive/prompt_ledger_2026_10_08.md) | オリーブへの便 0001（台帳の道具を作る） | 便を渡すとき | 止（枝の切り替えのあと。読む枝は docs/eucalyptus に直した。決定 37） |
+| [olive/prompt_ci_2026_10_08.md](./olive/prompt_ci_2026_10_08.md) | オリーブへの便 0002（CI のきっかけを絞る。決定 24〜28） | 便を渡すとき | 記（済み。手番 25） |
+| [olive/prompt_merge_deps_2026_10_08.md](./olive/prompt_merge_deps_2026_10_08.md) | オリーブへの便 0003（便 0002 の合流・問の番号・pf-attendance の依存。決定 31〜33） | 便を渡すとき | 記（済み。手番 25） |
 | [olive/tayori.md](./olive/tayori.md) | オリーブ宛ての短い知らせ | オリーブが窓を開いたとき | |
 | [bamboo/prompt_kikan_2026_10_08.md](./bamboo/prompt_kikan_2026_10_08.md) | バンブーへの最初の便（器官の出典と、コードの当たり所） | 便を渡すとき | 止（作者が要ると言うまで。決定 29） |
 

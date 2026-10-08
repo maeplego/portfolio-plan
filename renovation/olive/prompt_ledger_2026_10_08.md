@@ -3,7 +3,7 @@
 | 項目 | 値 |
 | --- | --- |
 | 状態 | できた。便 0002・0003 が master に入り、枝を切り替えてから渡す（決定 26・37）。ペッパー（pf-ペッパー）が照らしてから、作者が貼る |
-| 渡す条件 | 便 0002・0003 が master に入り、枝を切り替えたあと（決定 26・37）。そのとき「対象」の renovation/ を読む一行を、枝 docs/eucalyptus に直す（決定 35）。ペッパーの照らし。作者が貼る（便 0002 と同じ窓でよい。新しい窓なら、二行で起こして「書き写す三つ」が返ってから） |
+| 渡す条件 | 便 0002・0003 が master に入り、枝を切り替えたあと（決定 26・37）。「対象」の renovation/ を読む一行は、手番 25 に枝 docs/eucalyptus に直した（決定 35）。ペッパーの照らし。作者が貼る（便 0002 と同じ窓でよい。新しい窓なら、二行で起こして「書き写す三つ」が返ってから） |
 | 書いた日 | 2026-10-08（手番 1）。手番 7 で決定 11〜14 を入れ、道を今の器に直した。手番 8 で枝の名（決定 20）を、手番 10 で CI の決まり（決定 24）を、手番 18 で問と答え（決定 33・39）を入れた |
 | もと | [design/attendance-payroll/daicho.md](../design/attendance-payroll/daicho.md)・決定 11〜15（[README.md](../design/attendance-payroll/README.md)） |
 
@@ -19,7 +19,7 @@ pf-オリーブへ。この便で頼むのは「台帳の道具を作る」段�
 - maeplego/pf-payroll（P16）: TypeScript（Hono・vitest）
 - maeplego/portfolio-plan（読むだけ）: renovation/ の紙
   先に renovation/design/attendance-payroll/daicho.md（筋書きと道具の形）と renovation/kuchi.md（口と実測）を読む。renovation/naze.md（目的と範囲）と renovation/design/attendance-payroll/README.md（決まったこと）も。
-- renovation/ は、枝 claude/dazzling-franklin-c45tgk のものを読む（master は遅れることがある）。clone が master だけを追う設定なら、git ls-remote --heads origin で枝を見て、git fetch origin claude/dazzling-franklin-c45tgk と名指しで取る。
+- renovation/ は、枝 docs/eucalyptus のものを読む（master は遅れることがある）。clone が master だけを追う設定なら、git ls-remote --heads origin で枝を見て、git fetch origin docs/eucalyptus と名指しで取る。
 
 ■ 目的
 今の振る舞いを一字も変えずに、代表の筋書きを通したときの出力をそのまま記録し、hash を残す。
@@ -114,3 +114,9 @@ P16（pf-payroll）
 | ■ 問と答え | — | 問に番号を振らない。先へ進めない問は作者が直に答えることがある。ほかの答えはユーカリの便で届く | 決定 33・決定 39（問 31 の「便 0001 で伝える」） |
 | 報告に書くこと | — | 問（番号は振らない） | 決定 33（便 0003 と同じ形） |
 | 状態・渡す条件 | 便 0002 が master に入ったあと | 便 0002・0003 が master に入り、枝を切り替えたあと。読む一行は docs/eucalyptus に直す | 決定 35・37（渡す順はユーカリ） |
+
+## 手番 25 で変えたこと
+
+| どこ | 前 | 今 | もと |
+| --- | --- | --- | --- |
+| 対象（renovation/ を読む枝） | claude/dazzling-franklin-c45tgk | docs/eucalyptus | 決定 35・37（枝の切り替えの段取りの 2） |
