@@ -2,10 +2,10 @@
 
 | 項目 | 値 |
 | --- | --- |
-| 状態 | できた。ペッパー（pf-ペッパー）が照らしてから、作者が貼る |
-| 渡す条件 | ペッパーの照らし。作者が、便 0002 を渡したオリーブの窓に貼る |
-| 書いた日 | 2026-10-08（手番 16） |
-| もと | 決定 31（問 25 → あ）・決定 32（問 26 → あ）・決定 33（問の番号はユーカリ）。[kiroku/2026_10_08.md](../kiroku/2026_10_08.md) 手番 14〜16 |
+| 状態 | 手番 17 に直した（ペッパーの照らしの 1〜3 と、#20 の一行）。ペッパーが直した所を照らしてから、作者が貼る |
+| 渡す条件 | ペッパーの照らし（直した所）。作者が、便 0002 を渡したオリーブの窓に貼る |
+| 書いた日 | 2026-10-08（手番 16。手番 17 に直した） |
+| もと | 決定 31（問 25 → あ）・決定 32（問 26 → あ）・決定 33（問の番号はユーカリ）。[kiroku/2026_10_08.md](../kiroku/2026_10_08.md) 手番 14〜17 |
 
 下の囲みの中を、そのまま貼る。
 
@@ -22,7 +22,6 @@ pf-オリーブへ。オリーブ問 2 への作者の答えと、問の番号�
 ■ 2. 問の番号（決定 33）
 - これからは、問に番号を振らない。番号はユーカリが振る。
 - 問を出すときは「問（番号はユーカリが振る）」と書き、選択肢 あ／い／う・見立て・答えの型「問（番号はユーカリ）：［ ］」を添える。
-- 作者の答えは、ユーカリの番号で、ユーカリの便として届く。
 - 前の「問 1」「問 2」は、記録では「オリーブ問 1」「オリーブ問 2」と書いてある。
 
 ■ 3. pf-attendance の apps/web の依存を上げる（ユーカリの問 26 → あ。決定 32）
@@ -34,8 +33,10 @@ pf-オリーブへ。オリーブ問 2 への作者の答えと、問の番号�
   - source-map-js: 1.2.2 以上（postcss 8.4.31 が ^1.0.2 で求める）
 - やり方は任せる（例: apps/web で npm update next sharp source-map-js）。package.json に差が出たら、作る前に止まって報告する。
 - 確かめ:
+  - 最初に node -v。20.9 より古ければ、止まって報告する（sharp 0.35 は node 20.9 以上を求める）。
   - apps/web で npm ci と npm run build が通る（apps/web には試験が無い）。
-  - web/deps に押すと、master の前の形の ci.yml で CI が走る（四つのジョブ）。trivy を含む四つが緑になる。走らなければ、手で一度走らせる。
+  - lockfile に @img/sharp-linuxmusl-x64・@img/sharp-linuxmusl-arm64・@img/sharp-libvips-linuxmusl-x64・@img/sharp-libvips-linuxmusl-arm64 が残っている（apps/web の Dockerfile は node:22-alpine の中で npm ci をする。CI は image を作らないので、抜けても CI は緑のまま）。抜けていたら、作る前に止まって報告する。
+  - web/deps に押すと、master の前の形の ci.yml で CI が走る（四つのジョブ）。trivy を含む四つが緑になる。走らなければ、止まって報告する（その ci.yml には workflow_dispatch が無く、手では走らせられない）。
   - trivy がほかの脆弱性を出したら、どこにも足さずに止まって報告する。
 - web/deps の master への合流は、作者の「はい」のあと（--no-ff）。合流のあと master の走りが緑なら、続けて pf-attendance の ci/trigger も合流する（同じ「はい」で）。master が赤なら、そこで止まる。
 
@@ -49,7 +50,7 @@ pf-オリーブへ。オリーブ問 2 への作者の答えと、問の番号�
 - 二度目: 作者の「はい」で web/deps と pf-attendance の ci/trigger を合流したあと、master の走りを確かめて報告する。
 - 報告に書くこと:
   - 1: 二つの合流のコミットと、master の走り（run の番号と結果）
-  - 3: lockfile で変わった版（next・sharp・source-map-js）。package.json に差が無いこと。npm ci と build の結果。web/deps の CI の run と結果（trivy の件数）
+  - 3: node -v の結果。lockfile で変わった版（next・sharp・source-map-js）と、linuxmusl の四つが残っていること。package.json に差が無いこと。npm ci と build の結果。web/deps の CI の run と結果（trivy の件数）
   - 自分の間違い（#N。オリーブの通し番号。O-9）
   - 迷ったこと
   - 問（番号は振らない。2 のとおり）
@@ -66,3 +67,6 @@ pf-オリーブへ。オリーブ問 2 への作者の答えと、問の番号�
 | web/deps を master から切る | 依存の上げを、CI のきっかけの変え（ci/trigger）と混ぜないため。master の ci.yml はまだ前の形なので、web/deps に押すと CI が走り、それが合流の前の確かめになる |
 | 一つの「はい」で二つ合流 | web/deps のあとに ci/trigger を入れれば、master の走りは新しい ci.yml の初めの走りになる。master が赤なら止まるので、赤のまま ci/trigger は入らない |
 | 版の下限 | 手番 15 に npm の記録で測った（next 15.5.24 の sharp の範囲、sharp 0.35.4・0.35.5、source-map-js 1.2.2 があること）。上限は package.json と依存の範囲に任せる |
+| 手で走らせる一行を直した（手番 17） | web/deps は master から切るので、ci.yml は前の形（on: push と pull_request だけ）で、workflow_dispatch が無い【測】。手番 14 に手で走ったのは、枝の ci.yml にその一行があったから（#19。ペッパーの照らし 1） |
+| node と linuxmusl の確かめ（手番 17） | sharp 0.35.4・0.35.5 の engines は node >=20.9.0【測】。Dockerfile は node:22-alpine の中で npm ci をし、CI は image を作らない【測】。lockfile を取り直すと、ほかの OS 向けの任意の依存が抜けることがある【推】（ペッパーの照らし 2・3） |
+| 答えの届け方の一行を抜いた（手番 17） | 「作者の答えは、ユーカリの番号で、ユーカリの便として届く。」は作者の言葉に無く、手番 16 の「★ 私が決めた範囲」にも書いていなかった（#20。ペッパーの照らし 4）。どう届けるかは問 31 |
